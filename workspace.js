@@ -2,6 +2,7 @@
   'use strict';
 
   document.addEventListener('DOMContentLoaded', () => {
+    initWorkspaceNavigation();
     initAccountsPage();
     initCardsPage();
     initTeamPage();
@@ -10,6 +11,18 @@
     initPrototypeDialogs();
     initCopyActions();
   });
+
+  function initWorkspaceNavigation() {
+    document.body.classList.add('flux-enhanced');
+    const route = { accounts: 'accounts.html', cards: 'cards.html', team: 'team.html', expenses: 'expenses.html', reports: 'reports.html' }[document.body.dataset.page];
+    if (!route) return;
+    document.querySelectorAll('.nav-link').forEach((link) => {
+      const active = link.getAttribute('href') === route;
+      link.classList.toggle('active', active);
+      if (active) link.setAttribute('aria-current', 'page');
+      else link.removeAttribute('aria-current');
+    });
+  }
 
   function initAccountsPage() {
     const rows = [...document.querySelectorAll('.account-row')];
