@@ -3,111 +3,159 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Flux - Settings</title>
+  <meta name="color-scheme" content="light">
+  <title>Flux — Approval policies</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="app-container">
-    
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div style="padding: var(--spacing-6); font-weight: 600; font-size: 14px; letter-spacing: 0;">
-        ACME CORP GLOBAL
-      </div>
-      
-      <!-- Role Switcher -->
-      <div class="role-switcher">
-        <div class="role-tab active">Employee</div>
-        <div class="role-tab">Approver</div>
+    <aside class="sidebar" aria-label="Workspace navigation">
+      <div class="workspace">
+        <div>
+          <div class="brand"><span class="brand-name">FLUX</span><span class="workspace-name">Northstar Holdings</span></div>
+        </div>
+        <div class="role-switch" aria-label="Role switcher">
+          <button type="button" data-role="employee" aria-pressed="true">Employee</button>
+          <button type="button" data-role="approver" aria-pressed="false">Approver</button>
+        </div>
       </div>
 
-      <nav style="flex: 1;">
+      <nav class="sidebar-nav">
+        <p class="nav-section-label">Operations</p>
         <ul class="nav-list">
-          <li><a href="#" class="nav-link"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18"></rect><line x1="3" y1="9" x2="21" y2="9"></line></svg>Accounts</a></li>
-          <li><a href="index.html" class="nav-link"><svg class="icon" viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>Payments</a></li>
-          <li><a href="#" class="nav-link"><svg class="icon" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>Cards</a></li>
-          <li><a href="#" class="nav-link"><svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>Team</a></li>
-          <li><a href="#" class="nav-link"><svg class="icon" viewBox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"></path><path d="M16 14h.01"></path><path d="M12 14h.01"></path><path d="M8 14h.01"></path><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M8 10h.01"></path></svg>Expenses</a></li>
-          <li><a href="#" class="nav-link"><svg class="icon" viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>Reports</a></li>
-          <li><a href="settings.html" class="nav-link active"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>Settings</a></li>
+          <li><a href="#" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16"></rect><path d="M3 9h18M9 9v11"></path></svg><span>Accounts</span></a></li>
+          <li><a href="index.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h12M12 3l4 4-4 4M20 17H8m4-4-4 4 4 4"></path></svg><span>Payments</span></a></li>
+          <li><a href="#" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14"></rect><path d="M3 10h18"></path></svg><span>Cards</span></a></li>
+          <li><a href="#" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><path d="M3 20c.7-4 3-6 6-6s5.3 2 6 6M17 7h4M19 5v4"></path></svg><span>Team</span></a></li>
+          <li><a href="#" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6"></path></svg><span>Expenses</span></a></li>
+          <li><a href="#" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"></path></svg><span>Reports</span></a></li>
+        </ul>
+        <p class="nav-section-label" style="margin-top:18px">Administration</p>
+        <ul class="nav-list">
+          <li><a href="settings.html" class="nav-link active" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M7 4v6M4 17h16M16 14v6"></path></svg><span>Settings</span></a></li>
         </ul>
       </nav>
+
+      <div class="sidebar-footer"><strong>Workspace region</strong>EU · Production simulation</div>
     </aside>
 
-    <!-- Main Content -->
     <main class="main-content">
       <header class="topbar">
-        <div style="font-size: 13px; color: var(--color-text-secondary);">Settings / Approval Policies</div>
-        <div style="display: flex; align-items: center; gap: var(--spacing-4);">
-          <div style="font-size: 13px; font-weight: 500;">J. Smith</div>
-        </div>
+        <div class="breadcrumb"><span>Northstar Holdings</span><span>/</span><span>Settings</span><span>/</span><strong>Approval policies</strong></div>
+        <button class="user-menu" type="button" aria-label="Open user menu"><span>Jamie Stone · Finance ops</span><span class="user-initials">JS</span></button>
       </header>
 
       <div class="page-content">
-        <div style="margin-bottom: var(--spacing-6); display: flex; justify-content: space-between; align-items: flex-end;">
-          <div>
-            <h1 style="font-size: 20px; margin-bottom: var(--spacing-1);">Approval Policies</h1>
-            <p class="text-sm text-secondary">Define rule chains for high-value operations.</p>
+        <div class="page-header">
+          <div class="page-title">
+            <h1>Approval policies</h1>
+            <p>Define deterministic control rules for money movement. Rules are evaluated in order before a payment can execute.</p>
           </div>
-          <button class="btn btn-primary">
-            New Rule
-          </button>
+          <div class="page-actions"><button class="btn btn-primary" id="new-rule-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg><span>New rule</span></button></div>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: var(--spacing-4);">
-          <!-- Policy 1 -->
-          <div class="surface surface-dense">
-            <div class="text-xs text-muted" style="margin-bottom: var(--spacing-3);">RULE 01</div>
-            
-            <!-- Condition Row -->
-            <div style="display: flex; align-items: center; gap: var(--spacing-2); margin-bottom: var(--spacing-4);">
-              <span class="mono" style="font-size: 13px; font-weight: 600;">IF</span>
-              <span class="policy-token">amount > 10000</span>
-              <span style="font-size: 12px; font-weight: 600; color: var(--color-text-secondary);">AND</span>
-              <span class="policy-token">currency != base_currency</span>
-            </div>
-            
-            <!-- Consequence Row -->
-            <div style="display: flex; align-items: center; gap: var(--spacing-2); margin-bottom: var(--spacing-4);">
-              <span class="mono" style="font-size: 13px; font-weight: 600;">THEN REQUIRE</span>
-              <span class="policy-consequence-tag">1 &middot; Finance Manager</span>
-              <svg class="icon text-muted" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-              <span class="policy-consequence-tag">2 &middot; CFO</span>
-            </div>
-            
-            <!-- Footer Row -->
-            <div class="divider" style="margin-bottom: var(--spacing-3);"></div>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span class="text-sm text-secondary">Applies to: All wire transfers</span>
-              <span class="text-sm" style="color: var(--color-status-approved); font-weight: 500;">Active</span>
-            </div>
-          </div>
-          
-          <!-- Policy 2 -->
-          <div class="surface surface-dense">
-            <div class="text-xs text-muted" style="margin-bottom: var(--spacing-3);">RULE 02</div>
-            
-            <div style="display: flex; align-items: center; gap: var(--spacing-2); margin-bottom: var(--spacing-4);">
-              <span class="mono" style="font-size: 13px; font-weight: 600;">IF</span>
-              <span class="policy-token">amount <= 10000</span>
-            </div>
-            
-            <div style="display: flex; align-items: center; gap: var(--spacing-2); margin-bottom: var(--spacing-4);">
-              <span class="mono" style="font-size: 13px; font-weight: 600;">THEN REQUIRE</span>
-              <span class="policy-consequence-tag">1 &middot; Finance Manager</span>
-            </div>
-            
-            <div class="divider" style="margin-bottom: var(--spacing-3);"></div>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span class="text-sm text-secondary">Applies to: All wire transfers</span>
-              <span class="text-sm" style="color: var(--color-status-approved); font-weight: 500;">Active</span>
-            </div>
-          </div>
+        <section class="metrics-strip" aria-label="Policy summary">
+          <div class="metric"><span class="metric-label">Active rules</span><strong class="metric-value">04</strong><span class="metric-note">Evaluated top to bottom</span></div>
+          <div class="metric"><span class="metric-label">Payments matched · 30d</span><strong class="metric-value">126</strong><span class="metric-note">38 required two approvals</span></div>
+          <div class="metric"><span class="metric-label">Exceptions · 30d</span><strong class="metric-value">03</strong><span class="metric-note">All reviewed by CFO</span></div>
+          <div class="metric"><span class="metric-label">Last policy change</span><strong class="metric-value">12 SEP</strong><span class="metric-note">Sarah Jensen · 17:42</span></div>
+        </section>
+
+        <div class="toolbar">
+          <div class="toolbar-group"><strong style="font-size:12px;font-weight:500">Policy registry</strong><span style="font-size:11px;color:var(--muted)">Ordered rules · lower number = higher priority</span></div>
+          <div class="toolbar-group"><button class="btn" type="button">Change history</button><button class="btn" type="button">Export rules</button></div>
         </div>
 
+        <div class="policy-layout">
+          <section class="policy-list" aria-label="Approval policies">
+            <article class="policy-row" data-policy="1">
+              <span class="policy-index">Rule 01</span>
+              <div class="policy-summary"><strong>Large cross-border transfers</strong><p><span class="mono">amount &gt; USD 10,000</span> AND currency differs from workspace base currency.</p></div>
+              <div class="policy-scope">International wires<br><span class="status status-success" style="margin-top:6px">Active</span></div>
+              <button class="btn btn-icon policy-select" type="button" aria-label="Edit Rule 01"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button>
+            </article>
+            <article class="policy-row" data-policy="2">
+              <span class="policy-index">Rule 02</span>
+              <div class="policy-summary"><strong>Domestic operational spend</strong><p><span class="mono">amount ≤ USD 10,000</span> requires Finance manager review.</p></div>
+              <div class="policy-scope">Domestic ACH<br><span class="status status-success" style="margin-top:6px">Active</span></div>
+              <button class="btn btn-icon policy-select" type="button" aria-label="Edit Rule 02"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button>
+            </article>
+            <article class="policy-row" data-policy="3">
+              <span class="policy-index">Rule 03</span>
+              <div class="policy-summary"><strong>New beneficiary control</strong><p>Any first-time beneficiary above <span class="mono">USD 2,500</span> requires Finance manager approval.</p></div>
+              <div class="policy-scope">All payments<br><span class="status status-success" style="margin-top:6px">Active</span></div>
+              <button class="btn btn-icon policy-select" type="button" aria-label="Edit Rule 03"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button>
+            </article>
+            <article class="policy-row" data-policy="4">
+              <span class="policy-index">Rule 04</span>
+              <div class="policy-summary"><strong>Weekend execution hold</strong><p>Payments created outside treasury hours require manual release.</p></div>
+              <div class="policy-scope">All payments<br><span class="status status-neutral" style="margin-top:6px">Inactive</span></div>
+              <button class="btn btn-icon policy-select" type="button" aria-label="Edit Rule 04"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button>
+            </article>
+          </section>
+
+          <section class="policy-card" id="policy-builder" aria-labelledby="policy-builder-title">
+            <div class="policy-card-head">
+              <div><span class="rule-meta">Rule 01</span><h2 id="policy-builder-title">Large cross-border transfers</h2></div>
+              <span class="status status-success" id="rule-status">Active</span>
+            </div>
+
+            <div class="policy-card-body">
+              <div class="rule-section">
+                <span class="rule-label">Conditions</span>
+                <div class="token-row" id="condition-token-row">
+                  <span class="rule-token keyword">IF</span>
+                  <span class="rule-token condition-token" data-expression="amount > USD 10,000">amount &gt; USD 10,000 <button type="button" class="token-remove" aria-label="Remove amount condition">×</button></span>
+                  <span class="logic-word">AND</span>
+                  <span class="rule-token condition-token" data-expression="currency != base currency">currency != base currency <button type="button" class="token-remove" aria-label="Remove currency condition">×</button></span>
+                </div>
+                <div class="rule-editor" aria-label="Add condition">
+                  <select class="select mono" id="condition-field"><option value="amount">amount</option><option value="currency">currency</option><option value="beneficiary_age_days">beneficiary_age_days</option></select>
+                  <select class="select mono" id="condition-operator"><option value=">">&gt;</option><option value="<">&lt;</option><option value="=">=</option><option value="!=">!=</option></select>
+                  <input class="input mono" id="condition-value" value="USD 25,000" aria-label="Condition value">
+                  <button class="btn" type="button" id="add-condition">Add</button>
+                </div>
+              </div>
+
+              <div class="rule-section">
+                <span class="rule-label">Consequence</span>
+                <div class="token-row" id="approver-token-row">
+                  <span class="rule-token keyword">THEN require</span>
+                  <span class="approver-token" data-role-name="Finance manager"><strong>1</strong> · Finance manager <span class="approver-actions"><button type="button" data-move="right" aria-label="Move Finance manager later"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"></path></svg></button><button type="button" data-remove-approver aria-label="Remove Finance manager">×</button></span></span>
+                  <span class="arrow-separator">→</span>
+                  <span class="approver-token" data-role-name="CFO"><strong>2</strong> · CFO <span class="approver-actions"><button type="button" data-move="left" aria-label="Move CFO earlier"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"></path></svg></button><button type="button" data-remove-approver aria-label="Remove CFO">×</button></span></span>
+                </div>
+                <div style="display:flex;gap:6px;margin-top:10px">
+                  <select class="select" id="approver-select" style="min-height:32px;font-size:11px"><option>Finance manager</option><option>CFO</option><option>Treasury lead</option><option>Controller</option></select>
+                  <button class="btn" type="button" id="add-approver">Add approver</button>
+                </div>
+              </div>
+
+              <div class="rule-section">
+                <span class="rule-label">Rule scope</span>
+                <div class="form-grid">
+                  <div class="form-field"><label class="form-label" for="scope-select">Applies to</label><select class="select" id="scope-select"><option>International wires</option><option>All payments</option><option>Domestic ACH</option><option>Card transfers</option></select></div>
+                  <div class="form-field"><label class="form-label" for="status-select">Status</label><select class="select" id="status-select"><option>Active</option><option>Inactive</option></select></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="policy-footer"><span>Applies to: <strong id="policy-scope-label">International wires</strong></span><span id="policy-footer-status" style="color:var(--success);font-weight:500">Active</span></div>
+            <div class="policy-save"><button class="btn btn-danger" type="button" id="delete-rule">Delete rule</button><button class="btn" type="button">Discard changes</button><button class="btn btn-primary" type="button" id="save-policy">Save policy</button></div>
+          </section>
+        </div>
       </div>
     </main>
   </div>
+
+  <dialog id="new-rule-dialog" aria-labelledby="new-rule-title">
+    <form method="dialog">
+      <div class="dialog-head"><div><p class="section-label" style="margin-bottom:5px">Policy registry</p><h2 id="new-rule-title">Create approval rule</h2></div><button class="btn btn-icon" value="cancel" aria-label="Close dialog"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"></path></svg></button></div>
+      <div class="dialog-body"><div class="form-grid"><div class="form-field full"><label class="form-label">Rule name</label><input class="input" value="New approval rule"></div><div class="form-field"><label class="form-label">Priority</label><input class="input mono" value="05"></div><div class="form-field"><label class="form-label">Status</label><select class="select"><option>Active</option><option>Inactive</option></select></div></div></div>
+      <div class="dialog-actions"><button class="btn" value="cancel">Cancel</button><button class="btn btn-primary" value="default">Create rule</button></div>
+    </form>
+  </dialog>
+
   <script src="app.js"></script>
 </body>
 </html>
