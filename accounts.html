@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flux - Accounts</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Table specific styles for Institutional layout */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .data-table th, .data-table td {
+      padding: var(--spacing-3) var(--spacing-4);
+      text-align: left;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .data-table th {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-secondary);
+      font-weight: 500;
+    }
+    .data-table td {
+      font-size: 13px;
+    }
+    .data-table tbody tr {
+      transition: background-color 0.1s;
+    }
+    .data-table tbody tr:hover {
+      background-color: var(--color-bg-page);
+    }
+    .text-right { text-align: right !important; }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div style="padding: var(--spacing-6); font-weight: 600; font-size: 14px; letter-spacing: 0;">
+        ACME CORP GLOBAL
+      </div>
+      
+      <div class="role-switcher">
+        <div class="role-tab active">Employee</div>
+        <div class="role-tab">Approver</div>
+      </div>
+
+      <nav style="flex: 1;">
+        <ul class="nav-list">
+          <li><a href="accounts.html" class="nav-link active"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18"></rect><line x1="3" y1="9" x2="21" y2="9"></line></svg>Accounts</a></li>
+          <li><a href="index.html" class="nav-link"><svg class="icon" viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>Payments</a></li>
+          <li><a href="cards.html" class="nav-link"><svg class="icon" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>Cards</a></li>
+          <li><a href="team.html" class="nav-link"><svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>Team</a></li>
+          <li><a href="expenses.html" class="nav-link"><svg class="icon" viewBox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"></path><path d="M16 14h.01"></path><path d="M12 14h.01"></path><path d="M8 14h.01"></path><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M8 10h.01"></path></svg>Expenses</a></li>
+          <li><a href="reports.html" class="nav-link"><svg class="icon" viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>Reports</a></li>
+          <li><a href="settings.html" class="nav-link"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>Settings</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="topbar">
+        <div style="font-size: 13px; color: var(--color-text-secondary);">Accounts</div>
+        <div style="display: flex; align-items: center; gap: var(--spacing-4);">
+          <div style="font-size: 13px; font-weight: 500;">J. Smith</div>
+        </div>
+      </header>
+
+      <div class="page-content">
+        <div style="margin-bottom: var(--spacing-6); display: flex; justify-content: space-between; align-items: flex-end;">
+          <div>
+            <h1 style="font-size: 20px; margin-bottom: var(--spacing-1);">Global Balances</h1>
+            <p class="text-sm text-secondary">Manage your multi-currency accounts and liquidity.</p>
+          </div>
+          <div style="display: flex; gap: var(--spacing-3);">
+            <button class="btn btn-secondary">Download Statement</button>
+            <button class="btn btn-primary">Convert Funds</button>
+          </div>
+        </div>
+
+        <!-- Total Balance Overview (Dense) -->
+        <div class="surface" style="margin-bottom: var(--spacing-6); padding: var(--spacing-4); display: flex; gap: var(--spacing-8);">
+          <div>
+            <div class="text-xs text-muted" style="margin-bottom: var(--spacing-1);">TOTAL LIQUIDITY (USD EQV)</div>
+            <div class="mono" style="font-size: 24px; font-weight: 500;">$1,245,890.00</div>
+          </div>
+          <div style="border-left: 1px solid var(--color-border); padding-left: var(--spacing-8);">
+            <div class="text-xs text-muted" style="margin-bottom: var(--spacing-1);">PENDING INFLOWS</div>
+            <div class="mono" style="font-size: 16px; color: var(--color-text-secondary);">+$42,500.00</div>
+          </div>
+          <div style="border-left: 1px solid var(--color-border); padding-left: var(--spacing-8);">
+            <div class="text-xs text-muted" style="margin-bottom: var(--spacing-1);">PENDING OUTFLOWS</div>
+            <div class="mono" style="font-size: 16px; color: var(--color-text-secondary);">-$18,400.00</div>
+          </div>
+        </div>
+
+        <!-- Accounts Table -->
+        <div class="surface" style="padding: 0;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Currency</th>
+                <th>Account Details</th>
+                <th>Status</th>
+                <th class="text-right">Available Balance</th>
+                <th class="text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="policy-token">USD</span></td>
+                <td>
+                  <div style="font-weight: 500;">US Primary Operating</div>
+                  <div class="mono text-muted text-xs" style="margin-top: 2px;">AC: 8943 · RN: 1210</div>
+                </td>
+                <td><span class="badge badge-approved">Active</span></td>
+                <td class="text-right mono" style="font-size: 15px;">$840,500.00</td>
+                <td class="text-right"><button class="btn btn-secondary" style="padding: 2px 8px; font-size: 12px;">View</button></td>
+              </tr>
+              <tr>
+                <td><span class="policy-token">EUR</span></td>
+                <td>
+                  <div style="font-weight: 500;">EU Subsidiary Treasury</div>
+                  <div class="mono text-muted text-xs" style="margin-top: 2px;">IBAN: DE8937040044</div>
+                </td>
+                <td><span class="badge badge-approved">Active</span></td>
+                <td class="text-right mono" style="font-size: 15px;">€285,000.00</td>
+                <td class="text-right"><button class="btn btn-secondary" style="padding: 2px 8px; font-size: 12px;">View</button></td>
+              </tr>
+              <tr>
+                <td><span class="policy-token">GBP</span></td>
+                <td>
+                  <div style="font-weight: 500;">UK Payroll Funding</div>
+                  <div class="mono text-muted text-xs" style="margin-top: 2px;">SC: 20-04-15 · AC: 4892</div>
+                </td>
+                <td><span class="badge badge-approved">Active</span></td>
+                <td class="text-right mono" style="font-size: 15px;">£65,240.50</td>
+                <td class="text-right"><button class="btn btn-secondary" style="padding: 2px 8px; font-size: 12px;">View</button></td>
+              </tr>
+              <tr>
+                <td><span class="policy-token">SGD</span></td>
+                <td>
+                  <div style="font-weight: 500;">APAC Regional</div>
+                  <div class="mono text-muted text-xs" style="margin-top: 2px;">AC: 7171 · BC: 010</div>
+                </td>
+                <td><span class="badge badge-pending">Verifying</span></td>
+                <td class="text-right mono" style="font-size: 15px; color: var(--color-text-muted);">S$0.00</td>
+                <td class="text-right"><button class="btn btn-secondary" style="padding: 2px 8px; font-size: 12px;" disabled>Locked</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</body>
+</html>

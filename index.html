@@ -11,67 +11,53 @@
     
     <!-- Sidebar -->
     <aside class="sidebar">
-      <div style="padding: var(--spacing-6); font-weight: 700; font-size: 1.25rem; letter-spacing: 0.05em;">
-        FLUX
+      <div style="padding: var(--spacing-6); font-weight: 600; font-size: 14px; letter-spacing: 0;">
+        ACME CORP GLOBAL
       </div>
-      <nav style="flex: 1; padding: 0 var(--spacing-4);">
+      
+      <!-- Role Switcher (Adjacent Rectangles) -->
+      <div class="role-switcher">
+        <div class="role-tab active">Employee</div>
+        <div class="role-tab">Approver</div>
+      </div>
+
+      <nav style="flex: 1;">
         <ul class="nav-list">
-          <li><a href="#" class="nav-link"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>Accounts</a></li>
+          <li><a href="#" class="nav-link"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18"></rect><line x1="3" y1="9" x2="21" y2="9"></line></svg>Accounts</a></li>
           <li><a href="index.html" class="nav-link active"><svg class="icon" viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>Payments</a></li>
-          <li><a href="#" class="nav-link"><svg class="icon" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>Cards</a></li>
-          <li><a href="#" class="nav-link"><svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>Team</a></li>
-          <li><a href="#" class="nav-link"><svg class="icon" viewBox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"></path><path d="M16 14h.01"></path><path d="M12 14h.01"></path><path d="M8 14h.01"></path><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M8 10h.01"></path></svg>Expenses</a></li>
-          <li><a href="#" class="nav-link"><svg class="icon" viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>Reports</a></li>
+          <li><a href="#" class="nav-link"><svg class="icon" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>Cards</a></li>
+          <li><a href="#" class="nav-link"><svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>Team</a></li>
           <li><a href="settings.html" class="nav-link"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>Settings</a></li>
         </ul>
       </nav>
-      <div style="padding: var(--spacing-6); border-top: 1px solid var(--color-primary-light); font-size: 0.875rem; color: var(--color-text-muted);">
-        Employee Mode
-      </div>
     </aside>
 
     <!-- Main Content -->
     <main class="main-content">
       <header class="topbar">
-        <div style="color: var(--color-text-muted); font-size: 0.875rem;">Global Business Finance</div>
+        <div style="font-size: 13px; color: var(--color-text-secondary);">Payments / New Transfer</div>
         <div style="display: flex; align-items: center; gap: var(--spacing-4);">
-          <div style="width: 32px; height: 32px; border-radius: 50%; background-color: var(--color-primary-light); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.875rem; font-weight: 500;">
-            JS
-          </div>
+          <div style="font-size: 13px; font-weight: 500;">J. Smith</div>
         </div>
       </header>
 
       <div class="page-content">
         <!-- New Payment Form -->
-        <div id="new-payment-view" class="card" style="max-width: 600px; margin: 0 auto;">
-          <h2 style="margin-bottom: var(--spacing-6);">Create New Payment</h2>
+        <div id="new-payment-view" class="surface" style="max-width: 600px; margin: 0 auto;">
+          <h2 style="margin-bottom: var(--spacing-6); font-size: 16px;">Create Wire Transfer</h2>
           <form style="display: flex; flex-direction: column; gap: var(--spacing-4);">
             <div class="form-group">
-              <label class="form-label">Recipient</label>
+              <label class="form-label">Counterparty</label>
               <input type="text" id="recipient-input" class="form-input" value="Acme Corp (Global)">
             </div>
-            <div style="display: flex; gap: var(--spacing-4);">
-              <div style="flex: 1;">
-                <label class="form-label">Amount</label>
-                <input type="number" id="amount-input" class="form-input" value="18400">
-              </div>
-              <div style="width: 120px;">
-                <label class="form-label">Currency</label>
-                <select id="currency-input" class="form-select">
-                  <option value="USD">USD</option>
-                  <option value="EUR">EUR</option>
-                  <option value="GBP">GBP</option>
-                </select>
+            <div class="form-group">
+              <label class="form-label">Transfer Amount</label>
+              <div class="currency-input-wrapper">
+                <div class="currency-prefix">USD</div>
+                <input type="text" id="amount-input" class="mono" value="18,400.00">
               </div>
             </div>
             
-            <div style="background-color: var(--color-status-warning-bg); padding: var(--spacing-3); border-radius: var(--radius-md); border: 1px solid #fcd34d; margin-top: var(--spacing-4);">
-              <div style="display: flex; gap: var(--spacing-2); color: var(--color-status-warning);">
-                <svg class="icon" viewBox="0 0 24 24" style="width: 20px; height: 20px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                <span style="font-size: 0.875rem; font-weight: 500;">Policy Note: Transfers over $10,000 require Manager and CFO approval.</span>
-              </div>
-            </div>
-
             <div style="display: flex; justify-content: flex-end; gap: var(--spacing-3); margin-top: var(--spacing-4);">
               <button type="button" id="cancel-payment-btn" class="btn btn-secondary">Cancel</button>
               <button type="submit" id="submit-payment-btn" class="btn btn-primary">Submit for Approval</button>
@@ -80,93 +66,67 @@
         </div>
 
         <!-- Payment Detail View -->
-        <div id="payment-detail-view" class="hidden" style="display: flex; flex-direction: column; gap: var(--spacing-6);">
-          <div style="display: flex; align-items: center; gap: var(--spacing-2); color: var(--color-text-muted);">
-            <a href="index.html" style="color: inherit;">Payments</a>
-            <svg class="icon" viewBox="0 0 24 24" style="width: 16px; height: 16px;"><polyline points="9 18 15 12 9 6"></polyline></svg>
-            <span>TRF-98234</span>
-          </div>
-          
-          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <div>
-              <h1 id="detail-amount" style="font-size: 2rem; margin-bottom: var(--spacing-1);">$18,400.00</h1>
-              <p id="detail-recipient" style="color: var(--color-text-muted);">To: Acme Corp (Global)</p>
+        <div id="payment-detail-view" class="hidden" style="display: flex; flex-direction: column; gap: var(--spacing-4);">
+          <div class="surface surface-dense">
+            <!-- Above Rail: Meta -->
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: var(--spacing-4);">
+              <div>
+                <div class="text-xs text-muted mono">TRF-98234</div>
+                <div id="detail-recipient" style="font-size: 14px; font-weight: 500; margin-top: var(--spacing-1);">Acme Corp (Global)</div>
+              </div>
+              <div>
+                <div id="detail-amount" class="mono" style="font-size: 24px; font-weight: 500;">$18,400.00</div>
+              </div>
             </div>
-            <div>
-              <span id="status-badge" class="badge badge-warning">Needs Approval</span>
-            </div>
-          </div>
 
-          <div class="card">
-            <h3 style="margin-bottom: var(--spacing-4); font-size: 1rem;">Approval Control Chain</h3>
-            
+            <!-- Approval Rail -->
             <div class="approval-rail">
               <div class="rail-line-bg"></div>
-              <div id="rail-progress" class="rail-line-progress" style="width: 0%;"></div>
               
               <div class="rail-step">
-                <div id="rail-icon-1" class="rail-icon current"></div>
+                <div id="rail-node-1" class="rail-node current"></div>
                 <div style="text-align: center;">
                   <div id="rail-title-1" class="rail-title">Draft</div>
-                  <div class="rail-role">Employee</div>
+                  <div class="rail-meta mono">Employee</div>
                 </div>
               </div>
 
               <div class="rail-step">
-                <div id="rail-icon-2" class="rail-icon pending"></div>
+                <div id="rail-node-2" class="rail-node future"></div>
                 <div style="text-align: center;">
-                  <div id="rail-title-2" class="rail-title pending">Manager Review</div>
-                  <div class="rail-role">Finance Manager</div>
+                  <div id="rail-title-2" class="rail-title future">Finance manager</div>
+                  <div class="rail-meta mono">Pending</div>
                 </div>
               </div>
 
               <div class="rail-step">
-                <div id="rail-icon-3" class="rail-icon pending"></div>
+                <div id="rail-node-3" class="rail-node future"></div>
                 <div style="text-align: center;">
-                  <div id="rail-title-3" class="rail-title pending">Final Approval</div>
-                  <div class="rail-role">CFO</div>
+                  <div id="rail-title-3" class="rail-title future">CFO</div>
+                  <div class="rail-meta mono">Pending</div>
                 </div>
               </div>
 
               <div class="rail-step">
-                <div id="rail-icon-4" class="rail-icon pending"></div>
+                <div id="rail-node-4" class="rail-node future"></div>
                 <div style="text-align: center;">
-                  <div id="rail-title-4" class="rail-title pending">Executed</div>
-                  <div class="rail-role">System</div>
+                  <div id="rail-title-4" class="rail-title future">Executed</div>
+                  <div class="rail-meta mono">System</div>
                 </div>
               </div>
             </div>
             
-            <div style="border-top: 1px solid var(--color-border); margin: var(--spacing-6) 0; padding-top: var(--spacing-6);">
-              <h4 style="margin-bottom: var(--spacing-4); font-size: 0.875rem; text-transform: uppercase; color: var(--color-text-muted);">Activity Trail</h4>
-              <ul style="list-style: none; display: flex; flex-direction: column; gap: var(--spacing-4);">
-                <li style="display: flex; gap: var(--spacing-4);">
-                  <div style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--color-status-success); margin-top: 6px;"></div>
-                  <div>
-                    <p style="font-size: 0.875rem; font-weight: 500;">Payment Draft Created</p>
-                    <p style="font-size: 0.75rem; color: var(--color-text-muted);">By Employee JS on Sep 15, 2026 14:15</p>
-                  </div>
-                </li>
-                
-                <li id="activity-mgr" class="hidden" style="display: flex; gap: var(--spacing-4);">
-                  <div style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--color-status-success); margin-top: 6px;"></div>
-                  <div>
-                    <p style="font-size: 0.875rem; font-weight: 500;">Approved by Finance Manager</p>
-                    <p style="font-size: 0.75rem; color: var(--color-text-muted);">By Alex Smith on Sep 15, 2026 14:30</p>
-                  </div>
-                </li>
-                
-                <li id="activity-cfo" class="hidden" style="display: flex; gap: var(--spacing-4);">
-                  <div style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--color-status-success); margin-top: 6px;"></div>
-                  <div>
-                    <p style="font-size: 0.875rem; font-weight: 500;">Approved by CFO</p>
-                    <p style="font-size: 0.75rem; color: var(--color-text-muted);">By Sarah Jen on Sep 15, 2026 15:10</p>
-                  </div>
-                </li>
-              </ul>
+            <!-- Below Rail: Status Footer -->
+            <div class="divider" style="margin: var(--spacing-6) 0 var(--spacing-4) 0;"></div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div id="next-approver-text" class="text-sm text-secondary">
+                Next approver: Alex Smith, Finance Manager
+              </div>
+              <span id="status-badge" class="badge badge-pending">Pending</span>
             </div>
 
-            <div id="action-buttons" style="display: flex; justify-content: flex-end; gap: var(--spacing-3); margin-top: var(--spacing-4); padding-top: var(--spacing-4); border-top: 1px solid var(--color-border);">
+            <!-- Action Area -->
+            <div id="action-buttons" style="display: flex; justify-content: flex-end; gap: var(--spacing-3); margin-top: var(--spacing-6); padding-top: var(--spacing-4); border-top: 1px solid var(--color-border);">
               <button class="btn btn-secondary">Reject</button>
               <button id="approve-action-btn" class="btn btn-primary" data-step="1">Approve as Manager</button>
             </div>
