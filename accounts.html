@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>Flux — Accounts</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="workspace.css">
+</head>
+<body data-page="accounts">
+  <div class="app-container">
+    <aside class="sidebar" aria-label="Workspace navigation">
+      <div class="workspace">
+        <div><div class="brand"><span class="brand-name">FLUX</span><span class="workspace-name">Northstar Holdings</span></div></div>
+        <div class="role-switch" aria-label="Role switcher">
+          <button type="button" data-role="employee" aria-pressed="true">Employee</button>
+          <button type="button" data-role="approver" aria-pressed="false">Approver</button>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <p class="nav-section-label">Operations</p>
+        <ul class="nav-list"><li><a href="accounts.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16"></rect><path d="M3 9h18M9 9v11"></path></svg><span>Accounts</span></a></li><li><a href="index.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h12M12 3l4 4-4 4M20 17H8m4-4-4 4 4 4"></path></svg><span>Payments</span></a></li><li><a href="cards.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14"></rect><path d="M3 10h18"></path></svg><span>Cards</span></a></li><li><a href="team.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><path d="M3 20c.7-4 3-6 6-6s5.3 2 6 6M17 7h4M19 5v4"></path></svg><span>Team</span></a></li><li><a href="expenses.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6"></path></svg><span>Expenses</span></a></li><li><a href="reports.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"></path></svg><span>Reports</span></a></li></ul>
+        <p class="nav-section-label" style="margin-top:18px">Administration</p>
+        <ul class="nav-list"><li><a href="settings.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M7 4v6M4 17h16M16 14v6"></path></svg><span>Settings</span></a></li></ul>
+      </nav>
+      <div class="sidebar-footer"><strong>Workspace region</strong>EU · Production simulation</div>
+    </aside>
+    <main class="main-content">
+      <header class="topbar">
+        <div class="breadcrumb"><span>Northstar Holdings</span><span>/</span><strong>Accounts</strong></div>
+        <button class="user-menu" type="button" aria-label="Open user menu"><span>Jamie Stone · Finance ops</span><span class="user-initials">JS</span></button>
+      </header>
+      <div class="page-content">
+        <div class="page-header">
+          <div class="page-title"><h1>Accounts</h1><p>Monitor multi-currency liquidity, receiving details, and settlement availability from one treasury ledger.</p></div>
+          <div class="page-actions"><button class="btn" type="button">Add funds</button><button class="btn btn-primary" type="button" data-dialog-open="move-money-dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"></path></svg><span>Move money</span></button></div>
+        </div>
+        <section class="metrics-strip" aria-label="Accounts summary">
+          <div class="metric"><span class="metric-label">Total available</span><strong class="metric-value">USD 742,680</strong><span class="metric-note">Across 5 operating currencies</span></div>
+          <div class="metric"><span class="metric-label">Reserved</span><strong class="metric-value">USD 42,910</strong><span class="metric-note">Payments and card settlements</span></div>
+          <div class="metric"><span class="metric-label">Incoming · 24h</span><strong class="metric-value">USD 118,400</strong><span class="metric-note">4 expected credits</span></div>
+          <div class="metric"><span class="metric-label">FX exposure</span><strong class="metric-value">03 CCY</strong><span class="metric-note">Above treasury threshold</span></div>
+        </section>
+        <div class="toolbar">
+          <div class="toolbar-group"><strong style="font-size:12px;font-weight:500">Currency accounts</strong><span style="font-size:11px;color:var(--muted)">Available and reserved liquidity</span></div>
+          <div class="toolbar-group"><button class="btn" type="button">Statements</button><button class="btn" type="button">Account details</button></div>
+        </div>
+        <section class="workbench-grid" aria-label="Currency account workspace">
+          <div class="workbench-main">
+            <table class="data-table" aria-label="Currency accounts">
+              <thead><tr><th style="width:80px">CCY</th><th>Account</th><th style="width:142px" class="right">Available</th><th style="width:126px" class="right">Reserved</th><th style="width:118px">Region</th><th style="width:118px">Last activity</th></tr></thead>
+              <tbody>
+                <tr class="account-row" tabindex="0" data-select aria-selected="true" data-currency="USD" data-account-name="USD Operating" data-available="$286,420.00" data-reserved="$18,400.00" data-iban="US 021000021 · •• 4821" data-account-type="Local + SWIFT" data-settlement="16 Sep · 09:00 UTC" data-country="United States"><td><span class="currency-tag">USD</span></td><td><span class="table-strong">USD Operating</span><span class="subcopy">Primary vendor settlement</span></td><td class="right mono">286,420.00</td><td class="right mono">18,400.00</td><td>United States</td><td><span class="mono">14:38</span><span class="subcopy">Today</span></td></tr>
+                <tr class="account-row" tabindex="0" data-select aria-selected="false" data-currency="EUR" data-account-name="EUR Operations" data-available="€143,820.40" data-reserved="€12,840.00" data-iban="DE89 3704 0044 · •• 7720" data-account-type="SEPA + SWIFT" data-settlement="16 Sep · 08:00 CET" data-country="Germany"><td><span class="currency-tag">EUR</span></td><td><span class="table-strong">EUR Operations</span><span class="subcopy">EU payroll and suppliers</span></td><td class="right mono">143,820.40</td><td class="right mono">12,840.00</td><td>Germany</td><td><span class="mono">13:12</span><span class="subcopy">Today</span></td></tr>
+                <tr class="account-row" tabindex="0" data-select aria-selected="false" data-currency="GBP" data-account-name="GBP Operating" data-available="£72,990.18" data-reserved="£4,320.00" data-iban="GB29 NWBK 6016 · •• 1198" data-account-type="Faster Payments" data-settlement="16 Sep · 09:30 BST" data-country="United Kingdom"><td><span class="currency-tag">GBP</span></td><td><span class="table-strong">GBP Operating</span><span class="subcopy">UK service contracts</span></td><td class="right mono">72,990.18</td><td class="right mono">4,320.00</td><td>United Kingdom</td><td><span class="mono">11:46</span><span class="subcopy">Today</span></td></tr>
+                <tr class="account-row" tabindex="0" data-select aria-selected="false" data-currency="JPY" data-account-name="JPY Manufacturing" data-available="¥18,420,000" data-reserved="¥2,850,000" data-iban="JP ZENGIN · 0005-482190" data-account-type="Zengin domestic" data-settlement="17 Sep · 09:00 JST" data-country="Japan"><td><span class="currency-tag">JPY</span></td><td><span class="table-strong">JPY Manufacturing</span><span class="subcopy">Factory and logistics</span></td><td class="right mono">18,420,000</td><td class="right mono">2,850,000</td><td>Japan</td><td><span class="mono">10:04</span><span class="subcopy">Today</span></td></tr>
+                <tr class="account-row" tabindex="0" data-select aria-selected="false" data-currency="SGD" data-account-name="SGD APAC Reserve" data-available="S$94,600.00" data-reserved="S$0.00" data-iban="SG FAST · •• 6042" data-account-type="FAST + SWIFT" data-settlement="No scheduled debit" data-country="Singapore"><td><span class="currency-tag">SGD</span></td><td><span class="table-strong">SGD APAC Reserve</span><span class="subcopy">Regional contingency</span></td><td class="right mono">94,600.00</td><td class="right mono">0.00</td><td>Singapore</td><td><span class="mono">12 Sep</span><span class="subcopy">Last credit</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <aside class="workbench-aside" aria-label="Selected account details">
+            <div class="pane-head"><span class="pane-kicker" id="account-pane-code">USD</span><div class="pane-head-row"><div><h2 class="pane-title" id="account-pane-title">USD Operating</h2><p class="pane-subtitle">Available to move now</p></div><span class="status status-success">Open</span></div><strong class="primary-figure" id="account-pane-balance">$286,420.00</strong><span class="figure-note">Reserved <span class="mono" id="account-pane-reserved">$18,400.00</span></span></div>
+            <div class="pane-section"><p class="section-label">Account coordinates</p><div class="account-number"><div><span>Routing / account</span><strong id="account-pane-iban">US 021000021 · •• 4821</strong></div><button class="btn btn-icon" type="button" data-copy-target="account-pane-iban" aria-label="Copy account details"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="11" height="11"></rect><path d="M5 15H4V4h11v1"></path></svg></button></div><ul class="key-list" style="margin-top:10px"><li><span>Rails</span><strong id="account-pane-type">Local + SWIFT</strong></li><li><span>Jurisdiction</span><strong id="account-pane-country">United States</strong></li><li><span>Next settlement</span><strong class="mono" id="account-pane-settlement">16 Sep · 09:00 UTC</strong></li></ul></div>
+            <div class="pane-section"><div class="section-head"><p class="section-label">Liquidity position</p><a href="reports.html">View report →</a></div><div class="balance-bar"><div class="balance-row"><span class="code">USD</span><div class="balance-track"><div class="balance-fill" style="width:88%"></div></div><span class="balance-value">38.6%</span></div><div class="balance-row"><span class="code">EUR</span><div class="balance-track"><div class="balance-fill" style="width:58%"></div></div><span class="balance-value">23.9%</span></div><div class="balance-row"><span class="code">JPY</span><div class="balance-track"><div class="balance-fill" style="width:42%"></div></div><span class="balance-value">17.2%</span></div><div class="balance-row"><span class="code">GBP</span><div class="balance-track"><div class="balance-fill" style="width:31%"></div></div><span class="balance-value">11.8%</span></div></div></div>
+            <div class="pane-section"><div class="duty-note"><strong>Treasury signal:</strong> USD reserve is 14% above the target operating band. Next vendor window can settle without conversion.</div></div>
+          </aside>
+        </section>
+      </div>
+    </main>
+  </div>
+  <dialog id="move-money-dialog" aria-labelledby="move-money-title"><form method="dialog" data-prototype-submit="Transfer draft created and routed through policy checks."><div class="dialog-head"><div><p class="section-label" style="margin-bottom:5px">Treasury instruction</p><h2 id="move-money-title">Move money</h2></div><button class="btn btn-icon" value="cancel" aria-label="Close dialog">×</button></div><div class="dialog-body"><div class="form-grid"><div class="form-field full"><label class="form-label">From account</label><select class="select"><option>USD Operating · $286,420.00</option><option>EUR Operations · €143,820.40</option></select></div><div class="form-field full"><label class="form-label">Beneficiary</label><input class="input" value="Acme Corp (Global)"></div><div class="form-field"><label class="form-label">Currency</label><select class="select mono"><option>USD</option><option>EUR</option><option>GBP</option></select></div><div class="form-field"><label class="form-label">Amount</label><input class="input mono" value="18,400.00"></div></div></div><div class="dialog-actions"><button class="btn" value="cancel">Cancel</button><button class="btn btn-primary" value="default">Review transfer</button></div></form></dialog>
+  <script src="app.js"></script>
+  <script src="workspace.js"></script>
+</body>
+</html>
