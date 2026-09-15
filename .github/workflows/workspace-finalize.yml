@@ -1,0 +1,48 @@
+name: Temporary workspace finalization
+
+on:
+  push:
+    branches:
+      - tmp-nav-fix-runner2
+
+permissions:
+  contents: write
+
+jobs:
+  finalize-workspace:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: tmp-nav-fix-runner2
+      - name: Add active navigation and enhanced workspace state
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('workspace.js')
+          text = path.read_text(encoding='utf-8')
+
+          old = "  document.addEventListener('DOMContentLoaded', () => {\n    initAccountsPage();"
+          new = "  document.addEventListener('DOMContentLoaded', () => {\n    initWorkspaceNavigation();\n    initAccountsPage();"
+          if old not in text:
+              raise SystemExit('workspace.js: DOMContentLoaded anchor not found')
+          text = text.replace(old, new, 1)
+
+          anchor = "  function initAccountsPage() {"
+          function = """  function initWorkspaceNavigation() {\n    document.body.classList.add('flux-enhanced');\n    const route = { accounts: 'accounts.html', cards: 'cards.html', team: 'team.html', expenses: 'expenses.html', reports: 'reports.html' }[document.body.dataset.page];\n    if (!route) return;\n    document.querySelectorAll('.nav-link').forEach((link) => {\n      const active = link.getAttribute('href') === route;\n      link.classList.toggle('active', active);\n      if (active) link.setAttribute('aria-current', 'page');\n      else link.removeAttribute('aria-current');\n    });\n  }\n\n"""
+          if anchor not in text:
+              raise SystemExit('workspace.js: function insertion anchor not found')
+          text = text.replace(anchor, function + anchor, 1)
+          path.write_text(text, encoding='utf-8')
+          PY
+      - name: Validate and commit
+        shell: bash
+        run: |
+          node --check workspace.js
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add workspace.js
+          git commit -m "fix: mark active workspace navigation"
+          git push origin HEAD:tmp-nav-fix-runner2
