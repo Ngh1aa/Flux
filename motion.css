@@ -1,0 +1,167 @@
+/* FLUX — Workflow Motion Layer
+   Direction: flow / orchestration / progressive state
+   Signature: approval handoff + directional work-surface transitions. */
+
+:root{
+  --flux-motion-micro:110ms;
+  --flux-motion-fast:170ms;
+  --flux-motion-base:280ms;
+  --flux-motion-flow:420ms;
+  --flux-motion-ease:cubic-bezier(.2,.72,.25,1);
+  --flux-motion-handoff:cubic-bezier(.16,1,.3,1);
+}
+
+/* Main workspace enters as one coordinated work surface. */
+.main-content{
+  animation:flux-workspace-in var(--flux-motion-flow) var(--flux-motion-handoff) both;
+}
+@keyframes flux-workspace-in{
+  from{opacity:.62;transform:translate3d(12px,0,0)}
+  to{opacity:1;transform:none}
+}
+
+/* Approval flow reads left-to-right / top-to-bottom as a handoff chain. */
+.rail-step{
+  position:relative;
+  transition:opacity var(--flux-motion-base) ease,color var(--flux-motion-fast) ease,transform var(--flux-motion-base) var(--flux-motion-handoff);
+}
+.rail-node{
+  transition:transform var(--flux-motion-base) var(--flux-motion-handoff),background-color var(--flux-motion-fast) ease,border-color var(--flux-motion-fast) ease,box-shadow var(--flux-motion-base) ease;
+}
+.rail-step.current .rail-node{
+  animation:flux-node-handoff var(--flux-motion-flow) var(--flux-motion-handoff) both;
+}
+@keyframes flux-node-handoff{
+  0%{transform:scale(.72);box-shadow:0 0 0 0 rgba(38,93,246,.22)}
+  65%{transform:scale(1.12);box-shadow:0 0 0 7px rgba(38,93,246,0)}
+  100%{transform:scale(1)}
+}
+.rail-step.completed .rail-copy,
+.rail-step.current .rail-copy{
+  animation:flux-copy-handoff var(--flux-motion-base) var(--flux-motion-handoff) both;
+}
+@keyframes flux-copy-handoff{
+  from{opacity:.55;transform:translate3d(7px,0,0)}
+  to{opacity:1;transform:none}
+}
+
+/* Activity log behaves like a progressing ledger. */
+.activity-item{
+  animation:flux-ledger-in var(--flux-motion-base) var(--flux-motion-handoff) both;
+}
+.activity-list .activity-item:nth-child(2){animation-delay:42ms}
+.activity-list .activity-item:nth-child(3){animation-delay:78ms}
+.activity-list .activity-item:nth-child(n+4){animation-delay:105ms}
+@keyframes flux-ledger-in{
+  from{opacity:.48;transform:translate3d(9px,0,0)}
+  to{opacity:1;transform:none}
+}
+
+/* Row/card feedback follows the direction of work, not vertical float. */
+:is(.payment-row,.table-row,.transaction-row,.account-row,.expense-row,.team-row,.card-row){
+  transition:transform var(--flux-motion-fast) var(--flux-motion-handoff),background-color var(--flux-motion-fast) ease,border-color var(--flux-motion-fast) ease;
+}
+@media (hover:hover) and (pointer:fine){
+  :is(.payment-row,.table-row,.transaction-row,.account-row,.expense-row,.team-row,.card-row):hover{
+    transform:translate3d(3px,0,0);
+  }
+}
+
+/* Role switching feels like changing operating context. */
+.role-switch button,
+.nav-link,
+.btn,
+button,
+[role="button"]{
+  transition:transform var(--flux-motion-fast) var(--flux-motion-handoff),background-color var(--flux-motion-fast) ease,color var(--flux-motion-fast) ease,border-color var(--flux-motion-fast) ease,box-shadow var(--flux-motion-fast) ease;
+}
+@media (hover:hover) and (pointer:fine){
+  .btn:hover,.role-switch button:hover{transform:translate3d(0,-1px,0)}
+}
+.btn:active,.role-switch button:active{
+  transform:translate3d(1px,0,0) scale(.995);
+  transition-duration:var(--flux-motion-micro);
+}
+
+.nav-link{
+  position:relative;
+}
+.nav-link::after{
+  content:"";
+  position:absolute;
+  left:8px;
+  top:50%;
+  width:3px;
+  height:0;
+  border-radius:999px;
+  background:currentColor;
+  transform:translateY(-50%);
+  transition:height var(--flux-motion-base) var(--flux-motion-handoff);
+}
+.nav-link.active::after,
+.nav-link:hover::after,
+.nav-link:focus-visible::after{height:24px}
+
+/* Dialog enters like an operational sheet, not a consumer modal zoom. */
+dialog[open]{
+  animation:flux-sheet-in var(--flux-motion-base) var(--flux-motion-handoff) both;
+}
+dialog::backdrop{
+  animation:flux-backdrop-in var(--flux-motion-fast) ease both;
+}
+@keyframes flux-sheet-in{
+  from{opacity:0;transform:translate3d(18px,0,0)}
+  to{opacity:1;transform:none}
+}
+@keyframes flux-backdrop-in{from{opacity:0}to{opacity:1}}
+
+/* Status changes are acknowledged once. */
+.status,
+.rail-status,
+#approval-status{
+  transition:background-color var(--flux-motion-fast) ease,color var(--flux-motion-fast) ease,border-color var(--flux-motion-fast) ease,transform var(--flux-motion-fast) var(--flux-motion-handoff);
+}
+.status.is-updated,
+.rail-status.is-updated,
+#approval-status.is-updated{
+  animation:flux-status-ack 360ms var(--flux-motion-handoff) both;
+}
+@keyframes flux-status-ack{
+  0%{transform:translate3d(-4px,0,0);opacity:.55}
+  100%{transform:none;opacity:1}
+}
+
+/* Inputs snap into focus without visual noise. */
+:is(input,select,textarea,.input,.select,.amount-field){
+  transition:border-color var(--flux-motion-fast) ease,box-shadow var(--flux-motion-fast) ease,background-color var(--flux-motion-fast) ease;
+}
+
+@media (max-width:768px){
+  .main-content{animation-duration:300ms}
+  .activity-item{animation-duration:220ms}
+  dialog[open]{animation-name:flux-sheet-mobile}
+  @keyframes flux-sheet-mobile{
+    from{opacity:0;transform:translate3d(0,10px,0)}
+    to{opacity:1;transform:none}
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .main-content,
+  .rail-step,
+  .rail-node,
+  .rail-copy,
+  .activity-item,
+  dialog[open],
+  dialog::backdrop,
+  .nav-link,
+  .btn,
+  .role-switch button,
+  .status,
+  .rail-status,
+  #approval-status{
+    animation:none!important;
+    transition-duration:.01ms!important;
+    transform:none!important;
+  }
+}
