@@ -1,167 +1,62 @@
-/* FLUX — Workflow Motion Layer
-   Direction: flow / orchestration / progressive state
-   Signature: approval handoff + directional work-surface transitions. */
-
+/* FLUX — Visible Workflow Motion
+   Flow / orchestration / progressive state with obvious approval handoffs. */
 :root{
   --flux-motion-micro:110ms;
-  --flux-motion-fast:170ms;
-  --flux-motion-base:280ms;
-  --flux-motion-flow:420ms;
+  --flux-motion-fast:190ms;
+  --flux-motion-base:360ms;
+  --flux-motion-flow:620ms;
   --flux-motion-ease:cubic-bezier(.2,.72,.25,1);
   --flux-motion-handoff:cubic-bezier(.16,1,.3,1);
 }
 
-/* Main workspace enters as one coordinated work surface. */
-.main-content{
-  animation:flux-workspace-in var(--flux-motion-flow) var(--flux-motion-handoff) both;
+@media (prefers-reduced-motion:no-preference){
+  .sidebar{animation:flux-sidebar-in 560ms var(--flux-motion-handoff) both}
+  .main-content{animation:flux-workspace-in var(--flux-motion-flow) var(--flux-motion-handoff) both}
+  .metrics-strip>.metric{animation:flux-metric-in 520ms var(--flux-motion-handoff) both}
+  .metrics-strip>.metric:nth-child(2){animation-delay:80ms}.metrics-strip>.metric:nth-child(3){animation-delay:160ms}.metrics-strip>.metric:nth-child(4){animation-delay:240ms}
+  .detail-pane{animation:flux-detail-in 600ms var(--flux-motion-handoff) 120ms both}
+  .rail-step.current .rail-node{animation:flux-current-node 1.8s ease-in-out infinite}
 }
-@keyframes flux-workspace-in{
-  from{opacity:.62;transform:translate3d(12px,0,0)}
-  to{opacity:1;transform:none}
-}
+@keyframes flux-sidebar-in{from{opacity:0;transform:translate3d(-24px,0,0)}to{opacity:1;transform:none}}
+@keyframes flux-workspace-in{from{opacity:.25;transform:translate3d(28px,0,0)}to{opacity:1;transform:none}}
+@keyframes flux-metric-in{from{opacity:0;transform:translate3d(0,22px,0)}to{opacity:1;transform:none}}
+@keyframes flux-detail-in{from{opacity:0;transform:translate3d(24px,0,0)}to{opacity:1;transform:none}}
+@keyframes flux-current-node{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(42,87,255,0)}50%{transform:scale(1.12);box-shadow:0 0 0 8px rgba(42,87,255,.12)}}
 
-/* Approval flow reads left-to-right / top-to-bottom as a handoff chain. */
-.rail-step{
-  position:relative;
-  transition:opacity var(--flux-motion-base) ease,color var(--flux-motion-fast) ease,transform var(--flux-motion-base) var(--flux-motion-handoff);
-}
-.rail-node{
-  transition:transform var(--flux-motion-base) var(--flux-motion-handoff),background-color var(--flux-motion-fast) ease,border-color var(--flux-motion-fast) ease,box-shadow var(--flux-motion-base) ease;
-}
-.rail-step.current .rail-node{
-  animation:flux-node-handoff var(--flux-motion-flow) var(--flux-motion-handoff) both;
-}
-@keyframes flux-node-handoff{
-  0%{transform:scale(.72);box-shadow:0 0 0 0 rgba(38,93,246,.22)}
-  65%{transform:scale(1.12);box-shadow:0 0 0 7px rgba(38,93,246,0)}
-  100%{transform:scale(1)}
-}
-.rail-step.completed .rail-copy,
-.rail-step.current .rail-copy{
-  animation:flux-copy-handoff var(--flux-motion-base) var(--flux-motion-handoff) both;
-}
-@keyframes flux-copy-handoff{
-  from{opacity:.55;transform:translate3d(7px,0,0)}
-  to{opacity:1;transform:none}
-}
+.rail-step{position:relative;transition:opacity var(--flux-motion-base) ease,color var(--flux-motion-fast) ease,transform var(--flux-motion-base) var(--flux-motion-handoff)}
+.rail-node{transition:transform var(--flux-motion-base) var(--flux-motion-handoff),background-color var(--flux-motion-fast) ease,border-color var(--flux-motion-fast) ease,box-shadow var(--flux-motion-base) ease}
+.rail-step.completed{transform:translate3d(0,0,0)}
+.rail-step.current{transform:translate3d(6px,0,0)}
 
-/* Activity log behaves like a progressing ledger. */
-.activity-item{
-  animation:flux-ledger-in var(--flux-motion-base) var(--flux-motion-handoff) both;
-}
-.activity-list .activity-item:nth-child(2){animation-delay:42ms}
-.activity-list .activity-item:nth-child(3){animation-delay:78ms}
-.activity-list .activity-item:nth-child(n+4){animation-delay:105ms}
-@keyframes flux-ledger-in{
-  from{opacity:.48;transform:translate3d(9px,0,0)}
-  to{opacity:1;transform:none}
-}
-
-/* Row/card feedback follows the direction of work, not vertical float. */
-:is(.payment-row,.table-row,.transaction-row,.account-row,.expense-row,.team-row,.card-row){
-  transition:transform var(--flux-motion-fast) var(--flux-motion-handoff),background-color var(--flux-motion-fast) ease,border-color var(--flux-motion-fast) ease;
+.payment-row,.activity-item,.nav-link,.btn,.segmented button,.role-switch button{
+  transition:transform var(--flux-motion-fast) var(--flux-motion-handoff),background-color var(--flux-motion-fast) ease,border-color var(--flux-motion-fast) ease,box-shadow var(--flux-motion-base) ease,color var(--flux-motion-fast) ease;
 }
 @media (hover:hover) and (pointer:fine){
-  :is(.payment-row,.table-row,.transaction-row,.account-row,.expense-row,.team-row,.card-row):hover{
-    transform:translate3d(3px,0,0);
-  }
+  .payment-row:hover{transform:translate3d(6px,0,0);box-shadow:inset 3px 0 0 rgba(42,87,255,.22)}
+  .nav-link:hover{transform:translate3d(4px,0,0)}
+  .btn:hover{transform:translate3d(0,-4px,0)}
+  .metric:hover{transform:translate3d(0,-4px,0)}
 }
+.btn:active,.segmented button:active,.role-switch button:active{transform:translate3d(0,1px,0) scale(.98)}
 
-/* Role switching feels like changing operating context. */
-.role-switch button,
-.nav-link,
-.btn,
-button,
-[role="button"]{
-  transition:transform var(--flux-motion-fast) var(--flux-motion-handoff),background-color var(--flux-motion-fast) ease,color var(--flux-motion-fast) ease,border-color var(--flux-motion-fast) ease,box-shadow var(--flux-motion-fast) ease;
-}
-@media (hover:hover) and (pointer:fine){
-  .btn:hover,.role-switch button:hover{transform:translate3d(0,-1px,0)}
-}
-.btn:active,.role-switch button:active{
-  transform:translate3d(1px,0,0) scale(.995);
-  transition-duration:var(--flux-motion-micro);
-}
+.payment-row.selected{animation:flux-selected-row 520ms var(--flux-motion-handoff) both}
+@keyframes flux-selected-row{from{box-shadow:inset 0 0 0 rgba(42,87,255,0)}50%{box-shadow:inset 4px 0 0 rgba(42,87,255,.55)}to{box-shadow:inset 3px 0 0 rgba(42,87,255,.3)}}
 
-.nav-link{
-  position:relative;
-}
-.nav-link::after{
-  content:"";
-  position:absolute;
-  left:8px;
-  top:50%;
-  width:3px;
-  height:0;
-  border-radius:999px;
-  background:currentColor;
-  transform:translateY(-50%);
-  transition:height var(--flux-motion-base) var(--flux-motion-handoff);
-}
-.nav-link.active::after,
-.nav-link:hover::after,
-.nav-link:focus-visible::after{height:24px}
+.activity-item{position:relative}
+.activity-item::before{content:"";position:absolute;left:-12px;top:50%;width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.22;transform:translateY(-50%) scale(.6);transition:transform var(--flux-motion-base) var(--flux-motion-handoff),opacity var(--flux-motion-base) ease}
+.activity-item:hover::before{opacity:.7;transform:translateY(-50%) scale(1)}
 
-/* Dialog enters like an operational sheet, not a consumer modal zoom. */
-dialog[open]{
-  animation:flux-sheet-in var(--flux-motion-base) var(--flux-motion-handoff) both;
-}
-dialog::backdrop{
-  animation:flux-backdrop-in var(--flux-motion-fast) ease both;
-}
-@keyframes flux-sheet-in{
-  from{opacity:0;transform:translate3d(18px,0,0)}
-  to{opacity:1;transform:none}
-}
-@keyframes flux-backdrop-in{from{opacity:0}to{opacity:1}}
+#payment-dialog[open]{animation:flux-dialog-backdrop 260ms ease both}
+#payment-dialog[open] form{animation:flux-dialog-sheet 520ms var(--flux-motion-handoff) both}
+@keyframes flux-dialog-backdrop{from{opacity:0}to{opacity:1}}
+@keyframes flux-dialog-sheet{from{opacity:0;transform:translate3d(0,28px,0) scale(.985)}to{opacity:1;transform:none}}
 
-/* Status changes are acknowledged once. */
-.status,
-.rail-status,
-#approval-status{
-  transition:background-color var(--flux-motion-fast) ease,color var(--flux-motion-fast) ease,border-color var(--flux-motion-fast) ease,transform var(--flux-motion-fast) var(--flux-motion-handoff);
-}
-.status.is-updated,
-.rail-status.is-updated,
-#approval-status.is-updated{
-  animation:flux-status-ack 360ms var(--flux-motion-handoff) both;
-}
-@keyframes flux-status-ack{
-  0%{transform:translate3d(-4px,0,0);opacity:.55}
-  100%{transform:none;opacity:1}
-}
-
-/* Inputs snap into focus without visual noise. */
-:is(input,select,textarea,.input,.select,.amount-field){
-  transition:border-color var(--flux-motion-fast) ease,box-shadow var(--flux-motion-fast) ease,background-color var(--flux-motion-fast) ease;
-}
-
-@media (max-width:768px){
-  .main-content{animation-duration:300ms}
-  .activity-item{animation-duration:220ms}
-  dialog[open]{animation-name:flux-sheet-mobile}
-  @keyframes flux-sheet-mobile{
-    from{opacity:0;transform:translate3d(0,10px,0)}
-    to{opacity:1;transform:none}
-  }
+@media (max-width:800px){
+  @media (prefers-reduced-motion:no-preference){.main-content,.detail-pane{animation-duration:460ms}.metrics-strip>.metric{animation-duration:400ms}}
 }
 
 @media (prefers-reduced-motion:reduce){
-  .main-content,
-  .rail-step,
-  .rail-node,
-  .rail-copy,
-  .activity-item,
-  dialog[open],
-  dialog::backdrop,
-  .nav-link,
-  .btn,
-  .role-switch button,
-  .status,
-  .rail-status,
-  #approval-status{
-    animation:none!important;
-    transition-duration:.01ms!important;
-    transform:none!important;
+  .sidebar,.main-content,.metrics-strip>.metric,.detail-pane,.rail-step,.rail-node,.payment-row,.activity-item,.nav-link,.btn,.segmented button,.role-switch button,#payment-dialog,#payment-dialog form{
+    animation:none!important;transition-duration:.01ms!important;transform:none!important;opacity:1!important;
   }
 }
