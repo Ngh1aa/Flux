@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Flux user flows for international payments, approval, rejection and recovery.">
+  <title>Flux — User Flow</title>
+  <link rel="stylesheet" href="documentation.css">
+</head>
+<body>
+<div class="docs-shell">
+  <aside class="docs-sidebar" aria-label="Flux documentation navigation">
+    <div class="docs-brand"><div class="docs-brand-row"><strong>FLUX</strong><span>DESIGN DOCS</span></div><p>Operational design language for global business money, approvals, controls and auditability.</p></div>
+    <nav class="docs-nav"><p class="docs-nav-label">Documentation</p>
+      <a href="design-system.html"><span>Design System</span><span>01</span></a>
+      <a href="component-states.html"><span>Component States</span><span>02</span></a>
+      <a href="sitemap.html"><span>Sitemap</span><span>03</span></a>
+      <a class="active" aria-current="page" href="user-flow.html"><span>User Flow</span><span>04</span></a>
+      <a href="prototype.html"><span>Prototype</span><span>05</span></a>
+    </nav>
+    <div class="docs-sidebar-footer"><a href="index.html">← Open product</a><p>Northstar Holdings · Production simulation</p></div>
+  </aside>
+
+  <main class="docs-main">
+    <header class="docs-topbar"><div class="breadcrumb"><span>Flux</span><span>/</span><strong>User Flow</strong></div><span class="docs-index">04 / 05</span></header>
+    <div class="docs-content">
+      <section class="docs-hero">
+        <div><p class="eyebrow">Critical journey</p><h1>Move money without losing control.</h1></div>
+        <div class="docs-hero-copy"><p>The hero flow follows a cross-border payment that crosses a policy threshold. The experience must make the control chain visible to the initiator, the manager and the CFO from creation through execution.</p>
+          <div class="docs-meta"><div><span>Trigger</span><strong>USD 18,400 transfer</strong></div><div><span>Policy</span><strong>Manager → CFO</strong></div><div><span>End state</span><strong>Executed + immutable trail</strong></div></div>
+        </div>
+      </section>
+
+      <section class="docs-section"><div class="section-head"><span class="section-no">04.01</span><div><h2>Hero flow — international payment</h2><p>The normal path optimizes confidence rather than raw click count. Users should know why each approval step exists and who owns the next action.</p></div></div>
+        <div class="flow">
+          <div class="flow-step"><span class="step-no">01 / EMPLOYEE</span><strong>Create payment</strong><p>Select beneficiary, currency, amount and purpose.</p></div>
+          <div class="flow-step"><span class="step-no">02 / SYSTEM</span><strong>Evaluate policy</strong><p>Amount and currency trigger Cross-border policy 01.</p></div>
+          <div class="flow-step"><span class="step-no">03 / MANAGER</span><strong>Review evidence</strong><p>Inspect counterparty, purpose and supporting data.</p></div>
+          <div class="flow-step"><span class="step-no">04 / MANAGER</span><strong>Approve stage 1</strong><p>Decision is recorded and CFO becomes next owner.</p></div>
+          <div class="flow-step"><span class="step-no">05 / CFO</span><strong>Approve stage 2</strong><p>Final control check releases the payment.</p></div>
+          <div class="flow-step"><span class="step-no">06 / SYSTEM</span><strong>Execute + trace</strong><p>Settlement begins and the full activity trail remains visible.</p></div>
+        </div>
+      </section>
+
+      <section class="docs-section"><div class="section-head"><span class="section-no">04.02</span><div><h2>Decision context at each handoff</h2><p>Every actor should receive enough context to decide without reconstructing the transaction from multiple screens.</p></div></div>
+        <table class="metric-table"><thead><tr><th>Actor</th><th>Needs to know</th><th>Primary action</th><th>System evidence</th></tr></thead><tbody>
+          <tr><td>Employee</td><td>Why approval is required and who owns the next step</td><td>Submit payment</td><td>Policy trigger + Approval Rail</td></tr>
+          <tr><td>Finance Manager</td><td>Counterparty, amount, purpose, evidence, policy rule</td><td>Approve / reject</td><td>Payment detail + activity trail</td></tr>
+          <tr><td>CFO</td><td>Manager decision plus the high-risk financial facts</td><td>Final approve / reject</td><td>Decision history + threshold context</td></tr>
+          <tr><td>System</td><td>Validated instructions and complete approval chain</td><td>Execute</td><td>Immutable timestamps + settlement state</td></tr>
+        </tbody></table>
+      </section>
+
+      <section class="docs-section"><div class="section-head"><span class="section-no">04.03</span><div><h2>Exception branches</h2><p>High-consequence finance UX is defined as much by recovery as by the happy path.</p></div></div>
+        <div class="branch-list">
+          <div class="branch"><span class="tag" style="color:var(--danger)">REJECTED</span><h3>Manager or CFO rejects</h3><p>Capture an explicit reason. The payment returns to the initiator with evidence and history intact. Editing creates a new submission event, not a silent overwrite.</p></div>
+          <div class="branch"><span class="tag" style="color:var(--pending)">EXPIRED</span><h3>Approval window expires</h3><p>Mark the request expired, name the policy window that elapsed, and provide a controlled replacement path instead of auto-resubmitting.</p></div>
+          <div class="branch"><span class="tag" style="color:var(--danger)">FAILED</span><h3>Settlement fails</h3><p>Separate approval success from settlement success. Explain the bank or beneficiary failure and preserve the already-completed approval evidence.</p></div>
+        </div>
+      </section>
+
+      <section class="docs-section"><div class="section-head"><span class="section-no">04.04</span><div><h2>Recovery flow — rejected payment</h2><p>Rejection is not a dead end. The system needs a controlled edit-and-resubmit path that protects audit history.</p></div></div>
+        <div class="flow" style="grid-template-columns:repeat(5,minmax(0,1fr))">
+          <div class="flow-step"><span class="step-no">01</span><strong>Reject with reason</strong><p>Reviewer records why the payment cannot proceed.</p></div>
+          <div class="flow-step"><span class="step-no">02</span><strong>Notify initiator</strong><p>Reason and required correction appear in the payment detail.</p></div>
+          <div class="flow-step"><span class="step-no">03</span><strong>Edit permitted fields</strong><p>Initiator changes bank data, evidence or purpose while prior state stays in history.</p></div>
+          <div class="flow-step"><span class="step-no">04</span><strong>Re-evaluate policy</strong><p>System recalculates the control chain using the edited transaction.</p></div>
+          <div class="flow-step"><span class="step-no">05</span><strong>Resubmit</strong><p>A new approval cycle begins with a linked audit event.</p></div>
+        </div>
+      </section>
+
+      <section class="docs-section"><div class="section-head"><span class="section-no">04.05</span><div><h2>Permission flow</h2><p>Role boundaries should explain ownership rather than merely disable controls.</p></div></div>
+        <div class="docs-grid">
+          <div class="doc-panel"><p class="panel-kicker">Employee</p><h3>Can create, cannot self-approve</h3><p>After submission, decision controls are replaced with current owner and policy status.</p></div>
+          <div class="doc-panel"><p class="panel-kicker">Finance Manager</p><h3>Stage-one authority</h3><p>Can approve within policy boundaries and escalate when required evidence is insufficient.</p></div>
+          <div class="doc-panel"><p class="panel-kicker">CFO</p><h3>Final high-threshold authority</h3><p>Receives already-reviewed transactions with the manager decision visible as evidence.</p></div>
+        </div>
+      </section>
+
+      <section class="docs-section"><div class="section-head"><span class="section-no">04.06</span><div><h2>Validation plan</h2><p>The prototype should be tested on the decisions that matter, not only navigation completion.</p></div></div>
+        <table class="metric-table"><thead><tr><th>Task</th><th>What to observe</th><th>Failure signal</th><th>Target metric</th></tr></thead><tbody>
+          <tr><td>Create USD 18,400 payment</td><td>Can user predict approval requirements before submission?</td><td>Surprised by extra approver</td><td>Task success + policy comprehension</td></tr>
+          <tr><td>Manager review</td><td>Can reviewer find decision-critical evidence quickly?</td><td>Searches multiple areas or misses purpose</td><td>Time to confident decision</td></tr>
+          <tr><td>CFO final review</td><td>Can reviewer distinguish prior approval from current responsibility?</td><td>Unclear who has acted</td><td>Decision error rate</td></tr>
+          <tr><td>Recover rejected payment</td><td>Can initiator fix the issue without losing history?</td><td>Creates unrelated duplicate payment</td><td>Recovery success rate</td></tr>
+        </tbody></table>
+      </section>
+
+      <footer class="docs-footer"><span>Previous: <a href="sitemap.html">← Sitemap</a></span><span>Next: <a href="prototype.html">Prototype →</a></span></footer>
+    </div>
+  </main>
+</div>
+</body>
+</html>
