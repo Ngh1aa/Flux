@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Flux prototype overview with live entry points, core flows and validation scope.">
+  <title>Flux — Prototype</title>
+  <link rel="stylesheet" href="documentation.css">
+</head>
+<body>
+<div class="docs-shell">
+  <aside class="docs-sidebar" aria-label="Flux documentation navigation">
+    <div class="docs-brand"><div class="docs-brand-row"><strong>FLUX</strong><span>DESIGN DOCS</span></div><p>Operational design language for global business money, approvals, controls and auditability.</p></div>
+    <nav class="docs-nav"><p class="docs-nav-label">Documentation</p>
+      <a href="design-system.html"><span>Design System</span><span>01</span></a>
+      <a href="component-states.html"><span>Component States</span><span>02</span></a>
+      <a href="sitemap.html"><span>Sitemap</span><span>03</span></a>
+      <a href="user-flow.html"><span>User Flow</span><span>04</span></a>
+      <a class="active" aria-current="page" href="prototype.html"><span>Prototype</span><span>05</span></a>
+    </nav>
+    <div class="docs-sidebar-footer"><a href="index.html">← Open product</a><p>Northstar Holdings · Production simulation</p></div>
+  </aside>
+
+  <main class="docs-main">
+    <header class="docs-topbar"><div class="breadcrumb"><span>Flux</span><span>/</span><strong>Prototype</strong></div><span class="docs-index">05 / 05</span></header>
+    <div class="docs-content">
+      <section class="docs-hero">
+        <div><p class="eyebrow">Working prototype</p><h1>From financial intent to controlled execution.</h1></div>
+        <div class="docs-hero-copy"><p>The Flux prototype is a desktop-first simulation of a B2B money operations product. It demonstrates multi-currency operations, role-aware controls, payment approval chains, team spend visibility and policy configuration.</p>
+          <div class="docs-meta"><div><span>Environment</span><strong>Static HTML / CSS / JS</strong></div><div><span>Data</span><strong>Simulated operational data</strong></div><div><span>Scope</span><strong>Product interaction prototype</strong></div></div>
+        </div>
+      </section>
+
+      <section class="docs-section"><div class="section-head"><span class="section-no">05.01</span><div><h2>Explore the live prototype</h2><p>Each entry point demonstrates a distinct operational responsibility while sharing the same workspace shell, state language and permissions model.</p></div></div>
+        <div class="prototype-list">
+          <a class="prototype-card" href="index.html"><span class="route">/index.html</span><h3>Payments</h3><p>Review transfers, filter status, inspect payment details and read the Approval Rail.</p><span class="open">Open Payments →</span></a>
+          <a class="prototype-card" href="accounts.html"><span class="route">/accounts.html</span><h3>Accounts</h3><p>Inspect balances and multi-currency account activity.</p><span class="open">Open Accounts →</span></a>
+          <a class="prototype-card" href="cards.html"><span class="route">/cards.html</span><h3>Cards</h3><p>Review company cards and spend-control context.</p><span class="open">Open Cards →</span></a>
+          <a class="prototype-card" href="team.html"><span class="route">/team.html</span><h3>Team</h3><p>Understand member roles, access boundaries and financial responsibility.</p><span class="open">Open Team →</span></a>
+          <a class="prototype-card" href="expenses.html"><span class="route">/expenses.html</span><h3>Expenses</h3><p>Inspect expense evidence and operational review states.</p><span class="open">Open Expenses →</span></a>
+          <a class="prototype-card" href="reports.html"><span class="route">/reports.html</span><h3>Reports</h3><p>Review spend summaries and reporting-oriented financial information.</p><span class="open">Open Reports →</span></a>
+          <a class="prototype-card" href="settings.html"><span class="route">/settings.html</span><h3>Approval Policies</h3><p>Explore the policy layer that governs high-threshold payments.</p><span class="open">Open Settings →</span></a>
+          <a class="prototype-card" href="user-flow.html"><span class="route">/user-flow.html</span><h3>Hero flow map</h3><p>See the end-to-end transfer, approval and recovery logic before entering the prototype.</p><span class="open">Open User Flow →</span></a>
+          <a class="prototype-card" href="component-states.html"><span class="route">/component-states.html</span><h3>State inventory</h3><p>Inspect default, focus, approval, rejection, failure and permission behavior.</p><span class="open">Open States →</span></a>
+        </div>
+      </section>
+
+      <section class="docs-section"><div class="section-head"><span class="section-no">05.02</span><div><h2>Main prototype scenarios</h2><p>The prototype should be evaluated through complete financial decisions rather than isolated screens.</p></div></div>
+        <div class="docs-grid">
+          <div class="doc-panel span-6"><p class="panel-kicker">Flow A · hero</p><h3>Create → Review → Approve → Execute</h3><p>An employee initiates a high-threshold cross-border transfer. Policy triggers dual approval. Finance Manager reviews first, CFO reviews second, then the payment moves to execution with an audit trail.</p><div class="demo-stack" style="margin-top:16px"><a class="btn btn-primary" href="index.html">Explore payment workspace</a><a class="btn" href="user-flow.html">View flow logic</a></div></div>
+          <div class="doc-panel span-6"><p class="panel-kicker">Flow B · governance</p><h3>Policy → Trigger → Decision context</h3><p>An admin defines an IF/THEN approval rule. The product exposes that rule wherever it affects a transaction so reviewers understand why the control chain exists.</p><div class="demo-stack" style="margin-top:16px"><a class="btn btn-primary" href="settings.html">Explore approval policies</a></div></div>
+          <div class="doc-panel span-6"><p class="panel-kicker">Flow C · recovery</p><h3>Reject → Correct → Re-evaluate → Resubmit</h3><p>A reviewer rejects a payment with a reason. The initiator corrects permitted data, policy is re-evaluated, and a new approval cycle begins without erasing the previous decision history.</p><div class="demo-stack" style="margin-top:16px"><a class="btn" href="user-flow.html">Review recovery flow</a></div></div>
+          <div class="doc-panel span-6"><p class="panel-kicker">Flow D · role boundary</p><h3>Employee ↔ Approver</h3><p>Role switching demonstrates that shared context remains visible while decision rights change. Users should understand who can act next without encountering unexplained disabled controls.</p><div class="demo-stack" style="margin-top:16px"><a class="btn" href="index.html">Test role switcher</a></div></div>
+        </div>
+      </section>
+
+      <section class="docs-section"><div class="section-head"><span class="section-no">05.03</span><div><h2>Prototype fidelity</h2><p>This screen distinguishes implemented behavior from product assumptions so the prototype does not imply production evidence it does not have.</p></div></div>
+        <table class="metric-table"><thead><tr><th>Layer</th><th>Current prototype evidence</th><th>Boundary</th></tr></thead><tbody>
+          <tr><td>Visual system</td><td>Implemented tokens, typography, navigation shell, tables, detail panes, status language and Approval Rail.</td><td>Browser-rendered UI, not a production design-system package.</td></tr>
+          <tr><td>Interaction</td><td>Role switching, filters, detail selection, payment interaction and motion behaviors are represented in the static frontend.</td><td>No real banking network, ledger or backend state.</td></tr>
+          <tr><td>Data</td><td>Realistic currencies, counterparties, amounts, timestamps and approval scenarios.</td><td>All operational data is simulated.</td></tr>
+          <tr><td>Product outcome</td><td>Flows are designed around visibility, control and decision confidence.</td><td>No measured business impact or usability result is claimed here.</td></tr>
+        </tbody></table>
+      </section>
+
+      <section class="docs-section"><div class="section-head"><span class="section-no">05.04</span><div><h2>Review checklist</h2><p>A focused way to inspect the prototype as a recruiter, designer or product partner.</p></div></div>
+        <div class="branch-list">
+          <div class="branch"><span class="tag" style="color:var(--accent)">01 / PRODUCT</span><h3>Can you explain the control chain?</h3><p>Open Payments and identify why the selected transfer needs approval, who owns the current step and what comes next.</p></div>
+          <div class="branch"><span class="tag" style="color:var(--accent)">02 / SYSTEM</span><h3>Do states stay consistent?</h3><p>Compare pending, completed, failed and permission states across the working product and component inventory.</p></div>
+          <div class="branch"><span class="tag" style="color:var(--accent)">03 / RECOVERY</span><h3>Does failure preserve context?</h3><p>Use the user-flow documentation to inspect rejection and settlement-failure recovery instead of evaluating only the happy path.</p></div>
+        </div>
+      </section>
+
+      <section class="docs-section"><div class="section-head"><span class="section-no">05.05</span><div><h2>Documentation set</h2><p>The five pages form one evidence layer around the working prototype.</p></div></div>
+        <div class="prototype-list">
+          <a class="prototype-card" href="design-system.html"><span class="route">01</span><h3>Design System</h3><p>Foundations, tokens, typography, controls, spacing and signature components.</p><span class="open">Open →</span></a>
+          <a class="prototype-card" href="component-states.html"><span class="route">02</span><h3>Component States</h3><p>Interactive, semantic and recovery states across critical controls.</p><span class="open">Open →</span></a>
+          <a class="prototype-card" href="sitemap.html"><span class="route">03</span><h3>Sitemap</h3><p>Information architecture, role visibility and cross-cutting capabilities.</p><span class="open">Open →</span></a>
+          <a class="prototype-card" href="user-flow.html"><span class="route">04</span><h3>User Flow</h3><p>Hero journey, handoffs, exceptions, recovery and validation plan.</p><span class="open">Open →</span></a>
+          <a class="prototype-card" href="prototype.html"><span class="route">05</span><h3>Prototype</h3><p>Live entry points, scenario scope, fidelity boundaries and review checklist.</p><span class="open">Current page</span></a>
+        </div>
+      </section>
+
+      <footer class="docs-footer"><span>Previous: <a href="user-flow.html">← User Flow</a></span><span><a href="index.html">Open Flux product →</a></span></footer>
+    </div>
+  </main>
+</div>
+</body>
+</html>

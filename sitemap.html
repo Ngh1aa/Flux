@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Flux information architecture and sitemap for business money operations.">
+  <title>Flux — Sitemap</title>
+  <link rel="stylesheet" href="documentation.css">
+</head>
+<body>
+<div class="docs-shell">
+  <aside class="docs-sidebar" aria-label="Flux documentation navigation">
+    <div class="docs-brand"><div class="docs-brand-row"><strong>FLUX</strong><span>DESIGN DOCS</span></div><p>Operational design language for global business money, approvals, controls and auditability.</p></div>
+    <nav class="docs-nav"><p class="docs-nav-label">Documentation</p>
+      <a href="design-system.html"><span>Design System</span><span>01</span></a>
+      <a href="component-states.html"><span>Component States</span><span>02</span></a>
+      <a class="active" aria-current="page" href="sitemap.html"><span>Sitemap</span><span>03</span></a>
+      <a href="user-flow.html"><span>User Flow</span><span>04</span></a>
+      <a href="prototype.html"><span>Prototype</span><span>05</span></a>
+    </nav>
+    <div class="docs-sidebar-footer"><a href="index.html">← Open product</a><p>Northstar Holdings · Production simulation</p></div>
+  </aside>
+
+  <main class="docs-main">
+    <header class="docs-topbar"><div class="breadcrumb"><span>Flux</span><span>/</span><strong>Sitemap</strong></div><span class="docs-index">03 / 05</span></header>
+    <div class="docs-content">
+      <section class="docs-hero">
+        <div><p class="eyebrow">Information architecture</p><h1>Organized around financial work, not features.</h1></div>
+        <div class="docs-hero-copy"><p>The global navigation reflects the recurring jobs of a finance team: understand balances, move money, control cards and people, reconcile expenses, inspect reporting, and define policy.</p>
+          <div class="docs-meta"><div><span>Primary object</span><strong>Payment</strong></div><div><span>Primary actor</span><strong>Finance Manager / CFO</strong></div><div><span>Cross-cutting layer</span><strong>Audit trail + permissions</strong></div></div>
+        </div>
+      </section>
+
+      <section class="docs-section"><div class="section-head"><span class="section-no">03.01</span><div><h2>Product map</h2><p>The hierarchy stays shallow on purpose. High-value operational views are one navigation step away; detail and creation flows live inside the relevant domain.</p></div></div>
+<pre class="tree"><strong>FLUX / Northstar Holdings</strong>
+├── Accounts
+│   ├── Account list
+│   ├── Currency detail
+│   └── Account activity
+│
+├── <strong>Payments</strong>
+│   ├── Payment workspace
+│   ├── New payment
+│   │   ├── Counterparty + bank details
+│   │   ├── Amount + currency
+│   │   ├── Purpose + evidence
+│   │   └── Review + submit
+│   ├── Approval queue
+│   └── Payment detail
+│       ├── Payment data
+│       ├── Approval Rail
+│       ├── Activity trail
+│       └── Recovery / resubmit
+│
+├── Cards
+│   ├── Company cards
+│   ├── Card detail
+│   └── Spend controls
+│
+├── Team
+│   ├── Members
+│   ├── Roles
+│   └── Permissions
+│
+├── Expenses
+│   ├── Expense queue
+│   ├── Expense detail
+│   └── Receipt / category review
+│
+├── Reports
+│   ├── Spend overview
+│   ├── Currency exposure
+│   └── Export
+│
+└── Settings
+    ├── Workspace
+    ├── Security
+    ├── Integrations
+    └── <strong>Approval Policies</strong>
+        ├── Policy list
+        ├── Approval Policy Builder
+        └── Policy history</pre>
+      </section>
+
+      <section class="docs-section"><div class="section-head"><span class="section-no">03.02</span><div><h2>Navigation rationale</h2><p>Each top-level section maps to an operational responsibility rather than an internal system object.</p></div></div>
+        <div class="docs-grid">
+          <div class="doc-panel"><p class="panel-kicker">Money visibility</p><h3>Accounts</h3><p>Current balances, currencies and account-level activity. The starting point for understanding available funds.</p></div>
+          <div class="doc-panel"><p class="panel-kicker">Money movement</p><h3>Payments</h3><p>Creation, approval, execution and traceability of transfers. This is the hero workflow.</p></div>
+          <div class="doc-panel"><p class="panel-kicker">Spend instruments</p><h3>Cards</h3><p>Company cards and control boundaries for recurring or delegated spend.</p></div>
+          <div class="doc-panel"><p class="panel-kicker">Governance</p><h3>Team</h3><p>People, roles and permissions that determine who can initiate, review and administer.</p></div>
+          <div class="doc-panel"><p class="panel-kicker">Reconciliation</p><h3>Expenses</h3><p>Evidence, receipts, categories and review status for money already spent.</p></div>
+          <div class="doc-panel"><p class="panel-kicker">Control layer</p><h3>Settings</h3><p>Workspace configuration and approval policies that shape behavior across the product.</p></div>
+        </div>
+      </section>
+
+      <section class="docs-section"><div class="section-head"><span class="section-no">03.03</span><div><h2>Role visibility</h2><p>The same IA is visible across roles, but action rights change. This keeps shared language consistent while respecting control boundaries.</p></div></div>
+        <table class="metric-table"><thead><tr><th>Area</th><th>Employee</th><th>Finance Manager</th><th>CFO</th><th>Admin</th></tr></thead><tbody>
+          <tr><td>Accounts</td><td>View assigned balances</td><td>View</td><td>View</td><td>Configure</td></tr>
+          <tr><td>Payments</td><td>Create + track own</td><td>Create + approve stage 1</td><td>Approve stage 2</td><td>View + administer</td></tr>
+          <tr><td>Cards</td><td>Use assigned card</td><td>Review spend</td><td>Review policy</td><td>Issue + configure</td></tr>
+          <tr><td>Team</td><td>View directory</td><td>View team</td><td>View roles</td><td>Manage members + roles</td></tr>
+          <tr><td>Expenses</td><td>Submit evidence</td><td>Review</td><td>Escalation visibility</td><td>Configure categories</td></tr>
+          <tr><td>Settings</td><td>Personal only</td><td>Policy view</td><td>Policy view</td><td>Edit workspace + policies</td></tr>
+        </tbody></table>
+      </section>
+
+      <section class="docs-section"><div class="section-head"><span class="section-no">03.04</span><div><h2>Cross-cutting architecture</h2><p>Some capabilities should not become standalone destinations because they belong to every financial object.</p></div></div>
+        <div class="branch-list">
+          <div class="branch"><span class="tag" style="color:var(--accent)">AUDIT</span><h3>Activity trail</h3><p>Every meaningful mutation records actor, timestamp, old state, new state and decision context.</p></div>
+          <div class="branch"><span class="tag" style="color:var(--accent)">POLICY</span><h3>Approval logic</h3><p>Rules are configured in Settings but surfaced inline wherever they affect a payment decision.</p></div>
+          <div class="branch"><span class="tag" style="color:var(--accent)">ACCESS</span><h3>Permission model</h3><p>Roles change available actions while preserving enough context for handoff and accountability.</p></div>
+        </div>
+      </section>
+
+      <section class="docs-section"><div class="section-head"><span class="section-no">03.05</span><div><h2>IA guardrails</h2><p>Rules that keep the product legible as more financial capabilities are added.</p></div></div>
+        <div class="docs-grid">
+          <div class="doc-panel"><p class="panel-kicker">01</p><h3>Keep work near its object</h3><p>Payment approval belongs inside Payments, not inside a generic “Tasks” inbox that strips financial context.</p></div>
+          <div class="doc-panel"><p class="panel-kicker">02</p><h3>Expose policy in context</h3><p>Users should see why an action is blocked or escalated at the decision point.</p></div>
+          <div class="doc-panel"><p class="panel-kicker">03</p><h3>Do not hide recovery</h3><p>Failed, rejected and expired states remain discoverable and retain their audit history.</p></div>
+        </div>
+      </section>
+
+      <footer class="docs-footer"><span>Previous: <a href="component-states.html">← Component States</a></span><span>Next: <a href="user-flow.html">User Flow →</a></span></footer>
+    </div>
+  </main>
+</div>
+</body>
+</html>
