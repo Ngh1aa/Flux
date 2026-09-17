@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Flux design system: tokens, typography, controls, statuses, layout and signature approval patterns.">
+  <title>Flux — Design System</title>
+  <link rel="stylesheet" href="documentation.css">
+</head>
+<body>
+  <div class="docs-shell">
+    <aside class="docs-sidebar" aria-label="Flux documentation navigation">
+      <div class="docs-brand"><div class="docs-brand-row"><strong>FLUX</strong><span>DESIGN DOCS</span></div><p>Operational design language for global business money, approvals, controls and auditability.</p></div>
+      <nav class="docs-nav"><p class="docs-nav-label">Documentation</p>
+        <a class="active" aria-current="page" href="design-system.html"><span>Design System</span><span>01</span></a>
+        <a href="component-states.html"><span>Component States</span><span>02</span></a>
+        <a href="sitemap.html"><span>Sitemap</span><span>03</span></a>
+        <a href="user-flow.html"><span>User Flow</span><span>04</span></a>
+        <a href="prototype.html"><span>Prototype</span><span>05</span></a>
+      </nav>
+      <div class="docs-sidebar-footer"><a href="index.html">← Open product</a><p>Northstar Holdings · Production simulation</p></div>
+    </aside>
+
+    <main class="docs-main">
+      <header class="docs-topbar"><div class="breadcrumb"><span>Flux</span><span>/</span><strong>Design System</strong></div><span class="docs-index">01 / 05</span></header>
+      <div class="docs-content">
+        <section class="docs-hero">
+          <div><p class="eyebrow">System foundations</p><h1>Precise by default.<br>Institutional by intent.</h1></div>
+          <div class="docs-hero-copy"><p>Flux is designed for finance teams making high-consequence operational decisions. The system prioritizes scanability, control visibility, dense information and restrained hierarchy over consumer-fintech decoration.</p>
+            <div class="docs-meta"><div><span>Direction</span><strong>Precise / Institutional / Efficient</strong></div><div><span>Primary user</span><strong>Finance Manager / CFO</strong></div><div><span>Signature</span><strong>Approval Rail</strong></div></div>
+          </div>
+        </section>
+
+        <section class="docs-section"><div class="section-head"><span class="section-no">01.01</span><div><h2>Color tokens</h2><p>Neutral operational surfaces with a restrained institutional navy. Semantic colors communicate financial state, never decoration.</p></div></div>
+          <div class="docs-grid">
+            <div class="doc-panel span-6"><p class="panel-kicker">Core palette</p>
+              <div class="token-row"><code>page</code><div class="swatch" style="background:#F0F1EE"></div><code>#F0F1EE</code></div>
+              <div class="token-row"><code>surface</code><div class="swatch" style="background:#FFFFFF"></div><code>#FFFFFF</code></div>
+              <div class="token-row"><code>ink</code><div class="swatch" style="background:#14171A"></div><code>#14171A</code></div>
+              <div class="token-row"><code>secondary</code><div class="swatch" style="background:#5B6560"></div><code>#5B6560</code></div>
+              <div class="token-row"><code>line</code><div class="swatch" style="background:#D3D6D0"></div><code>#D3D6D0</code></div>
+              <div class="token-row"><code>accent</code><div class="swatch" style="background:#1F3A5F"></div><code>#1F3A5F</code></div>
+            </div>
+            <div class="doc-panel span-6"><p class="panel-kicker">Operational states</p>
+              <div class="token-row"><code>approved</code><div class="swatch" style="background:#E4E8D8;border-color:#2F5D3A"></div><code>#2F5D3A</code></div>
+              <div class="token-row"><code>pending</code><div class="swatch" style="background:#F0E2C4;border-color:#6B4A0F"></div><code>#6B4A0F</code></div>
+              <div class="token-row"><code>blocked</code><div class="swatch" style="background:#F0DDD1;border-color:#6A2B20"></div><code>#6A2B20</code></div>
+              <div class="annotation" style="margin-top:14px"><strong>Rule:</strong> state color must always be paired with explicit text. Never rely on color alone for approval, failure or permission state.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="docs-section"><div class="section-head"><span class="section-no">01.02</span><div><h2>Typography</h2><p>IBM Plex Sans carries hierarchy and interface language. IBM Plex Mono is reserved for operational evidence: money, IDs, timestamps, rules and thresholds.</p></div></div>
+          <div class="docs-grid">
+            <div class="doc-panel span-6"><div class="type-sample"><span class="label">DISPLAY / IBM PLEX SANS 500</span><div class="type-display">Payments under control.</div></div><div class="type-sample"><span class="label">BODY / IBM PLEX SANS 400</span><div class="type-body">Review the counterparty, amount, policy trigger and approval chain before execution.</div></div></div>
+            <div class="doc-panel span-6"><div class="type-sample"><span class="label">MONO / IBM PLEX MONO 500</span><div class="type-mono">TRF-98234 · USD 18,400.00 · 15 SEP 14:15</div></div><div class="type-sample"><span class="label">RULE / IBM PLEX MONO 400</span><div class="type-mono">IF amount &gt; 10,000 AND currency != base THEN Manager → CFO</div></div></div>
+          </div>
+        </section>
+
+        <section class="docs-section"><div class="section-head"><span class="section-no">01.03</span><div><h2>Spacing, grid and geometry</h2><p>Compact spacing supports high information density. Square edges and hairline borders keep the interface closer to an operations console than a consumer dashboard.</p></div></div>
+          <div class="docs-grid">
+            <div class="doc-panel"><p class="panel-kicker">Spacing scale</p><div class="scale-row"><div class="scale-bar" style="width:4px"></div><code>04</code></div><div class="scale-row"><div class="scale-bar" style="width:8px"></div><code>08</code></div><div class="scale-row"><div class="scale-bar" style="width:12px"></div><code>12</code></div><div class="scale-row"><div class="scale-bar" style="width:16px"></div><code>16</code></div><div class="scale-row"><div class="scale-bar" style="width:24px"></div><code>24</code></div><div class="scale-row"><div class="scale-bar" style="width:32px"></div><code>32</code></div></div>
+            <div class="doc-panel"><p class="panel-kicker">Geometry</p><h3>0–2px radius</h3><p>No floating glass cards, glow or soft consumer-fintech surfaces. Borders carry grouping and state.</p><div style="margin-top:18px;height:74px;border:1px solid var(--line-strong);border-radius:2px;background:#fff"></div></div>
+            <div class="doc-panel"><p class="panel-kicker">Layout contract</p><h3>220px persistent sidebar</h3><p>Desktop shell keeps global navigation stable while workspaces use tables, detail panes and thin top bars.</p><div style="display:grid;grid-template-columns:34% 66%;height:74px;margin-top:18px;border:1px solid var(--line)"><div style="border-right:1px solid var(--line);background:#F7F8F5"></div><div></div></div></div>
+          </div>
+        </section>
+
+        <section class="docs-section"><div class="section-head"><span class="section-no">01.04</span><div><h2>Core controls</h2><p>Controls remain restrained, explicit and keyboard-visible. Primary navy is limited to the main action or the current operational focus.</p></div></div>
+          <div class="docs-grid">
+            <div class="doc-panel span-6"><p class="panel-kicker">Buttons</p><div class="demo-stack"><button class="btn btn-primary">New payment</button><button class="btn">Secondary</button><button class="btn btn-danger">Reject</button><button class="btn" disabled>Disabled</button></div></div>
+            <div class="doc-panel span-6"><p class="panel-kicker">Inputs</p><div class="demo-stack"><div class="demo-field"><label class="form-label" for="amount-demo">Reference</label><input class="input" id="amount-demo" value="TRF-98234"></div><div class="demo-field"><label class="form-label" for="currency-demo">Currency</label><select class="select" id="currency-demo"><option>USD</option><option>EUR</option><option>GBP</option></select></div></div></div>
+            <div class="doc-panel span-12"><p class="panel-kicker">Status language</p><div class="demo-stack"><span class="status status-success">Approved</span><span class="status status-pending">Needs approval</span><span class="status status-danger">Rejected</span><span class="status status-neutral">Processing</span><span class="currency-tag">USD</span></div></div>
+          </div>
+        </section>
+
+        <section class="docs-section"><div class="section-head"><span class="section-no">01.05</span><div><h2>Signature component — Approval Rail</h2><p>The rail answers one critical question at a glance: where is this payment in the control chain, and what decision remains?</p></div></div>
+          <div class="doc-panel span-12"><div class="approval-summary"><div class="summary-copy"><strong>Cross-border policy 01</strong><span>Amount exceeds <span class="mono">USD 10,000</span> and requires dual approval.</span></div><span class="status status-pending">Finance manager</span></div>
+            <div class="approval-rail" aria-label="Approval chain example"><div class="rail-step completed"><div class="rail-node">✓</div><div class="rail-copy"><span class="rail-label">Draft</span><span class="rail-note">JS · 14:15</span></div></div><div class="rail-step current"><div class="rail-node"></div><div class="rail-copy"><span class="rail-label">Finance manager</span><span class="rail-note">Alex Smith</span></div></div><div class="rail-step future"><div class="rail-node"></div><div class="rail-copy"><span class="rail-label">CFO</span><span class="rail-note">Sarah Jensen</span></div></div><div class="rail-step future"><div class="rail-node"></div><div class="rail-copy"><span class="rail-label">Executed</span><span class="rail-note">Settlement</span></div></div></div>
+          </div>
+        </section>
+
+        <section class="docs-section"><div class="section-head"><span class="section-no">01.06</span><div><h2>Motion principles</h2><p>Motion explains state change and workflow continuity. It should never compete with transaction data.</p></div></div>
+          <div class="docs-grid"><div class="doc-panel"><p class="panel-kicker">Purpose</p><h3>Clarify change</h3><p>Use motion for selection, panel continuity, approval progression and successful state transitions.</p></div><div class="doc-panel"><p class="panel-kicker">Timing</p><h3>Fast and functional</h3><p>Prefer short transitions around 120–220ms with no decorative overshoot.</p></div><div class="doc-panel"><p class="panel-kicker">Accessibility</p><h3>Reduced motion</h3><p>Preserve visibility and information hierarchy when <span class="mono">prefers-reduced-motion</span> is enabled.</p></div></div>
+        </section>
+
+        <footer class="docs-footer"><span>Flux Design Documentation · v1</span><span>Next: <a href="component-states.html">Component States →</a></span></footer>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
