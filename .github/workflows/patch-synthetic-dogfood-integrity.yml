@@ -1,0 +1,123 @@
+name: Patch Flux synthetic dogfood integrity
+
+on:
+  push:
+    branches:
+      - fix/synthetic-dogfood-integrity
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/synthetic-dogfood-integrity
+          fetch-depth: 0
+
+      - name: Apply source-visible integrity repairs
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          def replace(path, old, new, *, count=1):
+              p = Path(path)
+              text = p.read_text(encoding='utf-8')
+              if old not in text:
+                  raise SystemExit(f'Expected source fragment not found in {path}: {old[:100]}')
+              text = text.replace(old, new, count)
+              p.write_text(text, encoding='utf-8')
+
+          # Accounts: clarify that Available is already net of Reserved.
+          replace(
+              'accounts.html',
+              '<span class="metric-label">Total available</span><strong class="metric-value">USD 742,680</strong><span class="metric-note">Across 5 operating currencies</span>',
+              '<span class="metric-label">Available to move</span><strong class="metric-value">USD 742,680</strong><span class="metric-note">Excludes reserved balances · 5 currencies</span>'
+          )
+          replace(
+              'accounts.html',
+              '<span class="metric-label">Reserved</span><strong class="metric-value">USD 42,910</strong><span class="metric-note">Payments and card settlements</span>',
+              '<span class="metric-label">Reserved</span><strong class="metric-value">USD 42,910</strong><span class="metric-note">Committed separately · do not subtract again</span>'
+          )
+
+          # Cards: do not expose a full simulated PAN by default.
+          replace(
+              'cards.html',
+              '<div class="card-number">5412 · 8881 · 4902 · <span id="card-pane-last4">4821</span></div>',
+              '<div class="card-number">•••• · •••• · •••• · <span id="card-pane-last4">4821</span></div>'
+          )
+
+          # Payments: clarify metric scope and remove processing/executed contradiction.
+          replace(
+              'index.html',
+              '<div class="metric"><span class="metric-label">Policy exceptions</span><strong class="metric-value">01</strong><span class="metric-note">Requires CFO review</span></div>',
+              '<div class="metric"><span class="metric-label">Policy escalations · open</span><strong class="metric-value">01</strong><span class="metric-note">1 payment above CFO threshold</span></div>'
+          )
+          replace('index.html', 'data-stage="Executed" data-stage-index="4" data-purpose="Manufacturing services"', 'data-stage="Settlement" data-stage-index="4" data-purpose="Manufacturing services"')
+          replace('index.html', '<td class="stage-column"><span class="stage-text">Executed</span></td>\n                </tr>\n                <tr class="payment-row" tabindex="0" data-status="pending" data-reference="TRF-98152"', '<td class="stage-column"><span class="stage-text">Settlement</span></td>\n                </tr>\n                <tr class="payment-row" tabindex="0" data-status="pending" data-reference="TRF-98152"')
+          replace('index.html', 'data-reference="TRF-98061" data-counterparty="Solventa Sp. z o.o." data-country="Poland" data-currency="EUR" data-amount="€5,600.00" data-initiated="14 Sep 2026 · 13:11" data-stage="CFO" data-stage-index="3"', 'data-reference="TRF-98061" data-counterparty="Solventa Sp. z o.o." data-country="Poland" data-currency="EUR" data-amount="€5,600.00" data-initiated="14 Sep 2026 · 13:11" data-stage="Finance manager" data-stage-index="2"')
+          replace('index.html', '<td class="stage-column"><span class="stage-text">CFO</span></td>\n                </tr>\n                <tr class="payment-row" tabindex="0" data-status="completed" data-reference="TRF-97988"', '<td class="stage-column"><span class="stage-text">Finance manager</span></td>\n                </tr>\n                <tr class="payment-row" tabindex="0" data-status="completed" data-reference="TRF-97988"')
+
+          # Payment runtime: distinguish approval completion from settlement execution.
+          replace(
+              'app.js',
+              "    const labels = ['Draft', 'Finance manager', 'CFO', 'Executed'];",
+              "    const finalRailLabel = status === 'completed' ? 'Executed' : status === 'processing' ? 'Settlement' : 'Execution';\n    const labels = ['Draft', 'Finance manager', 'CFO', finalRailLabel];"
+          )
+          replace(
+              'app.js',
+              "        if (step.classList.contains('current')) copy.insertAdjacentHTML('beforeend', '<span class=\"status status-pending rail-status\">Pending</span>');",
+              "        if (step.classList.contains('current')) {\n          const currentLabel = status === 'processing' ? 'In progress' : 'Pending';\n          const currentClass = status === 'processing' ? 'status status-neutral rail-status' : 'status status-pending rail-status';\n          copy.insertAdjacentHTML('beforeend', `<span class=\"${currentClass}\">${currentLabel}</span>`);\n        }"
+          )
+          replace(
+              'app.js',
+              "    } else {\n      const next = stageIndex === 2 ? 'Alex Smith, Finance manager' : stageIndex === 3 ? 'Sarah Jensen, CFO' : 'System execution';\n      nextApprover.textContent = next;\n      approvalStatus.textContent = 'Pending';\n      approvalStatus.className = 'status status-pending';\n    }",
+              "    } else if (status === 'processing') {\n      nextApprover.textContent = 'Settlement network · awaiting confirmation';\n      approvalStatus.textContent = 'Released';\n      approvalStatus.className = 'status status-neutral';\n    } else {\n      const next = stageIndex === 2 ? 'Alex Smith, Finance manager' : stageIndex === 3 ? 'Sarah Jensen, CFO' : 'System execution';\n      nextApprover.textContent = next;\n      approvalStatus.textContent = 'Pending';\n      approvalStatus.className = 'status status-pending';\n    }"
+          )
+          replace("app.js", "      row.dataset.stage = 'Executed';", "      row.dataset.stage = 'Settlement';")
+          replace("app.js", "      if (stageCell) stageCell.textContent = 'Executed';", "      if (stageCell) stageCell.textContent = 'Settlement';")
+
+          # Expenses/reports: clarify metric scope and report horizons.
+          replace('expenses.html', '<span class="metric-label">Policy flags</span><strong class="metric-value">03</strong><span class="metric-note">No hard declines outstanding</span>', '<span class="metric-label">Policy flags · open</span><strong class="metric-value">03</strong><span class="metric-note">Expense-review queue · no hard declines</span>')
+          replace('reports.html', '<span class="metric-label">Policy exceptions</span><strong class="metric-value" id="report-exceptions">08</strong><span class="metric-note">0 unresolved high-risk items</span>', '<span class="metric-label">Policy exceptions · 30d</span><strong class="metric-value" id="report-exceptions">08</strong><span class="metric-note">8 period exceptions · 0 unresolved high-risk</span>')
+          replace('reports.html', '<span>Forecast close</span><strong>$498,000</strong>', '<span>Projected Sep close</span><strong>$498,000</strong>')
+          replace('reports.html', 'Upcoming EU payroll and vendor windows explain most of the increase. No hedge action required yet.', '3 currency threshold signals are open; EUR is the largest current deviation. Upcoming EU payroll and vendor windows explain most of the increase. No hedge action required yet.')
+
+          # Ensure no forbidden synthetic-to-human drift.
+          status = Path('research/validation/flux-round-01/status.json').read_text(encoding='utf-8')
+          if '"verified_direct_user_sessions": 0' not in status:
+              raise SystemExit('Human evidence boundary unexpectedly changed')
+          ledger = Path('research/validation/flux-round-01/evidence-ledger.jsonl').read_text(encoding='utf-8')
+          if ledger != '':
+              raise SystemExit('Human evidence ledger must remain empty')
+          PY
+
+      - name: Extend evidence QA with integrity spec
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('.github/workflows/evidence-deep-dive-qa.yml')
+          text = p.read_text(encoding='utf-8')
+          old = 'run: npx playwright test qa/evidence-lens.spec.mjs --browser=chromium --workers=1'
+          new = 'run: npx playwright test qa/evidence-lens.spec.mjs qa/synthetic-dogfood-integrity.spec.mjs --browser=chromium --workers=1'
+          if old not in text:
+              raise SystemExit('Evidence QA command not found')
+          p.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
+
+      - name: Commit repairs
+        run: |
+          git diff --check
+          if git diff --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add accounts.html cards.html index.html app.js expenses.html reports.html .github/workflows/evidence-deep-dive-qa.yml
+          git commit -m "fix: repair Flux source integrity before human validation"
+          git push origin HEAD:fix/synthetic-dogfood-integrity
