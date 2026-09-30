@@ -1,0 +1,60 @@
+name: Patch Flux reviewer evidence entry
+
+on:
+  push:
+    branches:
+      - feat/reviewer-evidence-surface
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: feat/reviewer-evidence-surface
+          fetch-depth: 0
+
+      - name: Wire reviewer surfaces into canonical product
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          targets = {
+              Path('index.html'): '<script src="reviewer-entry.js" defer></script>',
+              Path('design-lens.html'): '<script src="design-lens-enhance.js" defer></script>',
+          }
+
+          changed = []
+          for path, tag in targets.items():
+              text = path.read_text(encoding='utf-8')
+              if tag in text:
+                  continue
+              if '</body>' not in text:
+                  raise SystemExit(f'Missing </body> in {path}')
+              text = text.replace('</body>', f'  {tag}\n</body>', 1)
+              path.write_text(text, encoding='utf-8')
+              changed.append(str(path))
+
+          print('Updated:', ', '.join(changed) if changed else 'none')
+          for path, tag in targets.items():
+              if tag not in path.read_text(encoding='utf-8'):
+                  raise SystemExit(f'Failed to wire {tag} into {path}')
+          PY
+
+      - name: Commit patch
+        run: |
+          if git diff --quiet; then
+            echo "No source changes to commit."
+            exit 0
+          fi
+          git diff --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html design-lens.html
+          git commit -m "feat: wire reviewer evidence into Flux live surface"
+          git push origin HEAD:feat/reviewer-evidence-surface
