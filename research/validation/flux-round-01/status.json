@@ -1,0 +1,50 @@
+{
+  "study_id": "flux-round-01",
+  "product": "Flux",
+  "study_type": "moderated task-based usability / decision-comprehension test",
+  "status": "READY_TO_RECRUIT",
+  "evidence_state": "PLANNED_VALIDATION",
+  "target_participants": {
+    "minimum": 3,
+    "preferred": 5
+  },
+  "verified_direct_user_sessions": 0,
+  "verified_proxy_sessions": 0,
+  "preferred_population": "finance operations, treasury, accounts payable/payments, finance manager or CFO users who review or approve business payments",
+  "proxy_population_allowed": true,
+  "proxy_rule": "Adjacent operations, accounting, banking-operations or compliance participants remain PROXY and may not be promoted to DIRECT_USER.",
+  "prototype_routes": [
+    "design-lens.html",
+    "index.html",
+    "settings.html"
+  ],
+  "priority_decisions": [
+    "D-01",
+    "D-02",
+    "D-03",
+    "D-04"
+  ],
+  "research_assets": {
+    "study_plan": "research/validation/flux-round-01/STUDY-PLAN.md",
+    "screener_and_consent": "research/validation/flux-round-01/SCREENER-AND-CONSENT.md",
+    "session_template": "research/validation/flux-round-01/SESSION-TEMPLATE.md",
+    "participant_tracker": "research/validation/flux-round-01/PARTICIPANT-TRACKER.md",
+    "atomic_ledger": "research/validation/flux-round-01/evidence-ledger.jsonl",
+    "findings": "research/validation/flux-round-01/FINDINGS.md",
+    "decision_log": "research/validation/flux-round-01/DECISION-LOG.md"
+  },
+  "iteration_gate": "Do not claim an evidence-driven iteration until at least one verified real session has traceable evidence. Prefer synthesis after 3-5 verified DIRECT_USER sessions; preserve PROXY evidence separately.",
+  "retest_gate": "After a named decision changes, freeze the changed build and run the same affected task with new or explicitly marked returning participants before claiming improvement.",
+  "allowed_claims": [
+    "A recruiter-facing design lens exists with decision pins, conceptual baseline/current comparison, a five-step tour and forced operational states",
+    "A direct-user validation round is ready to recruit",
+    "Direct-user evidence has not been collected yet"
+  ],
+  "forbidden_claims_until_verified": [
+    "Flux has been validated by finance teams",
+    "Flux reduces payment approval time",
+    "Flux reduces payment errors",
+    "Flux improves approval confidence",
+    "The recovery model improves task success"
+  ]
+}
