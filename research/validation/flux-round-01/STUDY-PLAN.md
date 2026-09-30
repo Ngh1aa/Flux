@@ -3,84 +3,86 @@
 ## Status
 `PLANNED_VALIDATION / READY_TO_RECRUIT`
 
-A completed plan is not a completed study. No direct-user result may be claimed until traceable evidence exists.
+A completed plan is not a completed study. No direct-user result may be claimed until traceable real-participant evidence exists.
+
+## Canonical questionnaire
+
+Use exactly one participant form for this round:
+
+`research/validation/flux-round-01/FLUX-NATIVE-FORM.md`
+
+Do not reuse, map or adapt the Nova form. The previous separate screener/session-template flow is retired.
 
 ## Decision map
 
-| Decision ID | Decision to challenge | Current evidence | Risk if wrong | Research question | Method |
-| --- | --- | --- | --- | --- | --- |
-| D-01 | Keep policy rationale, current approver and next approver visible in the payment detail via the Approval Rail. | PROJECT_CONTEXT + WORKING_PROTOTYPE / HYPOTHESIS | Reviewers approve without understanding why the control chain exists or who owns the next step. | Can finance users explain why the selected payment requires approval, who acts now and what happens next without being taught? | Moderated task-based usability / comprehension |
-| D-02 | Keep shared transaction context visible while action rights change between Employee and Approver roles. | WORKING_PROTOTYPE / HYPOTHESIS | Disabled actions look broken or users misunderstand who is authorized to commit the decision. | Can users distinguish visibility from authority and recover when the current role cannot approve? | Moderated task-based usability / comprehension |
-| D-03 | On execution failure, state whether money moved and give a safe recovery path without creating a duplicate payment. | FORCED_STATE TECHNICAL_PROOF / HYPOTHESIS | Duplicate payment attempts or uncertainty about financial state. | After a settlement failure, can users state whether money moved and choose the safe next action? | Moderated failure/recovery task |
-| D-04 | Preserve actor/action history in the payment workspace so later reviewers can reconstruct the control chain. | WORKING_PROTOTYPE / HYPOTHESIS | Approval history becomes decorative and cannot support handoff/audit reasoning. | Can a participant reconstruct who created, reviewed and advanced the payment using the visible trail? | Moderated reconstruction task |
+| Decision ID | Decision to challenge | Current evidence | Risk if wrong | Research question |
+| --- | --- | --- | --- | --- |
+| D-01 | Keep policy rationale, current approver and next approver visible in the payment detail via the Approval Rail. | PROJECT_CONTEXT + WORKING_PROTOTYPE / HYPOTHESIS | Reviewers approve without understanding why the control chain exists or who owns the next step. | Can finance users explain why the selected payment requires approval, who acts now and what happens next without being taught? |
+| D-02 | Keep shared transaction context visible while action rights change between Employee and Approver roles. | WORKING_PROTOTYPE / HYPOTHESIS | Disabled actions look broken or users misunderstand who is authorized to commit the decision. | Can users distinguish visibility from authority and recover when the current role cannot approve? |
+| D-03 | On settlement failure, state whether money moved and give a safe recovery path without creating a duplicate payment. | FORCED_STATE TECHNICAL_PROOF / HYPOTHESIS | Duplicate payment attempts or uncertainty about financial state. | After a settlement failure, can users state whether money moved and choose the safe next action? |
+| D-04 | Preserve actor/action history in the payment workspace so later reviewers can reconstruct the control chain. | WORKING_PROTOTYPE / HYPOTHESIS | Approval history becomes decorative and cannot support handoff/audit reasoning. | Can a participant reconstruct who created, reviewed and advanced the payment using the visible trail? |
 
 ## Audience and participant criteria
 
 **Target behavior/context:** People who review, approve, prepare or monitor business payments and approval chains.  
-**Must-have characteristics:** Uses business banking, ERP/AP, treasury, payment operations or a comparable approval workflow at least monthly.  
-**Preferred roles:** Finance Operations, Treasury, Accounts Payable/Payments, Finance Manager, Controller, CFO/finance approver.  
+**Must-have characteristics:** Uses business banking, ERP/AP, treasury, payment operations or a comparable approval workflow in real work.  
+**Preferred roles:** Finance Operations, Accounts Payable/Payments, Treasury, Finance Manager, Controller, CFO/finance approver.  
 **Proxy allowance:** Adjacent accounting, banking operations, compliance or procurement-approval users can participate only as `PROXY`; do not pool them into DIRECT_USER counts.  
-**Exclusions:** People with no experience preparing/reviewing/approving operational business payments; people directly involved in building Flux.  
-**Relevant accessibility/support needs:** Ask candidates about assistive technology, language, device, zoom or interaction support needed to participate comfortably.  
-**Target range:** 3 minimum / 5 preferred verified DIRECT_USER sessions.  
-**Recruitment channels:** Professional network, finance/accounting communities, former colleagues with relevant responsibilities, public GitHub volunteer issue.  
+**Exclusions:** People with no relevant operational experience; people directly involved in building Flux; people who do not consent to anonymized research notes.  
+**Target range:** 3 minimum / 5 preferred verified DIRECT_USER records.
 
 ## Method
 
-**Round type:** Moderated remote or in-person task-based usability / decision-comprehension test.  
+**Preferred:** moderated remote or in-person task-based usability / decision-comprehension test.  
+**Fallback:** async structured self-report using the same canonical form.  
 **Session length:** 20–30 minutes.  
-**Prototype:** `design-lens.html` for recruiter/evidence framing; actual tasks should be performed in the live product surface opened from it.  
+**Canonical product URL:** `https://flux-six-liard.vercel.app/`  
+**Build rule:** record the exact URL/build/commit used for every participant. Do not silently change builds inside a comparison round.
 
-This method can provide evidence about comprehension, task behavior, errors, recovery and confidence in the prototype. It cannot prove production approval-time reduction, fraud/loss outcomes, adoption or business impact.
+Method boundaries:
+- MODERATED may support claims about observed behavior, help, task outcome and recovery action.
+- ASYNC_SELF_REPORT may support only reported interpretation, intended action, confidence and perceived clarity.
+- Async responses must never be converted into observed task-success, time-on-task or moderator-help claims.
 
-## Tasks
+## Task order
 
-### Task 1 — Approval ownership / D-01
-> You are reviewing a USD 18,400 supplier payment. Without changing anything yet, tell me why it needs approval, who needs to act now, and what happens after that person approves.
+1. **D-01 Approval context** — explain why Acme USD 18,400 requires approval, who acts now and what happens next.
+2. **D-02 Role boundary** — start in Employee role and explain/recover from disabled approval action.
+3. **D-03 Settlement recovery — PRIORITY** — inspect `SETTLEMENT FAILED`, state whether money moved and choose a safe next action.
+4. **D-04 Audit reconstruction** — reconstruct actor/action history from the visible control trail.
 
-Capture: evidence inspected, current/next approver interpretation, hesitation, moderator help, confidence.
-
-### Task 2 — Role boundary / D-02
-> You need to approve this payment, but the interface is currently in the Employee role. Show me what you would do and explain what the disabled action means.
-
-Capture: whether permission is understood, whether participant expects hidden data/context, recovery path, help required.
-
-### Task 3 — Settlement failure / D-03 — PRIORITY
-> The payment has passed approvals but settlement fails. Tell me whether any money moved and what you would do next.
-
-Use the forced `SETTLEMENT FAILED` state. Capture: money-movement interpretation, duplicate-payment risk, recovery action, confidence.
-
-### Task 4 — Reconstruct the decision / D-04
-> A colleague asks what happened to this payment and who acted on it. Use the interface to reconstruct the control chain for them.
-
-Capture: which trail/rail evidence is used, omissions, ambiguity, confidence.
+Exact prompts, response fields, consent, screening and confidence scales live only in `FLUX-NATIVE-FORM.md`.
 
 ## Evidence capture
 
 - Use anonymized IDs `FLX-P01` … `FLX-P05`.
 - Separate observed behavior from participant interpretation.
-- Record moderator help exactly.
-- Record method as MODERATED or ASYNC_SELF_REPORT; do not infer observed task success from async forms.
+- Record method accurately.
+- Record every moderator hint/intervention in MODERATED sessions.
 - Store no real financial/account data; use prototype values only.
 - Atomic evidence goes to `evidence-ledger.jsonl` only after integrity review.
-- Contradictions remain in the ledger and findings; do not average them away.
+- Contradictions stay in the ledger and findings; do not average them away.
+- PROXY evidence remains separate from DIRECT_USER evidence.
 
 ## Learning criteria
 
 These are decision criteria, not desired success metrics:
 
-- D-01 is weakened if participants repeatedly cannot explain current/next approval ownership or policy rationale.
-- D-02 is weakened if disabled controls are interpreted as broken/unavailable product functionality rather than role permissions.
-- D-03 is weakened if participants believe money may already have moved, create a second payment, or cannot identify a safe retry path.
-- D-04 is weakened if participants cannot reconstruct actor/action history from the visible trail.
+- **D-01 weakened** if participants repeatedly cannot explain policy rationale + current approval owner + next step.
+- **D-02 weakened** if disabled controls are interpreted as broken/unbuilt functionality rather than role permissions, or recovery is unclear.
+- **D-03 weakened** if participants believe money may already have moved, create a duplicate payment, or cannot identify a safe recovery path.
+- **D-04 weakened** if participants cannot reconstruct actor/action history from the visible trail without guessing key steps.
 
 ## Synthesis and iteration gate
 
-Synthesize after at least 3 verified DIRECT_USER sessions; 5 is preferred if evidence is mixed. Keep proxy evidence in a separate column/evidence class. Any product change must cite the affected decision and evidence IDs. A changed UI is an **iteration**, not a validated improvement, until the same affected task is retested.
+Begin synthesis after at least **3 verified DIRECT_USER** records; **5 preferred** if evidence is mixed. Keep PROXY evidence separate. Any product change must cite affected decision IDs and atomic evidence IDs.
+
+A changed UI is an **iteration**, not a validated improvement, until the same affected task is retested on a frozen post-change build.
 
 ## Open blockers / UNKNOWNs
 
-- No verified direct-user sessions yet.
+- Verified DIRECT_USER sessions: **0**.
+- Verified PROXY sessions: **0**.
 - Exact participant mix is not yet known.
-- No production behavior or business outcome baseline exists.
-- The conceptual BEFORE mode in `design-lens.html` is deliberately a critique baseline, not a historical shipped version.
+- No production behavior or business-outcome baseline exists.
+- The conceptual BEFORE mode in `design-lens.html` is a critique baseline, not a historical shipped version.
