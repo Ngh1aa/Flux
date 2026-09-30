@@ -132,7 +132,8 @@
     const steps = [...document.querySelectorAll('[data-rail]')];
     if (!steps.length) return;
 
-    const labels = ['Draft', 'Finance manager', 'CFO', 'Executed'];
+    const finalRailLabel = status === 'completed' ? 'Executed' : status === 'processing' ? 'Settlement' : 'Execution';
+    const labels = ['Draft', 'Finance manager', 'CFO', finalRailLabel];
     const notes = ['Jamie Stone · 14:15', 'Alex Smith', 'Sarah Jensen', 'System'];
     const isCompleted = status === 'completed';
     const isRejected = status === 'rejected';
@@ -156,7 +157,11 @@
 
       if (copy) {
         copy.innerHTML = `<span class="rail-label">${labels[index]}</span><span class="rail-note">${notes[index]}</span>`;
-        if (step.classList.contains('current')) copy.insertAdjacentHTML('beforeend', '<span class="status status-pending rail-status">Pending</span>');
+        if (step.classList.contains('current')) {
+          const currentLabel = status === 'processing' ? 'In progress' : 'Pending';
+          const currentClass = status === 'processing' ? 'status status-neutral rail-status' : 'status status-pending rail-status';
+          copy.insertAdjacentHTML('beforeend', `<span class="${currentClass}">${currentLabel}</span>`);
+        }
       }
     });
 
@@ -172,6 +177,10 @@
       nextApprover.textContent = 'None · Payment rejected';
       approvalStatus.textContent = 'Rejected';
       approvalStatus.className = 'status status-danger';
+    } else if (status === 'processing') {
+      nextApprover.textContent = 'Settlement network · awaiting confirmation';
+      approvalStatus.textContent = 'Released';
+      approvalStatus.className = 'status status-neutral';
     } else {
       const next = stageIndex === 2 ? 'Alex Smith, Finance manager' : stageIndex === 3 ? 'Sarah Jensen, CFO' : 'System execution';
       nextApprover.textContent = next;
@@ -197,7 +206,7 @@
       addActivity('15:04:34', 'Payment released for execution', 'Flux control engine');
       stage = 4;
       row.dataset.stageIndex = '4';
-      row.dataset.stage = 'Executed';
+      row.dataset.stage = 'Settlement';
       row.dataset.status = 'processing';
       const statusCell = row.querySelector('.status');
       if (statusCell) {
@@ -205,7 +214,7 @@
         statusCell.className = 'status status-neutral';
       }
       const stageCell = row.querySelector('.stage-text');
-      if (stageCell) stageCell.textContent = 'Executed';
+      if (stageCell) stageCell.textContent = 'Settlement';
       updateDetailStatus('processing');
     }
 
