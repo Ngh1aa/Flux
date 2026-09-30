@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,follow">
+  <title>FLUX — Evidence Design Lens</title>
+  <style>
+    :root{color-scheme:light;--ink:#14171a;--muted:#66706a;--line:#d3d6d0;--paper:#fff;--bg:#eceee9;--navy:#1f3a5f;--ok:#2f5d3a;--warn:#6b4a0f;--danger:#6a2b20}
+    *{box-sizing:border-box}html,body{height:100%;margin:0}body{font-family:IBM Plex Sans,Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);overflow:hidden}
+    button,a{font:inherit}.shell{height:100%;display:grid;grid-template-columns:330px minmax(0,1fr)}.rail{background:#f7f8f5;border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}.rail-head{padding:18px;border-bottom:1px solid var(--line)}.eyebrow{font:700 10px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em;color:var(--navy)}h1{font-size:20px;line-height:1.15;margin:8px 0 6px}.rail-head p{font-size:12px;line-height:1.5;color:var(--muted);margin:0}.truth{margin-top:12px;padding:10px;border:1px solid #c8d2df;background:#eef3f8;font-size:11px;line-height:1.45}.scroll{overflow:auto;padding:14px 18px 24px}.section{padding:14px 0;border-bottom:1px solid var(--line)}.section:last-child{border-bottom:0}.section h2{font:700 10px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;margin:0 0 10px;color:var(--muted)}.controls{display:grid;gap:6px}.control{width:100%;text-align:left;border:1px solid var(--line);background:#fff;padding:9px 10px;cursor:pointer;font:700 10px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace}.control[aria-pressed="true"],.control.primary{border-color:var(--navy);background:var(--navy);color:white}.control:hover{border-color:#aeb5ad}.decision-list{display:grid;gap:7px}.decision{border:1px solid var(--line);background:#fff;padding:10px}.decision strong{display:block;font:700 11px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace}.decision p{font-size:11px;line-height:1.45;color:var(--muted);margin:5px 0 0}.decision .status{display:inline-block;margin-top:7px;font:700 9px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.05em;color:var(--warn)}.open-list{margin:0;padding-left:17px;color:var(--muted);font-size:11px;line-height:1.55}.tour-card{border:1px solid var(--line);background:#fff;padding:11px;min-height:128px}.tour-card b{display:block;font:700 10px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--navy)}.tour-card strong{display:block;font-size:14px;margin:6px 0}.tour-card p{font-size:11px;line-height:1.45;color:var(--muted);margin:0}.tour-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:9px}.stage{min-width:0;position:relative}.stagebar{height:52px;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:0 14px;background:#fff;border-bottom:1px solid var(--line)}.stagebar .title{font:700 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em}.stagebar .meta{font:600 10px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted);text-align:right}.frame-wrap{height:calc(100% - 52px);position:relative}.frame{display:block;width:100%;height:100%;border:0;background:white}.badge{position:absolute;right:12px;bottom:12px;background:rgba(20,23,26,.94);color:#fff;padding:7px 9px;font:600 10px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace;z-index:5;pointer-events:none}
+    @media(max-width:900px){.shell{grid-template-columns:1fr}.rail{position:absolute;z-index:20;width:min(330px,86vw);height:100%;box-shadow:12px 0 30px rgba(0,0,0,.12)}.stage{margin-left:48px}.rail-head{padding:14px}.scroll{padding:8px 14px 18px}}
+  </style>
+</head>
+<body>
+<div class="shell">
+  <aside class="rail" aria-label="Flux evidence lens controls">
+    <div class="rail-head">
+      <span class="eyebrow">EVIDENCE LENS / ROUND 01 PREP</span>
+      <h1>FLUX · controlled money movement</h1>
+      <p>Decision pins, forced operational states and a 60-second product tour. Research claims stay separate from technical proof.</p>
+      <div class="truth"><strong>Evidence boundary:</strong> the prototype and forced states are technical/product artifacts. Direct-user evidence is currently <strong>not collected</strong>.</div>
+    </div>
+    <div class="scroll">
+      <section class="section">
+        <h2>BEFORE / CURRENT</h2>
+        <div class="controls" role="group" aria-label="Compare conceptual baseline and current design">
+          <button class="control" id="baseline" type="button" aria-pressed="false">CONCEPTUAL BASELINE</button>
+          <button class="control" id="current" type="button" aria-pressed="true">CURRENT PROTOTYPE</button>
+        </div>
+      </section>
+      <section class="section">
+        <h2>STATE / EDGE CASE</h2>
+        <div class="controls" id="states">
+          <button class="control" data-state="normal" aria-pressed="true">NORMAL APPROVAL</button>
+          <button class="control" data-state="permission">PERMISSION DENIED</button>
+          <button class="control" data-state="expired">APPROVAL EXPIRED</button>
+          <button class="control" data-state="liquidity">INSUFFICIENT LIQUIDITY</button>
+          <button class="control" data-state="failed">SETTLEMENT FAILED</button>
+        </div>
+      </section>
+      <section class="section">
+        <h2>60-SECOND TOUR</h2>
+        <button class="control primary" id="startTour" type="button">START 5-STEP TOUR</button>
+        <div class="tour-card" id="tourCard" hidden>
+          <b id="tourIndex">01 / 05</b><strong id="tourTitle"></strong><p id="tourCopy"></p>
+          <div class="tour-actions"><button class="control" id="tourPrev" type="button">← PREV</button><button class="control primary" id="tourNext" type="button">NEXT →</button></div>
+        </div>
+      </section>
+      <section class="section">
+        <h2>DECISION MAP</h2>
+        <div class="decision-list">
+          <div class="decision"><strong>D-01 · Approval context</strong><p>Show why approval exists, who owns the current step and what comes next.</p><span class="status">PLANNED VALIDATION</span></div>
+          <div class="decision"><strong>D-02 · Role boundary</strong><p>Shared context stays visible while action rights change between Employee and Approver.</p><span class="status">PLANNED VALIDATION</span></div>
+          <div class="decision"><strong>D-03 · Failure/recovery</strong><p>Execution failure must state whether money moved and what recovery is safe.</p><span class="status">PLANNED VALIDATION</span></div>
+          <div class="decision"><strong>D-04 · Audit trail</strong><p>Approval and rejection history remains reconstructable instead of disappearing after the action.</p><span class="status">PLANNED VALIDATION</span></div>
+        </div>
+      </section>
+      <section class="section">
+        <h2>STILL OPEN</h2>
+        <ul class="open-list"><li>Direct-user baseline with finance/treasury/AP users.</li><li>Comprehension of approval ownership and permission boundaries.</li><li>Understanding of “no money moved” after execution failure.</li><li>Operational/business outcome evidence is not measured.</li></ul>
+      </section>
+    </div>
+  </aside>
+  <main class="stage">
+    <header class="stagebar"><span class="title">LIVE PRODUCT SURFACE / SIMULATED FINANCIAL DATA</span><span class="meta" id="modeMeta">CURRENT · NORMAL APPROVAL</span></header>
+    <div class="frame-wrap"><iframe class="frame" id="frame" src="index.html?lens=1" title="Flux payments prototype"></iframe><div class="badge">DESIGN LENS · NOT DIRECT-USER EVIDENCE</div></div>
+  </main>
+</div>
+<script>
+(() => {
+  'use strict';
+  const frame=document.getElementById('frame');
+  const modeMeta=document.getElementById('modeMeta');
+  const stateButtons=[...document.querySelectorAll('[data-state]')];
+  const baselineButton=document.getElementById('baseline');
+  const currentButton=document.getElementById('current');
+  let activeState='normal'; let baseline=false; let tourStep=-1;
+
+  const decisions=[
+    {id:'D-01',selector:'.approval-rail',title:'Approval context',copy:'Policy, current approver and next approver stay in the same decision surface.',evidence:'PROJECT_CONTEXT + WORKING_PROTOTYPE / HYPOTHESIS',risk:'Reviewers may still miss why the second approval exists.',status:'PLANNED_VALIDATION'},
+    {id:'D-02',selector:'.role-switch',title:'Role boundary',copy:'The workspace keeps context stable while decision rights change by role.',evidence:'WORKING_PROTOTYPE / HYPOTHESIS',risk:'Disabled actions can be read as broken rather than permission-bound.',status:'PLANNED_VALIDATION'},
+    {id:'D-03',selector:'.action-row',title:'Consequence + recovery',copy:'Approval actions must make execution consequence and failure recovery explicit.',evidence:'WORKING_PROTOTYPE / HYPOTHESIS',risk:'A failed settlement can create duplicate-action or money-movement anxiety.',status:'PLANNED_VALIDATION'},
+    {id:'D-04',selector:'#activity-list',title:'Audit trail',copy:'The control chain retains actor and action history for later reconstruction.',evidence:'WORKING_PROTOTYPE / HYPOTHESIS',risk:'History can become secondary decoration rather than decision evidence.',status:'PLANNED_VALIDATION'}
+  ];
+  const tour=[
+    {selector:'.payment-row.selected',title:'Start from the financial decision',copy:'The selected transfer keeps amount, counterparty, purpose and state visible before approval.'},
+    {selector:'.approval-summary',title:'Explain why control exists',copy:'Policy context is shown next to the payment instead of hidden in Settings.'},
+    {selector:'.approval-rail',title:'Show ownership across handoffs',copy:'The Approval Rail answers who approved, who acts now and what happens next.'},
+    {selector:'.role-switch',title:'Separate visibility from authority',copy:'Employees and approvers share context, while only authorized roles can commit the decision.'},
+    {selector:'#activity-list',title:'Preserve traceability',copy:'Creation, policy application and reviewer actions stay visible as a reconstructable trail.'}
+  ];
+
+  function addStyle(doc,css){const s=doc.createElement('style');s.dataset.evidenceLens='true';s.textContent=css;doc.head.appendChild(s)}
+  function resetFrame(){frame.src='index.html?lens=1&state='+encodeURIComponent(activeState)}
+  function setPressed(){stateButtons.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.state===activeState)));baselineButton.setAttribute('aria-pressed',String(baseline));currentButton.setAttribute('aria-pressed',String(!baseline));modeMeta.textContent=(baseline?'CONCEPTUAL BASELINE':'CURRENT')+' · '+activeState.replaceAll('-',' ').toUpperCase()}
+  function injectBaseStyles(doc){addStyle(doc,`
+    .lens-target{position:relative!important}.lens-pin{position:absolute;z-index:9998;top:5px;right:5px;border:1px solid #1f3a5f;background:#fff;color:#1f3a5f;padding:4px 6px;font:800 9px/1 ui-monospace,monospace;cursor:pointer;box-shadow:0 1px 0 rgba(0,0,0,.04)}.lens-pop{position:absolute;z-index:9999;top:31px;right:5px;width:280px;border:1px solid #1f3a5f;background:#fff;padding:10px;box-shadow:0 12px 28px rgba(20,23,26,.14);font:11px/1.45 IBM Plex Sans,system-ui,sans-serif}.lens-pop strong{display:block;font:800 10px/1.25 ui-monospace,monospace;color:#1f3a5f;margin-bottom:6px}.lens-pop b{font-weight:700}.lens-pop .meta{margin-top:7px;padding-top:7px;border-top:1px solid #d3d6d0;color:#66706a}.lens-tour-focus{outline:3px solid #1f3a5f!important;outline-offset:3px!important;z-index:9997!important}.lens-state-note{margin:10px 0;border:1px solid #b7bdb5;background:#f7f8f5;padding:10px;font-size:11px;line-height:1.45}.lens-state-note strong{display:block;font:800 10px/1.2 ui-monospace,monospace;margin-bottom:5px}.lens-state-note.warn{border-color:#c7a35d;background:#fff8e7;color:#5a3c08}.lens-state-note.danger{border-color:#b47a70;background:#fff3f0;color:#6a2b20}.lens-baseline-banner{border:1px solid #b7bdb5;background:#fff8e7;padding:10px 12px;margin-bottom:10px;font:700 10px/1.4 ui-monospace,monospace;color:#5a3c08}
+  `)}
+  function injectPins(doc){decisions.forEach(d=>{const target=doc.querySelector(d.selector);if(!target)return;target.classList.add('lens-target');const pin=doc.createElement('button');pin.className='lens-pin';pin.type='button';pin.textContent=d.id;pin.setAttribute('aria-label',`Open ${d.id} decision evidence`);pin.addEventListener('click',e=>{e.stopPropagation();doc.querySelectorAll('.lens-pop').forEach(p=>p.remove());const pop=doc.createElement('div');pop.className='lens-pop';pop.innerHTML=`<strong>${d.id} · ${d.title}</strong><div><b>Decision</b> — ${d.copy}</div><div class="meta"><b>Evidence</b> — ${d.evidence}<br><b>Risk</b> — ${d.risk}<br><b>Status</b> — ${d.status}</div>`;target.appendChild(pop)});target.appendChild(pin)})}
+  function note(doc,kind,title,copy){const host=doc.querySelector('.detail-pane');if(!host)return;const n=doc.createElement('div');n.className='lens-state-note '+kind;n.innerHTML=`<strong>${title}</strong>${copy}`;host.prepend(n)}
+  function applyState(doc){
+    if(activeState==='permission'){
+      doc.querySelector('[data-role="employee"]')?.click();
+      note(doc,'warn','PERMISSION DENIED / SAFE BOUNDARY','This role can inspect the payment and approval context but cannot approve or reject it. Switch to an authorized Approver or request access; no action was committed.');
+    }
+    if(activeState==='expired'){
+      const ds=doc.getElementById('detail-status');if(ds){ds.textContent='Expired';ds.className='status status-danger'}
+      const row=doc.querySelector('.payment-row.selected .status');if(row){row.textContent='Expired';row.className='status status-danger'}
+      ['approve-action','reject-action'].forEach(id=>{const b=doc.getElementById(id);if(b){b.disabled=true;b.title='Approval window expired. Re-submit for a new approval cycle.'}});
+      note(doc,'danger','APPROVAL WINDOW EXPIRED','The existing approval chain is closed. The initiator must re-submit so policy is re-evaluated; previous approval history remains visible.');
+    }
+    if(activeState==='liquidity'){
+      ['approve-action'].forEach(id=>{const b=doc.getElementById(id);if(b){b.disabled=true;b.title='Insufficient USD liquidity for execution.'}});
+      note(doc,'warn','INSUFFICIENT USD LIQUIDITY','Available USD 12,200.00 · Required USD 18,400.00. Approval can be reviewed, but execution is blocked until funding is resolved. No balance is silently borrowed from another currency.');
+    }
+    if(activeState==='failed'){
+      const ds=doc.getElementById('detail-status');if(ds){ds.textContent='Failed';ds.className='status status-danger'}
+      const step=doc.querySelector('[data-rail="4"]');if(step){step.className='rail-step current';const label=step.querySelector('.rail-label');if(label)label.textContent='Settlement failed';const noteEl=step.querySelector('.rail-note');if(noteEl)noteEl.textContent='No debit posted'}
+      ['approve-action','reject-action'].forEach(id=>{const b=doc.getElementById(id);if(b)b.disabled=true});
+      note(doc,'danger','SETTLEMENT FAILED / NO MONEY MOVED','Execution failed after approvals. No debit was posted. Keep the same reference and audit trail, verify beneficiary/funding details, then retry settlement without creating a duplicate payment.');
+    }
+  }
+  function applyBaseline(doc){if(!baseline)return;addStyle(doc,`.approval-summary,.approval-rail,#activity-list{display:none!important}.detail-pane .detail-section:has(#activity-list){display:none!important}`);const host=doc.querySelector('.detail-pane');if(host){const b=doc.createElement('div');b.className='lens-baseline-banner';b.innerHTML='CONCEPTUAL BASELINE / NOT A HISTORICAL SHIPPED SCREEN — status and amount remain, while policy rationale, approval ownership and audit trace are intentionally removed to expose the decision-context gap.';host.prepend(b)}}
+  function applyTour(doc){doc.querySelectorAll('.lens-tour-focus').forEach(el=>el.classList.remove('lens-tour-focus'));if(tourStep<0)return;const item=tour[tourStep];const target=doc.querySelector(item.selector);if(target){target.classList.add('lens-tour-focus');target.scrollIntoView({behavior:'smooth',block:'center'})}document.getElementById('tourIndex').textContent=String(tourStep+1).padStart(2,'0')+' / '+String(tour.length).padStart(2,'0');document.getElementById('tourTitle').textContent=item.title;document.getElementById('tourCopy').textContent=item.copy;document.getElementById('tourCard').hidden=false;document.getElementById('tourPrev').disabled=tourStep===0;document.getElementById('tourNext').textContent=tourStep===tour.length-1?'FINISH':'NEXT →'}
+  function apply(){const doc=frame.contentDocument;if(!doc)return;injectBaseStyles(doc);injectPins(doc);applyState(doc);applyBaseline(doc);applyTour(doc)}
+  frame.addEventListener('load',()=>requestAnimationFrame(apply));
+  stateButtons.forEach(b=>b.addEventListener('click',()=>{activeState=b.dataset.state;baseline=false;tourStep=-1;setPressed();resetFrame()}));
+  baselineButton.addEventListener('click',()=>{baseline=true;tourStep=-1;setPressed();resetFrame()});
+  currentButton.addEventListener('click',()=>{baseline=false;tourStep=-1;setPressed();resetFrame()});
+  document.getElementById('startTour').addEventListener('click',()=>{baseline=false;activeState='normal';tourStep=0;setPressed();resetFrame()});
+  document.getElementById('tourPrev').addEventListener('click',()=>{if(tourStep>0)tourStep-=1;applyTour(frame.contentDocument)});
+  document.getElementById('tourNext').addEventListener('click',()=>{if(tourStep>=tour.length-1){tourStep=-1;document.getElementById('tourCard').hidden=true;applyTour(frame.contentDocument);return}tourStep+=1;applyTour(frame.contentDocument)});
+  setPressed();
+})();
+</script>
+</body>
+</html>
