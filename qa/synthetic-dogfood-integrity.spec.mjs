@@ -5,8 +5,8 @@ const baseURL = process.env.FLUX_BASE_URL || 'http://127.0.0.1:4173';
 
 test('source integrity repairs remain visible before human Round 01', async ({ page }) => {
   await page.goto(`${baseURL}/accounts.html`, { waitUntil: 'domcontentloaded' });
-  await expect(page.getByText('Available to move')).toBeVisible();
-  await expect(page.getByText('Excludes reserved balances')).toBeVisible();
+  await expect(page.getByText('Available to move', { exact: true })).toBeVisible();
+  await expect(page.getByText('Excludes reserved balances · 5 currencies', { exact: true })).toBeVisible();
 
   await page.goto(`${baseURL}/cards.html`, { waitUntil: 'domcontentloaded' });
   await expect(page.locator('.card-number')).toContainText('•••• · •••• · ••••');
@@ -24,9 +24,9 @@ test('source integrity repairs remain visible before human Round 01', async ({ p
   await expect(solventa.locator('.stage-text')).toHaveText('Finance manager');
 
   await page.goto(`${baseURL}/reports.html`, { waitUntil: 'domcontentloaded' });
-  await expect(page.getByText('Projected Sep close')).toBeVisible();
-  await expect(page.getByText('3 currency threshold signals are open')).toBeVisible();
-  await expect(page.getByText('Policy exceptions · 30d')).toBeVisible();
+  await expect(page.getByText('Projected Sep close', { exact: true })).toBeVisible();
+  await expect(page.getByText(/3 currency threshold signals are open/)).toBeVisible();
+  await expect(page.getByText('Policy exceptions · 30d', { exact: true })).toBeVisible();
 });
 
 test('synthetic dogfood never mutates the human evidence boundary', async () => {
