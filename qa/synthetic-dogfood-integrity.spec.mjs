@@ -29,13 +29,21 @@ test('source integrity repairs remain visible before human Round 01', async ({ p
   await expect(page.getByText('Policy exceptions · 30d', { exact: true })).toBeVisible();
 });
 
-test('synthetic dogfood never mutates the human evidence boundary', async () => {
-  const synthetic = await fs.readFile('research/synthetic/flux-form-dogfood-01/README.md', 'utf8');
-  expect(synthetic).toContain('SYNTHETIC_DOGFOOD / NOT_DIRECT_USER_EVIDENCE');
-  expect(synthetic).toContain('Verified DIRECT_USER sessions: **0**');
+test('Round 01 has one Flux-native canonical form and no human-evidence drift', async () => {
+  const form = await fs.readFile('research/validation/flux-round-01/FLUX-NATIVE-FORM.md', 'utf8');
+  expect(form).toContain('CANONICAL / READY_TO_USE');
+  expect(form).toContain('D-01 Approval context');
+  expect(form).toContain('D-02 Role boundary');
+  expect(form).toContain('D-03 Settlement recovery');
+  expect(form).toContain('D-04 Audit reconstruction');
+  expect(form).toContain('https://flux-six-liard.vercel.app/');
+  expect(form).not.toContain('Safe to spend');
+  expect(form).not.toContain('Money Horizon');
 
   const status = JSON.parse(await fs.readFile('research/validation/flux-round-01/status.json', 'utf8'));
+  expect(status.research_assets.canonical_form).toBe('research/validation/flux-round-01/FLUX-NATIVE-FORM.md');
   expect(status.verified_direct_user_sessions).toBe(0);
+  expect(status.verified_proxy_sessions).toBe(0);
 
   const ledger = await fs.readFile('research/validation/flux-round-01/evidence-ledger.jsonl', 'utf8');
   expect(ledger).toBe('');
