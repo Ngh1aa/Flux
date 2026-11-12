@@ -47,6 +47,31 @@ Round 01 targets **3–5 real participants** from finance operations, treasury, 
 
 Do not claim faster approvals, fewer payment errors, better approval confidence or improved recovery until traceable participant evidence exists and the affected decision has been retested after iteration.
 
+## Working prototype (no backend)
+
+Every main workflow runs end to end in the browser. All data is fictional and nothing leaves the tab: no money moves and no email is sent.
+
+- **Data:** seeded from `data/seed.js` and copied into `sessionStorage` on first load (`core.js`). Changes survive navigation and reload within the tab. Use the user menu (top right) to **Reset demo data**.
+- **Payments** (`index.html`): 3-step new payment (payee, amount and date, review), with the approval chain evaluated live from the policy rules. Drafts can be edited, submitted or deleted. Pending payments can be cancelled by the initiator, or approved or rejected (reason required) in the Approver role. Detail deep link: `index.html?id=TRF-98234`.
+- **Saved payees** (`payees.html`): create, view, edit, delete.
+- **Accounts:** account detail with searchable, filterable transactions, move money between own accounts (now or scheduled, with scheduled cancel), receiving details and a CSV statement.
+- **Cards:** card detail, freeze or unfreeze, edit limit, issue card, cancel with confirmation.
+- **Team:** invite, edit role, remove or revoke with confirmation, resend invite, last-CFO guard.
+- **Expenses:** submit (receipt kept as a file name only), edit, delete, approve or reject with reason.
+- **Reports:** 30d, 90d, YTD or custom range with currency and source filters, CSV export generated client-side, report schedule.
+- **Approval policies** (`settings.html`): create, edit and delete rules with validation, change history, CSV export.
+- **States:** skeleton loading, empty and filtered-empty lists, not-found detail (`?id=UNKNOWN`), inline validation, a simulated load error (`?simulate=load-error`) and a simulated save failure (user menu, **Fail the next save**) with Try again.
+- The design lens (`index.html?lens=1`) always uses the seed data, so forced evidence states stay stable.
+
+### Tests
+
+```bash
+py -3 -m http.server 8901 --bind 127.0.0.1
+NODE_PATH=<folder containing playwright> node --test qa/full-flows.test.cjs
+```
+
+`qa/full-flows.test.cjs` covers every CRUD flow above, reset, console errors and `href="#"` on every page.
+
 ## Local review
 
 This repository includes static prototype/reviewer surfaces alongside the project implementation. Use the project’s existing development setup for local work, and treat the Vercel URL above as the canonical reviewer prototype unless the source-of-truth plan is updated.
