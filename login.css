@@ -1,0 +1,17 @@
+/* Flux sign-in screen */
+.login-shell { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 32px 16px 0; background: var(--page); }
+.login-card { width: 100%; max-width: 400px; padding: 28px; border: 1px solid var(--line); background: var(--surface); }
+.login-brand { margin-bottom: 22px; }
+.login-card h1 { margin: 0; font-size: 22px; font-weight: 500; letter-spacing: -.01em; }
+.login-lede { margin: 4px 0 20px; color: var(--secondary); font-size: 13px; }
+.login-continue { width: 100%; justify-content: center; gap: 10px; min-height: 42px; }
+.login-continue .user-initials { border-color: rgba(255, 255, 255, .5); color: inherit; }
+.login-divider { display: flex; align-items: center; gap: 10px; margin: 20px 0 14px; color: var(--muted); font-size: 12px; }
+.login-divider::before, .login-divider::after { content: ''; flex: 1; border-top: 1px solid var(--line); }
+#login-form { display: grid; gap: 12px; }
+#login-form .input { width: 100%; }
+.login-error { padding: 8px 10px; border: 1px solid var(--danger); color: var(--danger); background: var(--surface); font-size: 12px; }
+.login-submit { width: 100%; justify-content: center; min-height: 38px; }
+.login-help { margin: 16px 0 0; color: var(--muted); font-size: 12px; }
+.login-footer { border-top: 0; padding: 0 0 20px; text-align: center; }
+@media (max-width: 520px) { .login-card { padding: 22px 18px; } }

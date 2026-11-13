@@ -1,4 +1,4 @@
-/* Flux full-prototype end-to-end flows.
+/* Flux end-to-end flows.
    Run: serve the repo (py -3 -m http.server 8901 --bind 127.0.0.1), then
    NODE_PATH=<dir with playwright> node --test qa/full-flows.test.cjs
    Each test gets a fresh browser context, so sessionStorage starts from the seed. */
@@ -9,7 +9,8 @@ const { chromium } = require('playwright');
 
 const BASE = (process.env.FLUX_BASE_URL || 'http://127.0.0.1:8901').replace(/\/$/, '');
 const APP_PAGES = ['index.html', 'payees.html', 'accounts.html', 'cards.html', 'team.html', 'expenses.html', 'reports.html', 'settings.html'];
-const DOC_PAGES = ['design-system.html', 'component-states.html', 'sitemap.html', 'user-flow.html', 'prototype.html', 'design-lens.html'];
+const SIGNAL = /prototype|demo data|sandbox|simulat|fictional|state lab|portfolio review/i;
+const DOC_PAGES = ['login.html', 'design-system.html', 'component-states.html', 'sitemap.html', 'user-flow.html', 'prototype.html', 'design-lens.html'];
 
 let browser;
 before(async () => { browser = await chromium.launch(); });
@@ -78,6 +79,67 @@ test('every page loads without console errors and has no href="#"', async () => 
     const deadLinks = await session.page.locator('a[href="#"], a[href=""], a:not([href])').count();
     assert.equal(deadLinks, 0, `${path} has ${deadLinks} dead links`);
   }
+  await done(session);
+});
+
+test('product pages show no prototype signals; demo tools only with ?demo=1', async () => {
+  const session = await open('index.html');
+  const { page } = session;
+  for (const path of APP_PAGES) {
+    await go(page, path);
+    const body = await page.locator('body').innerText();
+    assert.doesNotMatch(body, SIGNAL, `${path} shows a prototype signal: ${body.match(SIGNAL)?.[0]}`);
+    assert.equal(await page.locator('#demo-tools').count(), 0, `${path} shows demo tools without ?demo=1`);
+    assert.equal(await page.locator('a[href*="design-lens"], a[href*="prototype.html"], a[href*="design-system"], a[href*="component-states"], a[href*="sitemap"], a[href*="user-flow"]').count(), 0, `${path} links to documentation`);
+    assert.match(await page.locator('.app-footer').innerText(), /^Concept product designed by Đỗ Anh Nghĩa\.$/);
+  }
+  // Dialog and menu copy that is hidden until opened.
+  await go(page, 'index.html');
+  await page.click('.user-menu');
+  assert.doesNotMatch(await page.locator('#account-menu').innerText(), SIGNAL);
+  await page.keyboard.press('Escape');
+  await page.click('#open-payment-dialog');
+  await page.click('#payment-dialog [data-nav="next"]');
+  await page.fill('#amount-input', '900');
+  await page.click('#payment-dialog [data-nav="next"]');
+  assert.doesNotMatch(await page.locator('#payment-dialog').innerText(), SIGNAL);
+  await page.click('#payment-dialog [value="cancel"]');
+
+  await go(page, 'index.html?demo=1');
+  await page.waitForSelector('#demo-tools .demo-tools-toggle', { state: 'visible' });
+  await page.click('.demo-tools-toggle');
+  await page.waitForSelector('#demo-reset', { state: 'visible' });
+  await page.waitForSelector('#demo-fail-toggle', { state: 'visible' });
+  await go(page, 'cards.html');
+  await page.waitForSelector('#demo-tools', { state: 'visible' });
+  await go(page, 'cards.html?demo=0');
+  assert.equal(await page.locator('#demo-tools').count(), 0, '?demo=0 turns demo tools off');
+  await done(session);
+});
+
+test('root opens signed in; sign out shows login; continue and credentials sign back in', async () => {
+  const session = await open('');
+  const { page } = session;
+  await page.waitForSelector('#payments-body tr[data-id]');
+  assert.match(await page.locator('.user-menu').innerText(), /Jamie Stone/);
+  await page.click('.user-menu');
+  await Promise.all([page.waitForURL(/login\.html/), page.click('#sign-out')]);
+  await page.waitForSelector('#continue-as');
+  assert.doesNotMatch(await page.locator('body').innerText(), SIGNAL);
+  // Product pages stay behind the login screen while signed out.
+  await page.goto(`${BASE}/cards.html`);
+  await page.waitForURL(/login\.html\?next=cards\.html/);
+  await page.fill('#login-password', 'wrong');
+  await page.click('#login-form button[type="submit"]');
+  await page.waitForSelector('#login-error:not([hidden])');
+  await page.fill('#login-email', 'jamie.stone@northstar.co');
+  await page.fill('#login-password', 'northstar');
+  await Promise.all([page.waitForURL(/cards\.html$/), page.click('#login-form button[type="submit"]')]);
+  await page.waitForSelector('#cards-body tr[data-id]');
+  await page.click('.user-menu');
+  await Promise.all([page.waitForURL(/login\.html/), page.click('#sign-out')]);
+  await Promise.all([page.waitForURL(/index\.html$/), page.click('#continue-as')]);
+  await page.waitForSelector('#payments-body tr[data-id]');
   await done(session);
 });
 
@@ -166,7 +228,7 @@ test('payments: approve through the chain, reject with reason, cancel pending', 
   await waitToast(page, 'Next: CFO');
   assert.equal(await text(page, '#approval-rail .rail-step.current .rail-label'), 'CFO');
   await page.click('#approve-action');
-  await waitToast(page, 'released for simulated settlement');
+  await waitToast(page, 'released for settlement');
   assert.equal(await text(page, '#detail-status'), 'Processing');
   // Reject requires a reason.
   await page.click('#payments-body tr[data-id="TRF-98152"]');
@@ -191,17 +253,17 @@ test('payments: approve through the chain, reject with reason, cancel pending', 
   await done(s);
 });
 
-test('payments: simulated failure is recoverable, unknown id shows not found, load error retries', async () => {
-  const s = await open('index.html?id=TRF-98234');
+test('payments: save failure (demo tools) is recoverable, unknown id shows not found, load error retries', async () => {
+  const s = await open('index.html?demo=1&id=TRF-98234');
   const { page } = s;
-  await page.click('.user-menu');
+  await page.click('.demo-tools-toggle');
   await page.check('#demo-fail-toggle');
   await page.keyboard.press('Escape');
   await page.waitForSelector('#demo-fail-flag:not([hidden])');
   await page.click('[data-role="approver"]');
   await page.click('#approve-action');
   await page.waitForSelector('.action-error');
-  assert.match(await text(page, '.action-error'), /simulated failure/i);
+  assert.match(await text(page, '.action-error'), /did not respond/i);
   assert.equal(await text(page, '#detail-status'), 'Pending', 'nothing saved on failure');
   await page.click('.action-error button');
   await waitToast(page, 'Next: CFO');
@@ -224,9 +286,9 @@ test('payments: simulated failure is recoverable, unknown id shows not found, lo
 });
 
 test('payment form failure keeps input and retries', async () => {
-  const s = await open('index.html');
+  const s = await open('index.html?demo=1');
   const { page } = s;
-  await page.click('.user-menu');
+  await page.click('.demo-tools-toggle');
   await page.check('#demo-fail-toggle');
   await page.keyboard.press('Escape');
   await page.click('#open-payment-dialog');
@@ -257,7 +319,7 @@ test('saved payees: create, view, edit, delete and empty state', async () => {
   await page.waitForSelector('#err-payee-form-account');
   await page.waitForSelector('#err-payee-form-email');
   await page.fill('#payee-account', 'US 121000248 7781');
-  await page.fill('#payee-email', 'ar@harborprint.example');
+  await page.fill('#payee-email', 'ar@harborprint.com');
   await page.click('#payee-submit');
   await waitToast(page, 'Harbor Print Co saved');
   assert.equal(await text(page, '#payee-pane-name'), 'Harbor Print Co');
@@ -301,7 +363,7 @@ test('accounts: detail, transaction search and filter, move money, scheduled can
   await page.fill('#move-amount', '1000');
   assert.match(await text(page, '#move-preview'), /€917\.43/);
   await page.click('#move-money-form .btn-primary');
-  await waitToast(page, 'No funds moved');
+  await waitToast(page, 'completed');
   assert.match(await text(page, '#accounts-body tr[data-id="USD"] td:nth-child(3)'), /285,420\.00/);
   // Scheduled transfer, then cancel it from the transaction detail.
   await page.click('#open-move-money');
@@ -381,10 +443,10 @@ test('team: invite, resend, edit role, remove, last-CFO guard', async () => {
   await page.fill('#invite-email', 'dana.okafor@northstar.co');
   await page.selectOption('#invite-role', 'Bookkeeper');
   await page.click('#invite-form .btn-primary');
-  await waitToast(page, 'does not send email');
+  await waitToast(page, 'Invite sent to dana.okafor@northstar.co');
   assert.equal(await text(page, '#member-pane-status'), 'Invited');
   await page.click('#resend-invite');
-  await waitToast(page, 'marked as resent');
+  await waitToast(page, 'Invite resent');
   await page.click('#edit-member');
   await page.selectOption('#member-role', 'Finance manager');
   await page.click('#member-form .btn-primary');
@@ -562,8 +624,8 @@ test('approval policies: create, edit, delete with validation; history; export; 
   await done(s);
 });
 
-test('reset demo data restores the seed and survives navigation', async () => {
-  const s = await open('payees.html?id=PYE-1001');
+test('reset demo data (demo tools) restores the seed and survives navigation', async () => {
+  const s = await open('payees.html?demo=1&id=PYE-1001');
   const { page } = s;
   await page.click('#payee-delete');
   await confirm(page);
@@ -571,7 +633,7 @@ test('reset demo data restores the seed and survives navigation', async () => {
   await go(page, 'index.html');
   await go(page, 'payees.html');
   assert.equal(await page.locator('#payees-body tr[data-id="PYE-1001"]').count(), 0, 'deletion persists across navigation');
-  await page.click('.user-menu');
+  await page.click('.demo-tools-toggle');
   await page.click('#demo-reset');
   await Promise.all([page.waitForURL(/payees\.html$/), confirm(page)]);
   await page.waitForSelector('#payees-body tr[data-id="PYE-1001"]');

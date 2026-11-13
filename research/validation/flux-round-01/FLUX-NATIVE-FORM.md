@@ -123,7 +123,7 @@ Ví dụ: business banking, ERP, AP tool, treasury platform, spreadsheet…
 
 ## Task prompt
 
-Mở **Payments**. Hãy tìm khoản thanh toán **Acme · USD 18,400**.
+Mở **Payments**. Hãy tìm khoản thanh toán **Arcwell Systems · USD 18,400**.
 
 > “Bạn đang review khoản thanh toán này. Chưa thay đổi gì cả, hãy cho biết **vì sao nó cần approval, ai cần hành động ở bước hiện tại, và sau khi người đó approve thì chuyện gì xảy ra tiếp theo**.”
 

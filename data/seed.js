@@ -1,18 +1,19 @@
-/* Flux demo seed data.
-   This is the single source of demo data. Every page copies it into
-   sessionStorage on first load (see core.js). Nothing here is real:
-   no account, card, payee or person exists, and no money moves. */
+/* Flux seed data.
+   Single source of workspace data. Every page copies it into sessionStorage
+   on first load (see core.js). All companies, people and accounts are fictional. */
 (() => {
   'use strict';
 
   const seed = {
     meta: {
-      version: 3,
+      version: 4,
       workspace: 'Northstar Holdings',
       baseCurrency: 'USD',
-      // The prototype runs on a simulated clock that starts here.
+      // The workspace clock starts here and advances in real time.
       clockStart: '2026-09-15T15:02:00',
-      currentUser: { name: 'Jamie Stone', title: 'Finance ops', initials: 'JS' }
+      currentUser: { name: 'Jamie Stone', title: 'Finance ops', role: 'Finance operations', email: 'jamie.stone@northstar.co', initials: 'JS' },
+      // Seeded sign-in for the login screen (session only).
+      credentials: { email: 'jamie.stone@northstar.co', password: 'northstar' }
     },
 
     fx: { USD: 1, EUR: 1.09, GBP: 1.27, JPY: 0.0068, SGD: 0.74 },
@@ -25,17 +26,17 @@
     },
 
     payees: [
-      { id: 'PYE-1001', name: 'Acme Corp (Global)', country: 'United States', currency: 'USD', bank: 'JPMorgan Chase', account: 'US 021000021 •• 7710', email: 'ap@acme-global.example', createdAt: '2025-11-02' },
-      { id: 'PYE-1002', name: 'Takahashi Industrial', country: 'Japan', currency: 'JPY', bank: 'MUFG Bank', account: 'JP 0005-221 •• 3381', email: 'finance@takahashi.example', createdAt: '2025-06-12' },
-      { id: 'PYE-1003', name: 'Nordlicht GmbH', country: 'Germany', currency: 'EUR', bank: 'Deutsche Bank', account: 'DE44 5001 0517 •• 2219', email: 'billing@nordlicht.example', createdAt: '2026-01-20' },
-      { id: 'PYE-1004', name: 'Fieldwork Studio', country: 'United Kingdom', currency: 'GBP', bank: 'Barclays', account: 'GB12 BARC 2004 •• 5521', email: 'studio@fieldwork.example', createdAt: '2025-09-01' },
-      { id: 'PYE-1005', name: 'Solventa Sp. z o.o.', country: 'Poland', currency: 'EUR', bank: 'PKO BP', account: 'PL61 1090 1014 •• 8874', email: 'faktury@solventa.example', createdAt: '2026-09-01' },
-      { id: 'PYE-1006', name: 'Atlas Freight BV', country: 'Netherlands', currency: 'EUR', bank: 'ING', account: 'NL91 INGB 0417 •• 4300', email: 'ar@atlasfreight.example', createdAt: '2024-03-10' }
+      { id: 'PYE-1001', name: 'Arcwell Systems Inc.', country: 'United States', currency: 'USD', bank: 'JPMorgan Chase', account: 'US 021000021 •• 7710', email: 'ap@arcwellsystems.com', createdAt: '2025-11-02' },
+      { id: 'PYE-1002', name: 'Takahashi Industrial', country: 'Japan', currency: 'JPY', bank: 'MUFG Bank', account: 'JP 0005-221 •• 3381', email: 'finance@takahashi-ind.co.jp', createdAt: '2025-06-12' },
+      { id: 'PYE-1003', name: 'Nordlicht GmbH', country: 'Germany', currency: 'EUR', bank: 'Deutsche Bank', account: 'DE44 5001 0517 •• 2219', email: 'billing@nordlicht-cloud.de', createdAt: '2026-01-20' },
+      { id: 'PYE-1004', name: 'Fieldwork Studio', country: 'United Kingdom', currency: 'GBP', bank: 'Barclays', account: 'GB12 BARC 2004 •• 5521', email: 'studio@fieldworkstudio.co.uk', createdAt: '2025-09-01' },
+      { id: 'PYE-1005', name: 'Solventa Sp. z o.o.', country: 'Poland', currency: 'EUR', bank: 'PKO BP', account: 'PL61 1090 1014 •• 8874', email: 'faktury@solventa-research.pl', createdAt: '2026-09-01' },
+      { id: 'PYE-1006', name: 'Atlas Freight BV', country: 'Netherlands', currency: 'EUR', bank: 'ING', account: 'NL91 INGB 0417 •• 4300', email: 'ar@atlasfreight.nl', createdAt: '2024-03-10' }
     ],
 
     payments: [
       {
-        id: 'TRF-98234', payeeId: 'PYE-1001', counterparty: 'Acme Corp (Global)', country: 'United States', currency: 'USD', amount: 18400,
+        id: 'TRF-98234', payeeId: 'PYE-1001', counterparty: 'Arcwell Systems Inc.', country: 'United States', currency: 'USD', amount: 18400,
         purpose: 'Supplier settlement', reference: 'September supplier settlement', executionDate: '2026-09-16', createdAt: '2026-09-15T14:15:22',
         status: 'pending', chain: ['Finance manager', 'CFO'], stage: 0, policy: 'Rule 01: amount above USD 10,000', approvals: [],
         activity: [
@@ -53,7 +54,7 @@
           { at: '2026-09-15T12:42:12', title: 'Policy 01 applied', meta: 'Finance manager → CFO approval required' },
           { at: '2026-09-15T13:05:41', title: 'Approved by Finance manager', meta: 'Alex Smith' },
           { at: '2026-09-15T13:48:02', title: 'Approved by CFO', meta: 'Sarah Jensen' },
-          { at: '2026-09-15T13:48:05', title: 'Released for settlement', meta: 'Flux control engine (simulated)' }
+          { at: '2026-09-15T13:48:05', title: 'Released for settlement', meta: 'Flux policy engine' }
         ]
       },
       {
@@ -74,7 +75,7 @@
           { at: '2026-09-14T16:28:00', title: 'Payment created', meta: 'Jamie Stone, Employee' },
           { at: '2026-09-14T16:51:12', title: 'Approved by Finance manager', meta: 'Alex Smith' },
           { at: '2026-09-14T17:20:40', title: 'Approved by CFO', meta: 'Sarah Jensen' },
-          { at: '2026-09-14T18:02:19', title: 'Settlement confirmed', meta: 'Simulated network confirmation' }
+          { at: '2026-09-14T18:02:19', title: 'Settlement confirmed', meta: 'SWIFT gpi confirmation' }
         ]
       },
       {
@@ -95,7 +96,7 @@
           { at: '2026-09-13T09:31:45', title: 'Payment created', meta: 'Jamie Stone, Employee' },
           { at: '2026-09-13T10:02:00', title: 'Approved by Finance manager', meta: 'Alex Smith' },
           { at: '2026-09-13T11:15:30', title: 'Approved by CFO', meta: 'Sarah Jensen' },
-          { at: '2026-09-13T12:40:11', title: 'Settlement confirmed', meta: 'Simulated network confirmation' }
+          { at: '2026-09-13T12:40:11', title: 'Settlement confirmed', meta: 'SWIFT gpi confirmation' }
         ]
       },
       {
@@ -116,7 +117,7 @@
 
     transactions: [
       { id: 'TX-50311', accountId: 'USD', date: '2026-09-15T14:38:00', description: 'Customer receipt', counterparty: 'Brightline Retail Inc.', direction: 'credit', amount: 42800, status: 'posted' },
-      { id: 'TX-50302', accountId: 'USD', date: '2026-09-15T14:15:24', description: 'Reserved for TRF-98234', counterparty: 'Acme Corp (Global)', direction: 'debit', amount: 18400, status: 'pending' },
+      { id: 'TX-50302', accountId: 'USD', date: '2026-09-15T14:15:24', description: 'Reserved for TRF-98234', counterparty: 'Arcwell Systems Inc.', direction: 'debit', amount: 18400, status: 'pending' },
       { id: 'TX-50288', accountId: 'USD', date: '2026-09-15T09:02:00', description: 'Card settlement batch', counterparty: 'Flux card program', direction: 'debit', amount: 6214.55, status: 'posted' },
       { id: 'TX-50261', accountId: 'USD', date: '2026-09-14T17:45:00', description: 'Customer receipt', counterparty: 'Harbor & Co.', direction: 'credit', amount: 18950, status: 'posted' },
       { id: 'TX-50240', accountId: 'USD', date: '2026-09-13T11:20:00', description: 'Payroll funding', counterparty: 'Northstar US Payroll', direction: 'debit', amount: 84200, status: 'posted' },

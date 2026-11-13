@@ -32,7 +32,7 @@
     missingEl.hidden = false;
     missingEl.innerHTML = empty
       ? F.stateBlock({ title: 'Nothing selected', body: `${noun} details appear here once one exists.` })
-      : F.stateBlock({ icon: 'missing', title: `${noun} ${id} not found`, body: 'It may have been removed, or the demo data was reset.', action: `Show first ${noun.toLowerCase()}` });
+      : F.stateBlock({ icon: 'missing', title: `${noun} ${id} not found`, body: 'It may have been removed, or the link is out of date.', action: `Show first ${noun.toLowerCase()}` });
     missingEl.querySelector('[data-state-action]')?.addEventListener('click', onShowFirst);
   }
 
@@ -178,7 +178,7 @@
       F.confirmAction({
         kicker: 'Scheduled transfer',
         title: `Cancel ${t.transferId}?`,
-        body: 'The reserved amount returns to the source account in the demo ledger. Nothing was sent.',
+        body: 'The reserved amount returns to the source account. The transfer will not run.',
         confirmLabel: 'Cancel transfer',
         busyLabel: 'Cancelling…',
         action: () => store.commit((s) => {
@@ -219,7 +219,7 @@
       if (!from || !to || !(amount > 0)) { preview.textContent = 'Enter an amount to see the converted value.'; return; }
       const rate = store.state.fx[from.currency] / store.state.fx[to.currency];
       const scheduled = moveForm.elements.date.value && moveForm.elements.date.value > F.isoDate();
-      preview.innerHTML = `<strong class="mono">${fmt.money(amount, from.currency)}</strong> arrives as <strong class="mono">${fmt.money(amount * rate, to.currency)}</strong>. Demo rate 1 ${esc(from.currency)} = ${rate.toFixed(4)} ${esc(to.currency)}. ${scheduled ? 'Funds are reserved until the transfer date.' : 'Recorded today.'}`;
+      preview.innerHTML = `<strong class="mono">${fmt.money(amount, from.currency)}</strong> arrives as <strong class="mono">${fmt.money(amount * rate, to.currency)}</strong>. Indicative rate 1 ${esc(from.currency)} = ${rate.toFixed(4)} ${esc(to.currency)}. ${scheduled ? 'Funds are reserved until the transfer date.' : 'Recorded today.'}`;
     }
     ['from', 'to', 'amount', 'date'].forEach((n) => moveForm.elements[n].addEventListener(n === 'amount' ? 'input' : 'change', syncMove));
     F.bindForm(moveForm, {
@@ -258,8 +258,8 @@
         }).then((r) => {
           renderList();
           F.toast(r.scheduled
-            ? `${r.transferId} scheduled. ${fmt.money(r.amount, r.from.currency)} is reserved in the demo ledger. No funds moved.`
-            : `${r.transferId} recorded in the demo ledger. No funds moved.`);
+            ? `${r.transferId} scheduled. ${fmt.money(r.amount, r.from.currency)} is reserved until the transfer date.`
+            : `${r.transferId} completed. Funds are available in the destination account.`);
         });
       }
     });
@@ -383,7 +383,7 @@
       try {
         await store.commit((s) => { s.cards.find((x) => x.id === c.id).status = next; });
         render();
-        F.toast(next === 'Frozen' ? `Card •••• ${c.last4} frozen. New spend is declined (simulated).` : c.status === 'Pending' ? `Card •••• ${c.last4} activated.` : `Card •••• ${c.last4} unfrozen.`);
+        F.toast(next === 'Frozen' ? `Card •••• ${c.last4} frozen. New spend is declined.` : c.status === 'Pending' ? `Card •••• ${c.last4} activated.` : `Card •••• ${c.last4} unfrozen.`);
       } catch (error) {
         button.disabled = false;
         button.textContent = original;
@@ -468,7 +468,7 @@
           search.value = '';
           setSegment(filterButtons, 'cardFilter', 'all');
           render();
-          F.toast(card.status === 'Active' ? `Virtual card •••• ${card.last4} issued to ${card.holder}. Demo only.` : `Physical card •••• ${card.last4} issued to ${card.holder}. It stays Pending until activated.`);
+          F.toast(card.status === 'Active' ? `Virtual card •••• ${card.last4} issued to ${card.holder}. It is ready to use.` : `Physical card •••• ${card.last4} issued to ${card.holder}. It stays Pending until activated.`);
         });
       }
     });
@@ -597,7 +597,7 @@
           search.value = '';
           roleFilter.value = 'all';
           render();
-          F.toast(`Invite recorded for ${m.email} as ${m.role}. The demo does not send email.`);
+          F.toast(`Invite sent to ${m.email} as ${m.role}.`);
         });
       }
     });
@@ -661,7 +661,7 @@
       try {
         const at = await store.commit((s) => { const t = s.members.find((x) => x.id === m.id); t.invitedAt = F.isoLocal(); return t.invitedAt; });
         renderPane();
-        F.toast(`Invite for ${m.email} marked as resent at ${fmt.time(at)}. No email is sent in this demo.`);
+        F.toast(`Invite resent to ${m.email} at ${fmt.time(at)}.`);
       } catch (error) {
         F.toast(error.message, 'error');
       } finally {
@@ -801,7 +801,7 @@
       try {
         await store.commit((s) => { const t = s.expenses.find((e) => e.id === x.id); t.status = 'approved'; t.reviewedBy = 'Alex Smith'; t.reviewedAt = F.isoLocal(); });
         render();
-        F.toast(`${x.merchant} approved and queued for accounting sync (simulated).`);
+        F.toast(`${x.merchant} approved and queued for accounting sync.`);
       } catch (error) {
         renderPane();
         F.toast(error.message, 'error');
@@ -1075,7 +1075,7 @@
       const s = store.state.reportSchedule;
       line.hidden = !s;
       if (!s) { line.innerHTML = ''; return; }
-      line.innerHTML = `<span><strong>Scheduled:</strong> ${esc(s.frequency)} to <span class="mono">${esc(s.recipient)}</span>. Demo only, no email is sent.</span><span class="schedule-actions"><button class="btn" type="button" id="schedule-edit">Edit</button><button class="btn btn-danger" type="button" id="schedule-remove">Remove</button></span>`;
+      line.innerHTML = `<span><strong>Scheduled:</strong> ${esc(s.frequency)} to <span class="mono">${esc(s.recipient)}</span>.</span><span class="schedule-actions"><button class="btn" type="button" id="schedule-edit">Edit</button><button class="btn btn-danger" type="button" id="schedule-remove">Remove</button></span>`;
       document.getElementById('schedule-edit').addEventListener('click', openSchedule);
       document.getElementById('schedule-remove').addEventListener('click', () => F.confirmAction({
         kicker: 'Report delivery', title: 'Remove this schedule?', body: `${s.recipient} will no longer be listed as a recipient.`, confirmLabel: 'Remove schedule', busyLabel: 'Removing…',
@@ -1092,7 +1092,7 @@
       validate(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.recipient) ? {} : { recipient: 'Enter a valid email address.' }; },
       submit(v) {
         return store.commit((s) => { s.reportSchedule = { frequency: v.frequency, recipient: v.recipient.toLowerCase(), range, currency: currencyInput.value, source: sourceInput.value }; })
-          .then(() => { renderSchedule(); F.toast(`Schedule saved: ${v.frequency}. No email is sent in this demo.`); });
+          .then(() => { renderSchedule(); F.toast(`Schedule saved: ${v.frequency}.`); });
       }
     });
     document.getElementById('open-schedule').addEventListener('click', openSchedule);
@@ -1110,7 +1110,7 @@
         const block = document.createElement('div');
         block.className = 'load-error';
         block.setAttribute('role', 'alert');
-        block.innerHTML = `${F.ICONS.error}<strong>Could not load reports</strong><span>The demo service did not respond (simulated). Your session data is unchanged.</span><button class="btn" type="button">Retry</button>`;
+        block.innerHTML = `${F.ICONS.error}<strong>Could not load reports</strong><span>The server did not respond. Your data is unchanged.</span><button class="btn" type="button">Retry</button>`;
         block.querySelector('button').addEventListener('click', () => { F.setParam('simulate', null); block.remove(); layout.hidden = false; apply(); });
         layout.before(block);
         return;

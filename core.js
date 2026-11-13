@@ -1,6 +1,6 @@
-/* Flux core: session store, simulated clock, formatting and shared UI states.
-   All demo changes live in sessionStorage for this tab only. No backend exists,
-   no money moves and no email is sent. */
+/* Flux core: session store, clock, formatting, sign-in and shared UI states.
+   Data lives in sessionStorage for this tab (there is no backend). Demo tools
+   (reset, fail the next save) appear only with ?demo=1. */
 (() => {
   'use strict';
 
@@ -12,6 +12,37 @@
   const params = new URLSearchParams(window.location.search);
   // The design lens embeds the product in an iframe and needs stable, seed-only data.
   const lens = params.get('lens') === '1';
+
+  /* Session sign-in. A first visit is signed in as the workspace user; signing out
+     sets a tab flag and shows login.html until the user signs in again. */
+  const SIGNED_OUT_KEY = 'flux-signed-out';
+  const DEMO_KEY = 'flux-demo-tools';
+  const tabStorage = (() => { try { return window.sessionStorage; } catch { return null; } })();
+  const auth = {
+    signedIn() {
+      try { return !tabStorage || tabStorage.getItem(SIGNED_OUT_KEY) !== '1'; } catch { return true; }
+    },
+    signOut() {
+      try { tabStorage?.setItem(SIGNED_OUT_KEY, '1'); } catch { /* ignore */ }
+      window.location.href = 'login.html';
+    },
+    signIn() {
+      try { tabStorage?.removeItem(SIGNED_OUT_KEY); } catch { /* ignore */ }
+    }
+  };
+  if (!lens && !auth.signedIn()) {
+    const back = window.location.pathname.split('/').pop() + window.location.search;
+    window.location.replace(`login.html?next=${encodeURIComponent(back || 'index.html')}`);
+  }
+  const demoTools = (() => {
+    if (lens) return false;
+    const flag = params.get('demo');
+    try {
+      if (flag === '1') tabStorage.setItem(DEMO_KEY, '1');
+      else if (flag === '0') tabStorage.removeItem(DEMO_KEY);
+      return tabStorage.getItem(DEMO_KEY) === '1';
+    } catch { return flag === '1'; }
+  })();
 
   const storage = (() => {
     if (lens) return null;
@@ -62,7 +93,7 @@
             state.meta.failNext = false;
             persist(state);
             syncDemoFlag();
-            reject(new FluxError('The demo service did not respond (simulated failure). Nothing was saved. Try again.'));
+            reject(new FluxError('The server did not respond, so nothing was saved. Try again.'));
             return;
           }
           try {
@@ -199,7 +230,7 @@
         block.className = 'load-error';
         block.dataset.loadError = '';
         block.setAttribute('role', 'alert');
-        block.innerHTML = `${ICONS.error}<strong>Could not load ${escapeHtml(noun)}</strong><span>The demo service did not respond (simulated). Your session data is unchanged.</span><button class="btn" type="button">Retry</button>`;
+        block.innerHTML = `${ICONS.error}<strong>Could not load ${escapeHtml(noun)}</strong><span>The server did not respond. Your data is unchanged.</span><button class="btn" type="button">Retry</button>`;
         block.querySelector('button').addEventListener('click', () => { setParam('simulate', null); loadView({ region, tbody, columns, noun, render }); });
         tbody.closest('table')?.after(block);
         return;
@@ -421,47 +452,72 @@
     if (toggle) toggle.checked = Boolean(state.meta.failNext);
   }
 
-  function initDemoMenu() {
+  /* ---------- User menu (account + sign out) ---------- */
+  function initUserMenu() {
     const trigger = document.querySelector('.user-menu');
     if (!trigger) return;
+    const user = state.meta.currentUser || {};
     trigger.removeAttribute('aria-label');
     trigger.setAttribute('aria-haspopup', 'true');
     trigger.setAttribute('aria-expanded', 'false');
-    trigger.setAttribute('aria-controls', 'demo-menu');
+    trigger.setAttribute('aria-controls', 'account-menu');
     const wrap = document.createElement('div');
     wrap.className = 'user-menu-wrap';
     trigger.replaceWith(wrap);
-    wrap.innerHTML = '<span class="demo-flag" id="demo-fail-flag" hidden>Next save fails</span>';
     wrap.appendChild(trigger);
     const menu = document.createElement('div');
-    menu.className = 'demo-menu';
-    menu.id = 'demo-menu';
+    menu.className = 'account-menu';
+    menu.id = 'account-menu';
     menu.hidden = true;
     menu.innerHTML = `
-      <div class="demo-menu-head"><strong>Jamie Stone</strong><span>Finance ops, demo workspace</span></div>
-      <p class="demo-menu-note">Demo data only. Changes stay in this browser tab, no money moves and no email is sent.</p>
-      <label class="demo-toggle"><input type="checkbox" id="demo-fail-toggle"><span>Fail the next save<small>Shows the recoverable error state once</small></span></label>
-      <div class="demo-menu-actions"><a class="btn" href="design-lens.html">Portfolio review</a><button class="btn btn-danger" type="button" id="demo-reset">Reset demo data</button></div>`;
+      <div class="account-menu-head"><strong>${escapeHtml(user.name)}</strong><span>${escapeHtml(user.email)}</span><span>${escapeHtml(user.role)}, ${escapeHtml(state.meta.workspace)}</span></div>
+      <div class="account-menu-actions"><a class="account-menu-item" href="settings.html">Approval policies</a><a class="account-menu-item" href="team.html">Team and roles</a><button class="account-menu-item" type="button" id="sign-out">Sign out</button></div>`;
     wrap.appendChild(menu);
     const close = () => { menu.hidden = true; trigger.setAttribute('aria-expanded', 'false'); };
     trigger.addEventListener('click', (event) => {
       event.stopPropagation();
       menu.hidden = !menu.hidden;
       trigger.setAttribute('aria-expanded', String(!menu.hidden));
-      if (!menu.hidden) menu.querySelector('input')?.focus();
+      if (!menu.hidden) menu.querySelector('.account-menu-item')?.focus();
     });
     document.addEventListener('click', (event) => { if (!wrap.contains(event.target)) close(); });
     document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && !menu.hidden) { close(); trigger.focus(); } });
-    menu.querySelector('#demo-fail-toggle').addEventListener('change', (event) => {
-      store.setFailNext(event.target.checked);
-      toast(event.target.checked ? 'The next save will fail once so you can see the error state.' : 'Simulated failure turned off.');
+    menu.querySelector('#sign-out').addEventListener('click', () => auth.signOut());
+  }
+
+  /* ---------- Demo tools: only with ?demo=1 (kept for the tab, ?demo=0 turns off) ---------- */
+  function initDemoTools() {
+    if (!demoTools) return;
+    const host = document.createElement('div');
+    host.className = 'demo-tools';
+    host.id = 'demo-tools';
+    host.innerHTML = `
+      <div class="demo-tools-panel" id="demo-tools-panel" hidden>
+        <label class="demo-toggle"><input type="checkbox" id="demo-fail-toggle"><span>Fail the next save<small>Shows the recoverable error state once</small></span></label>
+        <div class="demo-tools-actions"><button class="btn btn-danger" type="button" id="demo-reset">Reset demo data</button></div>
+      </div>
+      <button class="demo-tools-toggle" type="button" aria-expanded="false" aria-controls="demo-tools-panel">Demo tools<span class="demo-flag" id="demo-fail-flag" hidden>Next save fails</span></button>`;
+    document.body.appendChild(host);
+    const toggle = host.querySelector('.demo-tools-toggle');
+    const panel = host.querySelector('#demo-tools-panel');
+    const close = () => { panel.hidden = true; toggle.setAttribute('aria-expanded', 'false'); };
+    toggle.addEventListener('click', (event) => {
+      event.stopPropagation();
+      panel.hidden = !panel.hidden;
+      toggle.setAttribute('aria-expanded', String(!panel.hidden));
     });
-    menu.querySelector('#demo-reset').addEventListener('click', () => {
+    document.addEventListener('click', (event) => { if (!host.contains(event.target)) close(); });
+    document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && !panel.hidden) { close(); toggle.focus(); } });
+    panel.querySelector('#demo-fail-toggle').addEventListener('change', (event) => {
+      store.setFailNext(event.target.checked);
+      toast(event.target.checked ? 'The next save will fail once so you can see the error state.' : 'Save failure turned off.');
+    });
+    panel.querySelector('#demo-reset').addEventListener('click', () => {
       close();
       confirmAction({
-        kicker: 'Demo workspace',
+        kicker: 'Demo tools',
         title: 'Reset demo data?',
-        body: 'Every change made in this tab returns to the original demo data. This cannot be undone.',
+        body: 'Every change made in this tab returns to the original data. This cannot be undone.',
         confirmLabel: 'Reset demo data',
         busyLabel: 'Resetting…',
         action: async () => {
@@ -469,6 +525,7 @@
           const url = new URL(window.location.href);
           url.searchParams.delete('id');
           url.searchParams.delete('simulate');
+          url.searchParams.delete('demo');
           window.location.replace(url.pathname.split('/').pop() + url.search);
         }
       });
@@ -483,11 +540,12 @@
   onReady(() => {
     initNavigation();
     initRoles();
-    initDemoMenu();
+    initUserMenu();
+    initDemoTools();
   });
 
   window.Flux = {
-    lens, store, FluxError, now, isoLocal, isoDate, parseDate, fmt, toUsd, parseAmount,
+    lens, auth, demoTools, store, FluxError, now, isoLocal, isoDate, parseDate, fmt, toUsd, parseAmount,
     escapeHtml, setText, getParam, setParam, toast, ICONS, stateBlock, loadView, bindRows, markSelected, revealPane,
     openDialog, bindForm, showFormAlert, confirmAction, downloadCsv, onReady,
     get role() { return role; },

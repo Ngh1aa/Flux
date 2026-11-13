@@ -188,7 +188,7 @@
         const empty = !store.list('payments').length;
         missing.innerHTML = empty
           ? F.stateBlock({ title: 'Nothing selected', body: 'Payment details, the approval rail and the activity trail appear here.' })
-          : F.stateBlock({ icon: 'missing', title: `Payment ${selectedId} not found`, body: 'It may have been deleted, or the demo data was reset.', action: 'Show latest payment' });
+          : F.stateBlock({ icon: 'missing', title: `Payment ${selectedId} not found`, body: 'It may have been deleted, or the link is out of date.', action: 'Show latest payment' });
         missing.querySelector('[data-state-action]')?.addEventListener('click', () => { const first = store.list('payments')[0]; if (first) select(first.id); });
         return;
       }
@@ -301,7 +301,7 @@
       else if (p.status === 'pending') hint = role === 'approver'
         ? `Acting as ${approverName(p.chain[p.stage])}, ${p.chain[p.stage]}. Rejecting needs a reason.`
         : 'Switch to Approver to approve or reject. As the initiator you can cancel while approval is pending.';
-      else if (p.status === 'processing') hint = 'Released for simulated settlement. Nothing left to approve.';
+      else if (p.status === 'processing') hint = 'Released for settlement. Nothing left to approve.';
       else hint = 'This payment is closed. Its history stays in the activity trail.';
       setText('action-hint', hint);
     }
@@ -352,8 +352,8 @@
         p.stage += 1;
         if (p.stage >= p.chain.length) {
           p.status = 'processing';
-          p.activity.push({ at: F.isoLocal(), title: 'Released for settlement', meta: 'Flux control engine (simulated)' });
-          return `${p.id} fully approved and released for simulated settlement. No money moves in this demo.`;
+          p.activity.push({ at: F.isoLocal(), title: 'Released for settlement', meta: 'Flux policy engine' });
+          return `${p.id} fully approved and released for settlement.`;
         }
         return `${role} approval recorded. Next: ${p.chain[p.stage]}.`;
       }, (m) => m);
@@ -386,7 +386,7 @@
       F.confirmAction({
         kicker: 'Pending payment',
         title: `Cancel ${p.id}?`,
-        body: 'Approvers will no longer see it in their queue and the reserved amount is released in the demo ledger. This cannot be undone.',
+        body: 'Approvers will no longer see it in their queue and the reserved amount returns to the available balance. This cannot be undone.',
         confirmLabel: 'Cancel payment',
         busyLabel: 'Cancelling…',
         reason: { label: 'Reason (optional)', required: false, placeholder: 'For example: supplier sent a corrected invoice' },
@@ -396,7 +396,7 @@
           target.status = 'cancelled';
           target.cancelReason = reason;
           target.activity.push({ at: F.isoLocal(), title: 'Payment cancelled', meta: `${CURRENT_USER}, Employee${reason ? `: ${reason}` : ''}` });
-        }).then(() => { renderList(); F.toast(`${p.id} cancelled. No money moved.`); })
+        }).then(() => { renderList(); F.toast(`${p.id} cancelled. Reserved funds were released.`); })
       });
     }
 
@@ -471,7 +471,7 @@
       const preview = document.getElementById('payee-preview');
       preview.innerHTML = payee
         ? `<span>${esc(payee.bank)}</span><strong class="mono">${esc(payee.account)}</strong><span>${esc(payee.country)}, saved ${fmt.date(payee.createdAt)}</span>`
-        : '<span>New payees are verified by your bank before first settlement. In this demo nothing is verified or sent.</span>';
+        : '<span>New payees are verified by your bank before first settlement.</span>';
     }
 
     function syncCurrency() {
@@ -673,7 +673,7 @@
           F.setParam('id', record.id);
           clearFilters();
           F.toast(isSubmit
-            ? `${record.id} submitted for approval. ${record.chain.join(' → ')} must approve. No money has moved.`
+            ? `${record.id} submitted for approval. ${record.chain.join(' → ')} must approve before funds are released.`
             : mode === 'edit' ? `Draft ${record.id} updated.` : `Draft ${record.id} saved. Submit it when it is ready.`);
         });
       }
@@ -768,7 +768,7 @@
         missing.hidden = false;
         missing.innerHTML = !store.list('payees').length
           ? F.stateBlock({ title: 'Nothing selected', body: 'Payee details appear here once you add one.' })
-          : F.stateBlock({ icon: 'missing', title: `Payee ${selectedId} not found`, body: 'It may have been deleted, or the demo data was reset.', action: 'Show first payee' });
+          : F.stateBlock({ icon: 'missing', title: `Payee ${selectedId} not found`, body: 'It may have been deleted, or the link is out of date.', action: 'Show first payee' });
         missing.querySelector('[data-state-action]')?.addEventListener('click', () => select(store.list('payees')[0].id));
         return;
       }
@@ -938,7 +938,7 @@
         const none = !store.list('policies').length;
         missing.innerHTML = none
           ? F.stateBlock({ title: 'No rule selected', body: 'Create a rule to define who approves which payments.' })
-          : F.stateBlock({ icon: 'missing', title: `Rule ${selectedId} not found`, body: 'It may have been deleted, or the demo data was reset.', action: 'Open first rule' });
+          : F.stateBlock({ icon: 'missing', title: `Rule ${selectedId} not found`, body: 'It may have been deleted, or the link is out of date.', action: 'Open first rule' });
         missing.querySelector('[data-state-action]')?.addEventListener('click', () => select(store.list('policies')[0].id));
         return;
       }
@@ -1196,7 +1196,7 @@
     window.setTimeout(() => {
       listHost.removeAttribute('aria-busy');
       if (F.getParam('simulate') === 'load-error') {
-        listHost.innerHTML = `<div class="load-error" role="alert">${F.ICONS.error}<strong>Could not load approval rules</strong><span>The demo service did not respond (simulated). Your session data is unchanged.</span><button class="btn" type="button">Retry</button></div>`;
+        listHost.innerHTML = `<div class="load-error" role="alert">${F.ICONS.error}<strong>Could not load approval rules</strong><span>The server did not respond. Your data is unchanged.</span><button class="btn" type="button">Retry</button></div>`;
         listHost.querySelector('button').addEventListener('click', () => { F.setParam('simulate', null); start(); });
         return;
       }

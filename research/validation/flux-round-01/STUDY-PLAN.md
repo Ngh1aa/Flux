@@ -46,7 +46,7 @@ Method boundaries:
 
 ## Task order
 
-1. **D-01 Approval context** — explain why Acme USD 18,400 requires approval, who acts now and what happens next.
+1. **D-01 Approval context** — explain why Arcwell Systems USD 18,400 requires approval, who acts now and what happens next.
 2. **D-02 Role boundary** — start in Employee role and explain/recover from disabled approval action.
 3. **D-03 Settlement recovery — PRIORITY** — inspect `SETTLEMENT FAILED`, state whether money moved and choose a safe next action.
 4. **D-04 Audit reconstruction** — reconstruct actor/action history from the visible control trail.

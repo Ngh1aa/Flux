@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>Flux — Sign in</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="workspace.css">
+  <link rel="stylesheet" href="login.css">
+</head>
+<body data-page="login">
+  <main class="login-shell">
+    <section class="login-card" aria-labelledby="login-title">
+      <div class="brand login-brand"><span class="brand-name">FLUX</span><span class="workspace-name">Business payments</span></div>
+      <h1 id="login-title">Sign in to Flux</h1>
+      <p class="login-lede">Northstar Holdings workspace</p>
+
+      <button class="btn btn-primary login-continue" type="button" id="continue-as">
+        <span class="user-initials" aria-hidden="true">JS</span><span>Continue as Jamie Stone</span>
+      </button>
+
+      <div class="login-divider"><span>or sign in with email</span></div>
+
+      <form id="login-form" novalidate>
+        <div class="form-field"><label class="form-label" for="login-email">Work email</label><input class="input" id="login-email" name="email" type="email" autocomplete="username" required></div>
+        <div class="form-field"><label class="form-label" for="login-password">Password</label><input class="input" id="login-password" name="password" type="password" autocomplete="current-password" required></div>
+        <div class="login-error" id="login-error" role="alert" hidden></div>
+        <button class="btn login-submit" type="submit">Sign in</button>
+      </form>
+      <p class="login-help">Single sign-on and two-step verification are managed by your workspace admin.</p>
+    </section>
+    <footer class="app-footer login-footer">Concept product designed by Đỗ Anh Nghĩa.</footer>
+  </main>
+  <script src="data/seed.js"></script>
+  <script src="login.js"></script>
+</body>
+</html>

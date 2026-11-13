@@ -3,17 +3,16 @@ import fs from 'node:fs/promises';
 
 const baseURL = process.env.FLUX_BASE_URL || 'http://127.0.0.1:4173';
 
-test('Flux product exposes a truthful recruiter evidence entry', async ({ page }) => {
+test('Flux product keeps the evidence lens reachable by URL only, never linked from the product', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto(`${baseURL}/index.html`, { waitUntil: 'domcontentloaded' });
-
-  const entry = page.locator('.flux-review-entry');
-  await expect(entry).toBeVisible();
-  await expect(entry).toContainText('PORTFOLIO REVIEW');
-  await expect(entry).toHaveAttribute('href', 'design-lens.html');
+  await expect(page.locator('#payments-body tr[data-id]').first()).toBeVisible();
+  await expect(page.locator('a[href*="design-lens"]')).toHaveCount(0);
+  await expect(page.getByText(/portfolio review/i)).toHaveCount(0);
 
   await page.goto(`${baseURL}/index.html?lens=1`, { waitUntil: 'domcontentloaded' });
-  await expect(page.locator('.flux-review-entry')).toHaveCount(0);
+  await expect(page.locator('#payments-body tr[data-id]').first()).toBeVisible();
+  await expect(page.locator('#demo-tools')).toHaveCount(0);
 });
 
 test('Flux evidence lens exposes deep decision metadata, comparison, tour and safe forced states', async ({ page }) => {
