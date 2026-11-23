@@ -85,4 +85,18 @@ without losing the control context. **Decision maker:** the owner (Đỗ Anh Ngh
 **Recommended:** A for the product (it fixes the real flaws with the least behaviour risk and keeps the
 ledger reading that finance users expect), taking B's mini rail as the "Waiting on" cell in the ledger.
 
-**Status:** `CHƯA DUYỆT`. Waiting for the owner's choice before any other screen is built.
+**Status:** `ĐÃ DUYỆT`. Owner chose A on 2026-11-23 ("chọn A, làm tiếp đi"). B's mini rail is taken into A as recommended.
+
+## 6. Progress
+
+| Screen | State | Evidence |
+|---|---|---|
+| Payments | Built in product code (direction A) | `shots/1440-payments-after.png`, `shots/390-payments-after-full.png`; flow tests 17/17; overlay-check 0 errors, 0 warnings |
+| Accounts, Cards, Team, Expenses, Reports, Settings, Payees, Login | Not started | Same principles next: counts folded into tabs, no subtitles, ledger lists on phones |
+
+Payments changes: subtitle and metric strip removed; status filter became counted tabs with the
+approval tab first; "Waiting on" column with a mini rail; detail order is amount, Approval Rail,
+decision, payment data, activity; phones get a ledger list with currency codes and a vertical rail.
+At 1440 × 900 the rail starts at 444 px and Approve at 661 px (both below the fold before).
+CSS so far only adds (+34 / -0): the metric strip and subtitle rules are still used by other screens
+and are deleted when those screens move.

@@ -117,17 +117,26 @@
       });
     }
 
-    function renderMetrics() {
+    // The status tabs carry the counts; the approval tab also carries the USD value waiting.
+    function renderCounts() {
       const all = store.list('payments');
-      const sumUsd = (items) => items.reduce((sum, p) => sum + F.toUsd(p.amount, p.currency), 0);
+      const matches = (filter, p) => filter === 'all' || (filter === 'closed' ? ['rejected', 'cancelled'].includes(p.status) : p.status === filter);
+      document.querySelectorAll('[data-count]').forEach((el) => { el.textContent = String(all.filter((p) => matches(el.dataset.count, p)).length); });
       const pending = all.filter((p) => p.status === 'pending');
-      const completed = all.filter((p) => p.status === 'completed');
-      setText('metric-pending', fmt.pad2(pending.length));
-      setText('metric-pending-note', `USD ${fmt.number(sumUsd(pending))} equivalent`);
-      setText('metric-processing', fmt.pad2(all.filter((p) => p.status === 'processing').length));
-      setText('metric-drafts', fmt.pad2(all.filter((p) => p.status === 'draft').length));
-      setText('metric-completed', fmt.pad2(completed.length));
-      setText('metric-completed-note', `USD ${fmt.number(sumUsd(completed))} equivalent`);
+      const sum = pending.reduce((total, p) => total + F.toUsd(p.amount, p.currency), 0);
+      document.querySelectorAll('[data-sum="pending"]').forEach((el) => { el.textContent = pending.length ? `USD ${fmt.number(sum)}` : ''; });
+    }
+
+    // Compact control chain for the "Waiting on" cell: one node per step, the current one outlined.
+    function miniRail(p) {
+      if (p.status === 'draft') return '';
+      const total = p.chain.length + 2;
+      const reached = p.status === 'completed' ? total : p.status === 'processing' ? total - 1 : p.stage + 1;
+      const nodes = Array.from({ length: total }, (_, i) => {
+        const state = i < reached ? 'done' : i === reached && ['pending', 'processing'].includes(p.status) ? 'current' : 'next';
+        return `<i class="mini-node ${state}"></i>`;
+      }).join('');
+      return `<span class="mini-rail" aria-hidden="true">${nodes}</span>`;
     }
 
     function rowHtml(p) {
@@ -136,14 +145,14 @@
         <td><span class="${cls}">${label}</span></td>
         <td class="counterparty"><strong>${esc(p.counterparty)}</strong><span>${esc(p.purpose || 'No purpose yet')}</span></td>
         <td><span class="currency-tag">${esc(p.currency)}</span></td>
-        <td class="amount-col amount">${p.amount ? fmt.number(p.amount, p.currency) : '—'}</td>
+        <td class="amount-col amount" data-ccy="${esc(p.currency)}">${p.amount ? fmt.number(p.amount, p.currency) : '—'}</td>
         <td><time datetime="${esc(p.createdAt)}">${fmt.day(p.createdAt)}, ${fmt.time(p.createdAt)}</time></td>
-        <td class="stage-column"><span class="stage-text">${esc(stageText(p))}</span></td>
+        <td class="stage-column">${miniRail(p)}<span class="stage-text">${esc(stageText(p))}</span></td>
       </tr>`;
     }
 
     function renderList() {
-      renderMetrics();
+      renderCounts();
       const all = store.list('payments');
       const rows = visiblePayments();
       tbody.innerHTML = rows.map(rowHtml).join('');

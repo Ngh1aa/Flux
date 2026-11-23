@@ -49,7 +49,6 @@
         <div class="page-header">
           <div class="page-title">
             <h1>Payments</h1>
-            <p>Initiate, review, and approve cross-border payments through a visible control chain.</p>
           </div>
           <div class="page-actions">
             <a class="btn" href="payees.html">Saved payees</a>
@@ -57,22 +56,15 @@
           </div>
         </div>
 
-        <section class="metrics-strip" aria-label="Payments summary">
-          <div class="metric"><span class="metric-label">Awaiting approval</span><strong class="metric-value" id="metric-pending">—</strong><span class="metric-note" id="metric-pending-note">Loading</span></div>
-          <div class="metric"><span class="metric-label">Processing</span><strong class="metric-value" id="metric-processing">—</strong><span class="metric-note">Released, awaiting settlement</span></div>
-          <div class="metric"><span class="metric-label">Drafts</span><strong class="metric-value" id="metric-drafts">—</strong><span class="metric-note">Not yet submitted</span></div>
-          <div class="metric"><span class="metric-label">Completed</span><strong class="metric-value" id="metric-completed">—</strong><span class="metric-note" id="metric-completed-note">Loading</span></div>
-        </section>
-
         <div class="toolbar">
           <div class="toolbar-group">
-            <div class="segmented" role="group" aria-label="Payment status filter">
-              <button type="button" class="active" data-filter="all">All</button>
-              <button type="button" data-filter="draft">Drafts</button>
-              <button type="button" data-filter="pending">Needs approval</button>
-              <button type="button" data-filter="processing">Processing</button>
-              <button type="button" data-filter="completed">Completed</button>
-              <button type="button" data-filter="closed">Rejected or cancelled</button>
+            <div class="status-tabs" role="group" aria-label="Payment status filter">
+              <button type="button" class="status-tab lead" data-filter="pending"><span class="status-tab-label">Needs approval</span><span class="status-tab-meta"><span data-count="pending">0</span> <span class="status-tab-sum" data-sum="pending"></span></span></button>
+              <button type="button" class="status-tab" data-filter="processing"><span class="status-tab-label">Processing</span><span class="status-tab-meta" data-count="processing">0</span></button>
+              <button type="button" class="status-tab" data-filter="draft"><span class="status-tab-label">Drafts</span><span class="status-tab-meta" data-count="draft">0</span></button>
+              <button type="button" class="status-tab" data-filter="completed"><span class="status-tab-label">Completed</span><span class="status-tab-meta" data-count="completed">0</span></button>
+              <button type="button" class="status-tab" data-filter="closed"><span class="status-tab-label">Rejected or cancelled</span><span class="status-tab-meta" data-count="closed">0</span></button>
+              <button type="button" class="status-tab active" data-filter="all"><span class="status-tab-label">All</span><span class="status-tab-meta" data-count="all">0</span></button>
             </div>
           </div>
           <div class="toolbar-group">
@@ -85,7 +77,7 @@
 
         <section class="workspace-grid" aria-label="Payment operations workspace">
           <div class="table-region" id="payments-region">
-            <table class="data-table" id="payments-table" aria-label="Payments">
+            <table class="data-table payments-ledger" id="payments-table" aria-label="Payments">
               <thead>
                 <tr>
                   <th class="col-status">Status</th>
@@ -93,7 +85,7 @@
                   <th class="col-ccy">CCY</th>
                   <th class="amount-col col-amount">Amount</th>
                   <th class="col-date">Initiated</th>
-                  <th class="stage-column col-stage">Approval stage</th>
+                  <th class="stage-column col-stage">Waiting on</th>
                 </tr>
               </thead>
               <tbody id="payments-body"></tbody>
@@ -111,6 +103,28 @@
               </div>
 
               <div class="detail-section">
+                <p class="section-label">Approval rail</p>
+                <div class="approval-summary">
+                  <div class="summary-copy"><strong>Control chain</strong><span id="detail-policy">—</span></div>
+                </div>
+                <div class="approval-rail" id="approval-rail" role="group" aria-label="Approval chain"></div>
+                <div class="approval-footer"><span class="next-approver">Next approver: <strong id="next-approver">—</strong></span><span class="status status-pending" id="approval-status">Pending</span></div>
+                <div class="inline-note outcome-note" id="detail-outcome" hidden></div>
+              </div>
+
+              <div class="detail-section detail-decide">
+                <p class="action-hint" id="action-hint"></p>
+                <div class="action-row">
+                  <button class="btn btn-danger" type="button" id="delete-draft" hidden>Delete draft</button>
+                  <button class="btn" type="button" id="cancel-payment" hidden>Cancel payment</button>
+                  <button class="btn" type="button" id="edit-draft" hidden>Edit draft</button>
+                  <button class="btn btn-primary" type="button" id="submit-draft" hidden>Submit for approval</button>
+                  <button class="btn" type="button" id="reject-action">Reject</button>
+                  <button class="btn btn-primary" type="button" id="approve-action">Approve payment</button>
+                </div>
+              </div>
+
+              <div class="detail-section">
                 <p class="section-label">Payment data</p>
                 <div class="meta-grid">
                   <div class="meta-item"><span>Currency</span><strong class="mono" id="detail-currency">—</strong></div>
@@ -123,30 +137,8 @@
               </div>
 
               <div class="detail-section">
-                <p class="section-label">Approval rail</p>
-                <div class="approval-summary">
-                  <div class="summary-copy"><strong>Control chain</strong><span id="detail-policy">—</span></div>
-                </div>
-                <div class="approval-rail" id="approval-rail" role="group" aria-label="Approval chain"></div>
-                <div class="approval-footer"><span class="next-approver">Next approver: <strong id="next-approver">—</strong></span><span class="status status-pending" id="approval-status">Pending</span></div>
-                <div class="inline-note outcome-note" id="detail-outcome" hidden></div>
-              </div>
-
-              <div class="detail-section">
                 <p class="section-label">Activity trail</p>
                 <ul class="activity-list" id="activity-list"></ul>
-              </div>
-
-              <div class="detail-section">
-                <p class="action-hint" id="action-hint"></p>
-                <div class="action-row">
-                  <button class="btn btn-danger" type="button" id="delete-draft" hidden>Delete draft</button>
-                  <button class="btn" type="button" id="cancel-payment" hidden>Cancel payment</button>
-                  <button class="btn" type="button" id="edit-draft" hidden>Edit draft</button>
-                  <button class="btn btn-primary" type="button" id="submit-draft" hidden>Submit for approval</button>
-                  <button class="btn" type="button" id="reject-action">Reject</button>
-                  <button class="btn btn-primary" type="button" id="approve-action">Approve payment</button>
-                </div>
               </div>
             </div>
           </aside>
