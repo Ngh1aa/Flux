@@ -92,11 +92,12 @@ ledger reading that finance users expect), taking B's mini rail as the "Waiting 
 | Screen | State | Evidence |
 |---|---|---|
 | Payments | Built in product code (direction A) | `shots/1440-payments-after.png`, `shots/390-payments-after-full.png`; flow tests 17/17; overlay-check 0 errors, 0 warnings |
-| Accounts, Cards, Team, Expenses, Reports, Settings, Payees, Login | Not started | Same principles next: counts folded into tabs, no subtitles, ledger lists on phones |
+| Shell, all pages | Done | Subtitles removed on 7 pages; mobile nav is a 4-column grid showing all 7 destinations; shell breakpoints live only in `style-base.css` (duplicate 820 px block deleted from `workspace.css`); metric strips sit 2 × 2 on phones. `shots/1440-all-screens-after.jpg`, `shots/390-all-screens-after.jpg` |
+| Accounts, Cards, Team, Expenses, Reports, Settings, Payees | Next | Per screen: metric strip folded into counted tabs where it repeats the filter, ledger list instead of a scrolled table on phones |
 
 Payments changes: subtitle and metric strip removed; status filter became counted tabs with the
 approval tab first; "Waiting on" column with a mini rail; detail order is amount, Approval Rail,
 decision, payment data, activity; phones get a ledger list with currency codes and a vertical rail.
 At 1440 × 900 the rail starts at 444 px and Approve at 661 px (both below the fold before).
-CSS so far only adds (+34 / -0): the metric strip and subtitle rules are still used by other screens
+CSS after the shell pass: +40 / -30 lines, 0 new files, `!important` +0: the metric strip and subtitle rules are still used by other screens
 and are deleted when those screens move.
