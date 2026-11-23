@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flux direction A: ledger, decision first</title>
+<link rel="stylesheet" href="../../../style-base.css">
+<style>
+/* Direction A: evolve the ledger. Same shell and tokens; the decision moves above the fold. */
+:root { --rail-done: var(--accent); --rail-next: var(--line-strong); }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink); font: 14px/1.5 var(--sans); }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.app { display: grid; grid-template-columns: var(--sidebar) 1fr; min-height: 100vh; }
+
+.side { background: var(--surface); border-right: 1px solid var(--line); padding: 20px 0; display: flex; flex-direction: column; gap: 20px; }
+.side-brand { display: flex; justify-content: space-between; align-items: baseline; padding: 0 18px; }
+.side-brand b { letter-spacing: .16em; font-size: 13px; }
+.side-brand span { font-size: 12px; color: var(--secondary); }
+.roles { margin: 0 18px; display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line-strong); }
+.roles button { font: 500 12px var(--sans); min-height: 36px; border: 0; background: var(--surface); color: var(--secondary); }
+.roles button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
+.nav { display: grid; }
+.nav p { margin: 8px 18px 4px; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.nav a { display: flex; align-items: center; justify-content: space-between; min-height: 40px; padding: 0 18px; color: var(--secondary); text-decoration: none; border-left: 2px solid transparent; }
+.nav a[aria-current] { color: var(--ink); font-weight: 600; border-left-color: var(--ink); background: var(--page); }
+.nav a .count { font: 500 12px var(--mono); color: var(--surface); background: var(--accent); min-width: 22px; padding: 1px 6px; text-align: center; }
+
+.main { display: grid; grid-template-rows: var(--topbar) auto 1fr; min-width: 0; }
+.top { display: flex; align-items: center; justify-content: space-between; padding: 0 28px; border-bottom: 1px solid var(--line); background: var(--surface); font-size: 13px; color: var(--secondary); }
+.top b { color: var(--ink); font-weight: 500; }
+
+.head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding: 24px 28px 0; }
+.head h1 { margin: 0; font-size: 28px; font-weight: 500; letter-spacing: -.01em; }
+.actions { display: flex; gap: 8px; }
+.btn { font: 500 13px var(--sans); min-height: 40px; padding: 0 16px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); border-radius: var(--radius); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn.quiet { border-color: transparent; background: transparent; }
+
+/* Status tabs carry the counts the old metric strip repeated; the approval tab leads. */
+.tabs { display: flex; gap: 0; margin: 20px 28px 0; border-bottom: 1px solid var(--line); overflow-x: auto; }
+.tab { display: grid; gap: 2px; padding: 10px 18px 12px 0; margin-right: 22px; border-bottom: 2px solid transparent; color: var(--secondary); white-space: nowrap; }
+.tab b { font: 500 13px var(--sans); color: var(--ink); }
+.tab .mono { font-size: 12px; }
+.tab[aria-selected="true"] { border-bottom-color: var(--accent); }
+.tab.lead b { font-size: 15px; }
+.tab.lead .mono { color: var(--accent); font-weight: 500; }
+
+.work { display: grid; grid-template-columns: minmax(0, 1fr) 460px; gap: 0; margin: 0 28px 28px; background: var(--surface); border: 1px solid var(--line); border-top: 0; min-height: 0; }
+.list { min-width: 0; }
+.tools { display: flex; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+.tools input, .tools select { font: 13px var(--sans); min-height: 36px; padding: 0 10px; border: 1px solid var(--line-strong); background: var(--surface); border-radius: var(--radius); }
+.tools input { flex: 1; }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; font: 500 12px var(--sans); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); padding: 10px 16px; border-bottom: 1px solid var(--line); }
+td { padding: 12px 16px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+td.num, th.num { text-align: right; }
+tr.sel td { background: var(--navy-soft, #E8EDF2); }
+tr.sel td:first-child { box-shadow: inset 2px 0 0 var(--accent); }
+.cp b { display: block; font-weight: 500; }
+.cp span { font-size: 12px; color: var(--secondary); }
+.badge { display: inline-block; font: 500 12px var(--sans); padding: 2px 8px; border: 1px solid currentColor; }
+.badge.pending { color: var(--pending); background: var(--pending-bg); }
+.badge.processing { color: var(--secondary); background: var(--page); }
+.badge.completed { color: var(--success); background: var(--success-bg); }
+.badge.draft { color: var(--secondary); background: var(--surface); }
+.wait { font-size: 12px; color: var(--secondary); }
+.wait.mine { color: var(--accent); font-weight: 500; }
+
+/* Detail: amount, then the Approval Rail and the decision, then the data. */
+.detail { border-left: 1px solid var(--line); display: flex; flex-direction: column; min-width: 0; }
+.d-head { padding: 20px 24px 16px; border-bottom: 1px solid var(--line); }
+.d-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--secondary); }
+.d-amount { font: 500 32px/1.2 var(--mono); margin: 8px 0 2px; letter-spacing: -.01em; }
+.d-to { color: var(--secondary); }
+.d-to b { color: var(--ink); font-weight: 500; }
+.d-rail { padding: 18px 24px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.d-rail h2, .d-data h2 { margin: 0 0 4px; font: 500 12px var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.d-rule { font-size: 13px; margin: 0 0 16px; }
+.rail { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; }
+.step { position: relative; padding-top: 22px; padding-right: 8px; }
+.step::before { content: ""; position: absolute; top: 7px; left: 16px; right: 0; height: 2px; background: var(--rail-next); }
+.step:last-child::before { display: none; }
+.step.done::before { background: var(--rail-done); }
+.node { position: absolute; top: 0; left: 0; width: 16px; height: 16px; border: 2px solid var(--rail-next); background: var(--surface); }
+.step.done .node { background: var(--rail-done); border-color: var(--rail-done); }
+.step.current .node { border-color: var(--accent); box-shadow: 0 0 0 3px var(--navy-soft, #E8EDF2); }
+.step b { display: block; font-size: 13px; font-weight: 500; }
+.step span { display: block; font-size: 12px; color: var(--secondary); }
+.step.current b { color: var(--accent); }
+.decide { display: flex; gap: 8px; padding: 14px 24px; border-bottom: 1px solid var(--line); background: var(--page); align-items: center; }
+.decide p { margin: 0 auto 0 0; font-size: 13px; }
+.d-data { padding: 18px 24px; }
+dl { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 20px; margin: 10px 0 0; }
+dt { font-size: 12px; color: var(--secondary); }
+dd { margin: 0; font-weight: 500; }
+
+@media (max-width: 1100px) { .work { grid-template-columns: 1fr; } .detail { border-left: 0; border-top: 1px solid var(--line); } }
+@media (max-width: 839px) {
+  .app { grid-template-columns: 1fr; }
+  .side { display: none; }
+  .top { padding: 0 16px; }
+  .head { padding: 16px 16px 0; }
+  .head h1 { font-size: 24px; }
+  .head .btn:not(.primary) { display: none; }
+  .tabs { margin: 12px 16px 0; }
+  .work { margin: 0 0 24px; border-left: 0; border-right: 0; min-width: 0; }
+  .main { grid-template-columns: minmax(0, 1fr); }
+  .head .actions { flex-shrink: 0; }
+  .tools select { display: none; }
+  thead { display: none; }
+  table, tbody, tr { display: block; }
+  tr { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+  td { padding: 0; border: 0; }
+  td.ccy, td.when { display: none; }
+  td.st { grid-column: 1; grid-row: 2; }
+  td.amount { grid-column: 2; grid-row: 1; text-align: right; }
+  td.stage { grid-column: 2; grid-row: 2; text-align: right; }
+  .d-head, .d-rail, .decide, .d-data { padding-left: 16px; padding-right: 16px; }
+  .rail { grid-auto-flow: row; grid-auto-rows: auto; gap: 0; }
+  .step { padding: 0 0 16px 28px; }
+  .step::before { top: 16px; left: 7px; bottom: 0; right: auto; width: 2px; height: auto; }
+  .decide p { display: none; }
+  .decide .btn { flex: 1; }
+}
+
+.brand-m, .menu-m { display: none; }
+@media (max-width: 839px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .crumb, .who { display: none; }
+  .brand-m { display: block; letter-spacing: .16em; font-size: 13px; color: var(--ink); }
+  .menu-m { display: inline-flex; align-items: center; min-height: 36px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="side-brand"><b>FLUX</b><span>Northstar Holdings</span></div>
+    <div class="roles" role="group" aria-label="Role"><button aria-pressed="false">Employee</button><button aria-pressed="true">Approver</button></div>
+    <nav class="nav" aria-label="Main">
+      <p>Operations</p>
+      <a href="#">Accounts</a>
+      <a href="#" aria-current="page">Payments <span class="count" id="nav-count"></span></a>
+      <a href="#">Cards</a><a href="#">Team</a><a href="#">Expenses</a><a href="#">Reports</a>
+      <p>Administration</p>
+      <a href="#">Settings</a>
+    </nav>
+  </aside>
+  <div class="main">
+    <header class="top"><span class="crumb">Northstar Holdings / <b>Payments</b></span><b class="brand-m">FLUX</b><span class="who">Jamie Stone, Finance ops</span><button class="btn menu-m" type="button">Menu</button></header>
+    <div>
+      <div class="head"><h1>Payments</h1><div class="actions"><button class="btn">Saved payees</button><button class="btn primary">New payment</button></div></div>
+      <div class="tabs" role="tablist" id="tabs"></div>
+    </div>
+    <div class="work">
+      <section class="list" aria-label="Payments">
+        <div class="tools"><input type="search" placeholder="Search reference or counterparty" aria-label="Search"><select aria-label="Currency"><option>All currencies</option></select></div>
+        <table><thead><tr><th>Status</th><th>Counterparty</th><th>Ccy</th><th class="num">Amount</th><th>Initiated</th><th>Waiting on</th></tr></thead><tbody id="rows"></tbody></table>
+      </section>
+      <section class="detail" aria-label="Payment detail" id="detail"></section>
+    </div>
+  </div>
+</div>
+<script src="../../../data/seed.js"></script>
+<script src="mock.js"></script>
+<script>
+const { esc, money, usd, day, time, STATUS, rail, lane, payments } = MOCK;
+const mine = payments.filter((p) => lane(p) === 'mine');
+const sum = (list) => list.reduce((t, p) => t + usd(p), 0);
+document.getElementById('nav-count').textContent = mine.length;
+const count = (s) => payments.filter((p) => p.status === s).length;
+const tabs = [
+  { label: 'Needs your approval', meta: `${mine.length} · USD ${money(sum(mine), 'USD')}`, lead: true, sel: true },
+  { label: 'Processing', meta: String(count('processing')) },
+  { label: 'Drafts', meta: String(count('draft')) },
+  { label: 'Completed', meta: String(count('completed')) },
+  { label: 'All', meta: String(payments.length) },
+];
+document.getElementById('tabs').innerHTML = tabs.map((t) => `<div class="tab${t.lead ? ' lead' : ''}" role="tab" aria-selected="${!!t.sel}"><b>${t.label}</b><span class="mono">${t.meta.replace(' · ', '  ')}</span></div>`).join('');
+const order = [...payments].sort((a, b) => (lane(a) === 'mine' ? 0 : 1) - (lane(b) === 'mine' ? 0 : 1));
+document.getElementById('rows').innerHTML = order.map((p, i) => {
+  const r = rail(p); const cur = r.find((s) => s.state === 'current');
+  const waiting = lane(p) === 'mine' ? '<span class="wait mine">You</span>' : `<span class="wait">${cur ? esc(cur.label) : 'Settled'}</span>`;
+  return `<tr class="${i === 0 ? 'sel' : ''}"><td class="st"><span class="badge ${p.status}">${STATUS[p.status]}</span></td><td class="cp"><b>${esc(p.counterparty)}</b><span>${esc(p.purpose)}</span></td><td class="ccy mono">${p.currency}</td><td class="amount num mono">${money(p.amount, p.currency)}${window.innerWidth < 840 ? ' ' + p.currency : ''}</td><td class="when mono">${day(p.createdAt)} ${time(p.createdAt)}</td><td class="stage">${waiting}</td></tr>`;
+}).join('');
+const p = order[0]; const r = rail(p);
+document.getElementById('detail').innerHTML = `
+  <div class="d-head"><div class="d-meta"><span class="mono">${p.id}</span><span class="badge ${p.status}">${STATUS[p.status]}</span></div>
+    <p class="d-amount">${p.currency === 'USD' ? '$' : ''}${money(p.amount, p.currency)}${p.currency === 'USD' ? '' : ' ' + p.currency}</p>
+    <p class="d-to" style="margin:0">To <b>${esc(p.counterparty)}</b>, ${esc(p.country)}</p></div>
+  <div class="d-rail"><h2>Approval rail</h2><p class="d-rule">${esc(p.policy)}</p>
+    <ol class="rail" style="list-style:none;margin:0;padding:0">${r.map((s) => `<li class="step ${s.state}"><span class="node"></span><b>${esc(s.label)}</b><span>${esc(s.who)}</span><span class="mono">${s.at ? day(s.at) + ' ' + time(s.at) : s.state === 'current' ? 'Since ' + time(p.createdAt) : ''}</span></li>`).join('')}</ol></div>
+  <div class="decide"><p>Your approval moves it to <b>${esc(r[2] ? r[2].label : 'execution')}</b>.</p><button class="btn">Reject</button><button class="btn primary">Approve</button></div>
+  <div class="d-data"><h2>Payment data</h2><dl><div><dt>Purpose</dt><dd>${esc(p.purpose)}</dd></div><div><dt>Reference</dt><dd>${esc(p.reference)}</dd></div><div><dt>Execution date</dt><dd class="mono">${day(p.executionDate)}</dd></div><div><dt>USD equivalent</dt><dd class="mono">${money(usd(p), 'USD')}</dd></div></dl></div>`;
+</script>
+</body>
+</html>

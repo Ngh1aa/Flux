@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flux direction B: queue by control chain</title>
+<link rel="stylesheet" href="../../../style-base.css">
+<style>
+/* Direction B: the Approval Rail becomes the structure of the page. Payments are grouped by where they
+   wait in the chain; each row carries its own rail and opens in place to decide. */
+:root { --rail-done: var(--accent); --rail-next: var(--line-strong); }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink); font: 14px/1.5 var(--sans); }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.app { display: grid; grid-template-columns: var(--sidebar) 1fr; min-height: 100vh; }
+.side { background: var(--surface); border-right: 1px solid var(--line); padding: 20px 0; display: flex; flex-direction: column; gap: 20px; }
+.side-brand { display: flex; justify-content: space-between; align-items: baseline; padding: 0 18px; }
+.side-brand b { letter-spacing: .16em; font-size: 13px; }
+.side-brand span { font-size: 12px; color: var(--secondary); }
+.roles { margin: 0 18px; display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line-strong); }
+.roles button { font: 500 12px var(--sans); min-height: 36px; border: 0; background: var(--surface); color: var(--secondary); }
+.roles button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
+.nav { display: grid; }
+.nav p { margin: 8px 18px 4px; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.nav a { display: flex; align-items: center; justify-content: space-between; min-height: 40px; padding: 0 18px; color: var(--secondary); text-decoration: none; border-left: 2px solid transparent; }
+.nav a[aria-current] { color: var(--ink); font-weight: 600; border-left-color: var(--ink); background: var(--page); }
+.nav a .count { font: 500 12px var(--mono); color: var(--surface); background: var(--accent); min-width: 22px; padding: 1px 6px; text-align: center; }
+
+.main { min-width: 0; }
+.top { display: flex; align-items: center; justify-content: space-between; height: var(--topbar); padding: 0 28px; border-bottom: 1px solid var(--line); background: var(--surface); font-size: 13px; color: var(--secondary); }
+.top b { color: var(--ink); font-weight: 500; }
+.wrap { padding: 24px 28px 40px; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 24px; align-items: start; }
+.head { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.head h1 { margin: 0; font-size: 28px; font-weight: 500; }
+.head-tools { display: flex; gap: 8px; }
+.btn { font: 500 13px var(--sans); min-height: 40px; padding: 0 16px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); border-radius: var(--radius); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+input[type=search] { font: 13px var(--sans); min-height: 40px; padding: 0 12px; border: 1px solid var(--line-strong); background: var(--surface); width: 280px; border-radius: var(--radius); }
+
+/* Lanes: one per place a payment can wait. */
+.lanes { display: grid; gap: 20px; min-width: 0; }
+.lane-head { display: flex; align-items: baseline; justify-content: space-between; padding: 0 2px 8px; border-bottom: 2px solid var(--ink); }
+.lane-head h2 { margin: 0; font-size: 15px; font-weight: 600; }
+.lane-head .mono { font-size: 13px; color: var(--secondary); }
+.lane.mine .lane-head { border-bottom-color: var(--accent); }
+.lane.mine .lane-head h2 { color: var(--accent); }
+.row { background: var(--surface); border: 1px solid var(--line); border-top: 0; }
+.row-main { display: grid; grid-template-columns: minmax(180px, 1.3fr) minmax(260px, 2fr) 150px; align-items: center; gap: 20px; padding: 14px 18px; }
+.cp b { display: block; font-weight: 500; }
+.cp span { font-size: 12px; color: var(--secondary); }
+.amt { text-align: right; }
+.amt b { display: block; font: 500 15px var(--mono); }
+.amt span { font-size: 12px; color: var(--secondary); }
+
+/* Mini rail: every row shows its control chain at a glance. */
+.mini { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; list-style: none; margin: 0; padding: 0; }
+.mini li { position: relative; padding-top: 16px; font-size: 12px; color: var(--secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 6px; }
+.mini li::before { content: ""; position: absolute; top: 4px; left: 10px; right: 0; height: 2px; background: var(--rail-next); }
+.mini li:last-child::before { display: none; }
+.mini li.done::before { background: var(--rail-done); }
+.mini li i { position: absolute; top: 0; left: 0; width: 10px; height: 10px; border: 2px solid var(--rail-next); background: var(--surface); }
+.mini li.done i { background: var(--rail-done); border-color: var(--rail-done); }
+.mini li.current i { border-color: var(--accent); }
+.mini li.current { color: var(--accent); font-weight: 600; }
+
+/* Opened row: the decision stays in the list instead of a separate panel. */
+.row.open { border-color: var(--accent); border-left: 3px solid var(--accent); }
+.row-open { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px 20px; padding: 14px 18px 0; border-top: 1px solid var(--line); background: var(--surface-subtle, #F8F9F6); }
+.row-open dt { font-size: 12px; color: var(--secondary); }
+.row-open dd { margin: 0; font-weight: 500; }
+.row-open .rule { grid-column: 1 / -1; font-size: 13px; }
+.decide { display: flex; justify-content: flex-end; gap: 8px; padding: 14px 18px; background: var(--surface-subtle, #F8F9F6); }
+
+/* Side column: what the chain looks like overall. */
+.summary { background: var(--surface); border: 1px solid var(--line); padding: 18px; display: grid; gap: 16px; position: sticky; top: 16px; }
+.summary h2 { margin: 0; font: 500 12px var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.sum-row { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); font-size: 13px; }
+.sum-row b { font: 500 13px var(--mono); }
+.sum-row.lead span { color: var(--accent); font-weight: 600; }
+.sum-row.lead b { color: var(--accent); }
+.policy { font-size: 13px; color: var(--secondary); border-top: 1px solid var(--line); padding-top: 12px; }
+.policy b { color: var(--ink); font-weight: 500; display: block; }
+
+@media (max-width: 1100px) { .wrap { grid-template-columns: 1fr; } .summary { position: static; order: -1; } .head { order: -2; } }
+@media (max-width: 839px) {
+  .app { grid-template-columns: 1fr; }
+  .side { display: none; }
+  .top { padding: 0 16px; }
+  .wrap { padding: 16px 16px 32px; gap: 16px; }
+  .head h1 { font-size: 24px; }
+  input[type=search], .head-tools .btn:not(.primary) { display: none; }
+  .summary { display: none; }
+  .row-main { grid-template-columns: 1fr auto; gap: 10px 12px; }
+  .mini { grid-column: 1 / -1; grid-row: 2; }
+  .row-open { grid-template-columns: 1fr 1fr; }
+  .decide .btn { flex: 1; }
+}
+
+.brand-m, .menu-m { display: none; }
+@media (max-width: 839px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .crumb, .who { display: none; }
+  .brand-m { display: block; letter-spacing: .16em; font-size: 13px; color: var(--ink); }
+  .menu-m { display: inline-flex; align-items: center; min-height: 36px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="side-brand"><b>FLUX</b><span>Northstar Holdings</span></div>
+    <div class="roles" role="group" aria-label="Role"><button aria-pressed="false">Employee</button><button aria-pressed="true">Approver</button></div>
+    <nav class="nav" aria-label="Main">
+      <p>Operations</p>
+      <a href="#">Accounts</a>
+      <a href="#" aria-current="page">Payments <span class="count" id="nav-count"></span></a>
+      <a href="#">Cards</a><a href="#">Team</a><a href="#">Expenses</a><a href="#">Reports</a>
+      <p>Administration</p>
+      <a href="#">Settings</a>
+    </nav>
+  </aside>
+  <div class="main">
+    <header class="top"><span class="crumb">Northstar Holdings / <b>Payments</b></span><b class="brand-m">FLUX</b><span class="who">Jamie Stone, Finance ops</span><button class="btn menu-m" type="button">Menu</button></header>
+    <div class="wrap">
+      <div class="head"><h1>Payments</h1><div class="head-tools"><input type="search" placeholder="Search reference or counterparty" aria-label="Search"><button class="btn">Saved payees</button><button class="btn primary">New payment</button></div></div>
+      <div class="lanes" id="lanes"></div>
+      <aside class="summary" id="summary" aria-label="Control chain summary"></aside>
+    </div>
+  </div>
+</div>
+<script src="../../../data/seed.js"></script>
+<script src="mock.js"></script>
+<script>
+const { S, esc, money, usd, day, time, STATUS, rail, lane, payments } = MOCK;
+const LANES = [
+  { id: 'mine', title: 'Waiting for your approval' },
+  { id: 'others', title: 'Waiting for other approvers' },
+  { id: 'settling', title: 'Approved, settling' },
+  { id: 'draft', title: 'Drafts' },
+  { id: 'done', title: 'Completed' },
+];
+const sum = (list) => list.reduce((t, p) => t + usd(p), 0);
+const mine = payments.filter((p) => lane(p) === 'mine');
+document.getElementById('nav-count').textContent = mine.length;
+let first = true;
+document.getElementById('lanes').innerHTML = LANES.map((l) => {
+  const list = payments.filter((p) => lane(p) === l.id);
+  if (!list.length) return '';
+  return `<section class="lane ${l.id}"><div class="lane-head"><h2>${l.title}</h2><span class="mono">${list.length}  USD ${money(sum(list), 'USD')}</span></div>${list.map((p) => {
+    const r = rail(p); const open = first && l.id === 'mine'; if (open) first = false;
+    const next = r.find((s, i) => i > 0 && s.state !== 'done' && r[i - 1].state === 'current');
+    return `<article class="row${open ? ' open' : ''}"><div class="row-main">
+      <div class="cp"><b>${esc(p.counterparty)}</b><span>${esc(p.purpose)}  <span class="mono">${p.id}</span></span></div>
+      <ol class="mini" aria-label="Approval rail">${r.map((s) => `<li class="${s.state}"><i></i>${esc(s.state === 'current' && l.id === 'mine' ? 'You' : s.label)}</li>`).join('')}</ol>
+      <div class="amt"><b>${money(p.amount, p.currency)} ${p.currency}</b><span>${day(p.createdAt)} ${time(p.createdAt)}</span></div></div>
+      ${open ? `<dl class="row-open"><p class="rule">${esc(p.policy)}. Your approval sends it to <b>${esc(next ? next.label + ', ' + next.who : 'execution')}</b>.</p>
+        <div><dt>Reference</dt><dd>${esc(p.reference)}</dd></div><div><dt>Execution date</dt><dd class="mono">${day(p.executionDate)}</dd></div>
+        <div><dt>Country</dt><dd>${esc(p.country)}</dd></div><div><dt>USD equivalent</dt><dd class="mono">${money(usd(p), 'USD')}</dd></div></dl>
+        <div class="decide"><button class="btn">Reject</button><button class="btn primary">Approve</button></div>` : ''}
+    </article>`;
+  }).join('')}</section>`;
+}).join('');
+const by = (id) => payments.filter((p) => lane(p) === id);
+document.getElementById('summary').innerHTML = `<h2>Control chain today</h2>
+  <div>${LANES.map((l, i) => { const list = by(l.id); return `<div class="sum-row${i === 0 ? ' lead' : ''}"><span>${l.title}</span><b>${list.length}</b></div>`; }).join('')}</div>
+  <div class="policy"><b>Active policies</b>${S.policies.filter((x) => x.status === 'Active').map((x) => esc(x.name)).join('<br>')}</div>`;
+</script>
+</body>
+</html>
