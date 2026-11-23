@@ -425,7 +425,7 @@
 .policy-skeleton { display: grid; gap: 8px; padding: 16px 12px; border-bottom: 1px solid var(--line); }
 .policy-skeleton .skeleton:last-child { width: 46%; }
 @media (max-width: 1180px) {
-  #payments-table .col-date, #payments-table td:nth-child(5) { display: none; }
+  #payments-table .col-date, #payments-table td:nth-child(4) { display: none; }
 }
 .permission-cell { position: relative; }
 .permission-cell .permission-dot { display: block; flex: none; }

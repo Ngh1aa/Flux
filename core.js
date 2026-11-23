@@ -136,7 +136,7 @@
   /* ---------- Formatting ---------- */
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const SYMBOLS = { USD: '$', EUR: '€', GBP: '£', JPY: '¥', SGD: 'S$' };
-  const decimals = (currency) => (currency === 'JPY' ? 0 : 2);
+  const decimals = (currency) => (currency === 'JPY' || currency === 'VND' ? 0 : 2);
   const fmt = {
     number(amount, currency = 'USD') {
       const d = decimals(currency);

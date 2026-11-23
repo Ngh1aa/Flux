@@ -121,7 +121,7 @@ test('root opens signed in; sign out shows login; continue and credentials sign 
   const session = await open('');
   const { page } = session;
   await page.waitForSelector('#payments-body tr[data-id]');
-  assert.match(await page.locator('.user-menu').innerText(), /Jamie Stone/);
+  assert.match(await page.locator('.user-menu').innerText(), /Võ Ngọc Lan/);
   await page.click('.user-menu');
   await Promise.all([page.waitForURL(/login\.html/), page.click('#sign-out')]);
   await page.waitForSelector('#continue-as');
@@ -143,15 +143,16 @@ test('root opens signed in; sign out shows login; continue and credentials sign 
   await done(session);
 });
 
-test('payments: new payment flow validates, evaluates policy, submits and persists', async () => {
+test('requests: new request validates, picks the rule, submits and persists', async () => {
   const s = await open('index.html');
   const { page } = s;
   await page.click('#open-payment-dialog');
   await page.waitForSelector('#payment-dialog[open]');
+  await page.selectOption('#type-select', 'Vendor payment');
   await page.selectOption('#payee-select', 'new');
   await page.click('#payment-dialog [data-nav="next"]');
   await page.waitForSelector('#err-new-payment-form-newPayeeName');
-  await page.selectOption('#payee-select', 'PYE-1003');
+  await page.selectOption('#payee-select', 'PYE-1001');
   await page.click('#payment-dialog [data-nav="next"]');
   await page.waitForSelector('[data-step="2"]:not([hidden])');
   await page.fill('#amount-input', '');
@@ -159,102 +160,122 @@ test('payments: new payment flow validates, evaluates policy, submits and persis
   await page.click('#payment-dialog [data-nav="next"]');
   assert.match(await text(page, '#err-new-payment-form-amount'), /Enter an amount/);
   assert.match(await text(page, '#err-new-payment-form-executionDate'), /later date/);
-  await page.fill('#amount-input', '12,000');
+  await page.fill('#amount-input', '24,000,000');
   await page.fill('#execution-input', '2026-09-20');
-  await page.fill('#purpose-input', 'Q4 hosting prepayment');
+  await page.fill('#purpose-input', 'Booth banner printing');
   assert.match(await text(page, '#policy-preview'), /Rule 01/);
   await page.click('#payment-dialog [data-nav="next"]');
   await page.waitForSelector('[data-step="3"]:not([hidden])');
-  assert.match(await text(page, '#review-chain'), /Finance manager.*CFO/s);
+  assert.match(await text(page, '#review-chain'), /Team lead.*Director.*Payout/s);
   await page.click('#submit-payment-btn');
   await waitToast(page, 'submitted for approval');
   await page.waitForSelector('#payment-dialog', { state: 'hidden' });
-  assert.equal(await rowStatus(page, '#payments-body', 'TRF-98235'), 'Pending');
-  assert.equal(await text(page, '#detail-reference'), 'TRF-98235');
-  assert.equal(await text(page, '#approval-rail .rail-step.current .rail-label'), 'Finance manager');
+  assert.equal(await rowStatus(page, '#payments-body', 'REQ-2042'), 'Pending');
+  assert.equal(await text(page, '#detail-reference'), 'REQ-2042');
+  assert.equal(await text(page, '#approval-rail .rail-step.current .rail-label'), 'Team lead');
   assert.match(await text(page, '#detail-policy'), /Rule 01/);
   await page.reload();
-  await page.waitForSelector('#payments-body tr[data-id="TRF-98235"]');
-  assert.match(page.url(), /id=TRF-98235/);
+  await page.waitForSelector('#payments-body tr[data-id="REQ-2042"]');
+  assert.match(page.url(), /id=REQ-2042/);
   await done(s);
 });
 
-test('payments: draft save, edit, submit and delete', async () => {
+test('requests: an advance goes to the requester; a small one needs only the team lead', async () => {
   const s = await open('index.html');
   const { page } = s;
   await page.click('#open-payment-dialog');
-  await page.selectOption('#payee-select', 'new');
-  await page.fill('#new-payee-name', 'Kite Analytics SAS');
-  await page.selectOption('#new-payee-country', 'Germany');
-  await page.fill('#new-payee-account', 'DE21 3704 0044 0532 0130');
+  assert.equal(await page.inputValue('#type-select'), 'Advance');
+  assert.equal(await page.locator('#payee-select').isVisible(), false, 'no vendor picker for an advance');
+  assert.match(await text(page, '#payee-preview'), /Võ Ngọc Lan/);
   await page.click('#payment-dialog [data-nav="next"]');
-  await page.selectOption('#currency-input', 'EUR');
-  await page.fill('#amount-input', '1500');
-  await page.click('#save-draft-btn');
-  await waitToast(page, 'saved');
-  const id = 'TRF-98235';
-  assert.equal(await rowStatus(page, '#payments-body', id), 'Draft');
-  await page.click('#edit-draft');
-  await page.waitForSelector('#payment-dialog[open]');
-  assert.match(await text(page, '#payment-dialog-title'), /Edit draft TRF-98235/);
+  await page.fill('#amount-input', '3,000,000');
+  await page.fill('#purpose-input', 'Client visit in Biên Hòa');
+  assert.match(await text(page, '#policy-preview'), /Default: team lead approval/);
+  await page.fill('#amount-input', '12,000,000');
+  assert.match(await text(page, '#policy-preview'), /Rule 03/);
+  await page.fill('#amount-input', '1500.5');
   await page.click('#payment-dialog [data-nav="next"]');
-  await page.fill('#amount-input', '1750.50');
-  await page.fill('#purpose-input', 'Data subscription');
-  await page.click('#save-draft-btn');
-  await waitToast(page, `Draft ${id} updated`);
-  assert.equal(await text(page, '#detail-amount'), '€1,750.50');
-  await page.click('#submit-draft');
-  await waitToast(page, 'submitted');
-  assert.equal(await rowStatus(page, '#payments-body', id), 'Pending');
-  // The new payee was saved for next time.
-  await go(page, 'payees.html');
-  await page.waitForSelector('#payees-body tr:has-text("Kite Analytics SAS")');
-  // Delete the seeded draft.
-  await go(page, 'index.html?id=TRF-97940');
-  await page.waitForSelector('#delete-draft:not([hidden])');
-  await page.click('#delete-draft');
-  await confirm(page);
-  await waitToast(page, 'Draft TRF-97940 deleted');
-  assert.equal(await page.locator('#payments-body tr[data-id="TRF-97940"]').count(), 0);
+  assert.match(await text(page, '#err-new-payment-form-amount'), /whole dong/);
   await done(s);
 });
 
-test('payments: approve through the chain, reject with reason, cancel pending', async () => {
-  const s = await open('index.html?id=TRF-98234');
+test('requests: draft save, edit, submit and delete', async () => {
+  const s = await open('index.html');
+  const { page } = s;
+  await page.click('#open-payment-dialog');
+  await page.selectOption('#type-select', 'Vendor payment');
+  await page.selectOption('#payee-select', 'new');
+  await page.fill('#new-payee-name', 'Đức Thành Signage');
+  await page.fill('#new-payee-account', '0071 0004 9988');
+  await page.click('#payment-dialog [data-nav="next"]');
+  await page.fill('#amount-input', '1500000');
+  await page.click('#save-draft-btn');
+  await waitToast(page, 'saved');
+  const id = 'REQ-2042';
+  assert.equal(await rowStatus(page, '#payments-body', id), 'Draft');
+  await page.click('#edit-draft');
+  await page.waitForSelector('#payment-dialog[open]');
+  assert.match(await text(page, '#payment-dialog-title'), /Edit draft REQ-2042/);
+  await page.click('#payment-dialog [data-nav="next"]');
+  await page.fill('#amount-input', '1,750,000');
+  await page.fill('#purpose-input', 'Shop sign repair');
+  await page.click('#save-draft-btn');
+  await waitToast(page, `Draft ${id} updated`);
+  assert.equal(await text(page, '#detail-amount'), 'VND 1,750,000');
+  await page.click('#submit-draft');
+  await waitToast(page, 'submitted');
+  assert.equal(await rowStatus(page, '#payments-body', id), 'Pending');
+  // A vendor added today triggers the new vendor check.
+  assert.match(await text(page, '#detail-policy'), /Rule 02/);
+  // The new vendor was saved for next time.
+  await go(page, 'payees.html');
+  await page.waitForSelector('#payees-body tr:has-text("Đức Thành Signage")');
+  // Delete the seeded draft.
+  await go(page, 'index.html?id=REQ-2024');
+  await page.waitForSelector('#delete-draft:not([hidden])');
+  await page.click('#delete-draft');
+  await confirm(page);
+  await waitToast(page, 'Draft REQ-2024 deleted');
+  assert.equal(await page.locator('#payments-body tr[data-id="REQ-2024"]').count(), 0);
+  await done(s);
+});
+
+test('requests: approve through the chain, reject with reason, cancel pending', async () => {
+  const s = await open('index.html?id=REQ-2041');
   const { page } = s;
   assert.equal(await page.locator('#approve-action').isDisabled(), true, 'employee cannot approve');
   await page.click('[data-role="approver"]');
   await page.click('#approve-action');
-  await waitToast(page, 'Next: CFO');
-  assert.equal(await text(page, '#approval-rail .rail-step.current .rail-label'), 'CFO');
+  await waitToast(page, 'Next: Director');
+  assert.equal(await text(page, '#approval-rail .rail-step.current .rail-label'), 'Director');
   await page.click('#approve-action');
-  await waitToast(page, 'released for settlement');
+  await waitToast(page, 'pays it out next');
   assert.equal(await text(page, '#detail-status'), 'Processing');
   // Reject requires a reason.
-  await page.click('#payments-body tr[data-id="TRF-98152"]');
+  await page.click('#payments-body tr[data-id="REQ-2036"]');
   await page.click('#reject-action');
   await page.waitForSelector('#flux-confirm[open]');
   await page.click('#flux-confirm-submit');
   await page.waitForSelector('#flux-confirm .field-error');
-  await page.fill('#flux-confirm-reason', 'Invoice total does not match the PO');
+  await page.fill('#flux-confirm-reason', 'The lunch receipt is missing');
   await page.click('#flux-confirm-submit');
-  await waitToast(page, 'TRF-98152 rejected');
+  await waitToast(page, 'REQ-2036 rejected');
   assert.equal(await text(page, '#detail-status'), 'Rejected');
-  assert.match(await text(page, '#detail-outcome'), /Invoice total does not match the PO/);
-  // The initiator cancels a pending payment.
+  assert.match(await text(page, '#detail-outcome'), /The lunch receipt is missing/);
+  // The requester cancels a pending request.
   await page.click('[data-role="employee"]');
-  await page.click('#payments-body tr[data-id="TRF-98061"]');
+  await page.click('#payments-body tr[data-id="REQ-2031"]');
   await page.click('#cancel-payment');
-  await confirm(page, 'Supplier sent a corrected invoice');
-  await waitToast(page, 'TRF-98061 cancelled');
-  assert.equal(await rowStatus(page, '#payments-body', 'TRF-98061'), 'Cancelled');
+  await confirm(page, 'Workshop moved to October');
+  await waitToast(page, 'REQ-2031 cancelled');
+  assert.equal(await rowStatus(page, '#payments-body', 'REQ-2031'), 'Cancelled');
   await page.click('[data-filter="closed"]');
   assert.equal(await page.locator('#payments-body tr[data-id]').count(), 2);
   await done(s);
 });
 
-test('payments: save failure (demo tools) is recoverable, unknown id shows not found, load error retries', async () => {
-  const s = await open('index.html?demo=1&id=TRF-98234');
+test('requests: save failure (demo tools) is recoverable, unknown id shows not found, load error retries', async () => {
+  const s = await open('index.html?demo=1&id=REQ-2041');
   const { page } = s;
   await page.click('.demo-tools-toggle');
   await page.check('#demo-fail-toggle');
@@ -266,12 +287,12 @@ test('payments: save failure (demo tools) is recoverable, unknown id shows not f
   assert.match(await text(page, '.action-error'), /did not respond/i);
   assert.equal(await text(page, '#detail-status'), 'Pending', 'nothing saved on failure');
   await page.click('.action-error button');
-  await waitToast(page, 'Next: CFO');
+  await waitToast(page, 'Next: Director');
   await page.waitForSelector('#demo-fail-flag', { state: 'hidden' });
 
-  await go(page, 'index.html?id=TRF-00000');
+  await go(page, 'index.html?id=REQ-0000');
   await page.waitForSelector('#payment-not-found:not([hidden])');
-  assert.match(await text(page, '#payment-not-found'), /TRF-00000 not found/);
+  assert.match(await text(page, '#payment-not-found'), /REQ-0000 not found/);
   await page.click('#payment-not-found [data-state-action]');
   await page.waitForSelector('#payment-detail-body:not([hidden])');
 
@@ -280,12 +301,12 @@ test('payments: save failure (demo tools) is recoverable, unknown id shows not f
   await page.click('.load-error button');
   await page.waitForSelector('#payments-body tr[data-id]');
 
-  await page.fill('#payment-search', 'no such payee');
-  await page.waitForSelector('#payment-empty-state:has-text("No matching payments")');
+  await page.fill('#payment-search', 'no such request');
+  await page.waitForSelector('#payment-empty-state:has-text("No matching requests")');
   await done(s);
 });
 
-test('payment form failure keeps input and retries', async () => {
+test('request form failure keeps input and retries', async () => {
   const s = await open('index.html?demo=1');
   const { page } = s;
   await page.click('.demo-tools-toggle');
@@ -293,12 +314,12 @@ test('payment form failure keeps input and retries', async () => {
   await page.keyboard.press('Escape');
   await page.click('#open-payment-dialog');
   await page.click('#payment-dialog [data-nav="next"]');
-  await page.fill('#amount-input', '900');
-  await page.fill('#purpose-input', 'Freight top-up');
+  await page.fill('#amount-input', '900000');
+  await page.fill('#purpose-input', 'Parking fees');
   await page.click('#payment-dialog [data-nav="next"]');
   await page.click('#submit-payment-btn');
   await page.waitForSelector('#new-payment-form .form-alert');
-  assert.equal(await page.inputValue('#amount-input'), '900');
+  assert.equal(await page.inputValue('#amount-input'), '900000');
   await page.click('#new-payment-form .form-alert [data-retry]');
   await waitToast(page, 'submitted for approval');
   await done(s);
@@ -328,7 +349,7 @@ test('saved payees: create, view, edit, delete and empty state', async () => {
   await page.click('#payee-submit');
   await waitToast(page, 'Harbor Print Co updated');
   assert.equal(await text(page, '#payee-pane-bank'), 'Chase');
-  assert.match(await page.getAttribute('#payee-pay', 'href'), /index\.html\?new=PYE-1007/);
+  assert.match(await page.getAttribute('#payee-pay', 'href'), /index\.html\?new=PYE-1006/);
   // Delete every payee to reach the true empty state.
   while (await page.locator('#payees-body tr[data-id]').count()) {
     const name = await text(page, '#payee-pane-name');
@@ -618,7 +639,7 @@ test('approval policies: create, edit, delete with validation; history; export; 
   assert.match(await text(page, '#history-list'), /deleted/);
   await page.click('#history-dialog [value="cancel"]');
   const [download] = await Promise.all([page.waitForEvent('download'), page.click('#export-rules')]);
-  assert.match(fs.readFileSync(await download.path(), 'utf8'), /Large cross-border transfers/);
+  assert.match(fs.readFileSync(await download.path(), 'utf8'), /Large requests/);
   await go(page, 'settings.html?id=POL-99');
   await page.waitForSelector('#policy-not-found:has-text("Rule POL-99 not found")');
   await done(s);
@@ -637,7 +658,7 @@ test('reset demo data (demo tools) restores the seed and survives navigation', a
   await page.click('#demo-reset');
   await Promise.all([page.waitForURL(/payees\.html$/), confirm(page)]);
   await page.waitForSelector('#payees-body tr[data-id="PYE-1001"]');
-  assert.equal(await page.locator('#payees-body tr[data-id]').count(), 6);
+  assert.equal(await page.locator('#payees-body tr[data-id]').count(), 5);
   await done(s);
 });
 

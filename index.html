@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="light">
-  <title>Flux — Payments</title>
+  <title>Flux — Requests</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="workspace.css">
 </head>
@@ -13,7 +13,7 @@
     <aside class="sidebar" aria-label="Workspace navigation">
       <div class="workspace">
         <div>
-          <div class="brand"><span class="brand-name">FLUX</span><span class="workspace-name">Northstar Holdings</span></div>
+          <div class="brand"><span class="brand-name">FLUX</span><span class="workspace-name">Minh An Trading</span></div>
         </div>
         <div class="role-switch" role="group" aria-label="Role switcher">
           <button type="button" data-role="employee" aria-pressed="true">Employee</button>
@@ -25,7 +25,7 @@
         <p class="nav-section-label">Operations</p>
         <ul class="nav-list">
           <li><a href="accounts.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16"></rect><path d="M3 9h18M9 9v11"></path></svg><span>Accounts</span></a></li>
-          <li><a href="index.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h12M12 3l4 4-4 4M20 17H8m4-4-4 4 4 4"></path></svg><span>Payments</span></a></li>
+          <li><a href="index.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h12M12 3l4 4-4 4M20 17H8m4-4-4 4 4 4"></path></svg><span>Requests</span></a></li>
           <li><a href="cards.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14"></rect><path d="M3 10h18"></path></svg><span>Cards</span></a></li>
           <li><a href="team.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><path d="M3 20c.7-4 3-6 6-6s5.3 2 6 6M17 7h4M19 5v4"></path></svg><span>Team</span></a></li>
           <li><a href="expenses.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6"></path></svg><span>Expenses</span></a></li>
@@ -41,18 +41,18 @@
 
     <main class="main-content">
       <header class="topbar">
-        <div class="breadcrumb"><span>Northstar Holdings</span><span>/</span><strong>Payments</strong></div>
-        <button class="user-menu" type="button"><span>Jamie Stone, Finance ops</span><span class="user-initials" aria-hidden="true">JS</span></button>
+        <div class="breadcrumb"><span>Minh An Trading</span><span>/</span><strong>Requests</strong></div>
+        <button class="user-menu" type="button"><span>Võ Ngọc Lan, Sales</span><span class="user-initials" aria-hidden="true">NL</span></button>
       </header>
 
       <div class="page-content">
         <div class="page-header">
           <div class="page-title">
-            <h1>Payments</h1>
+            <h1>Requests</h1>
           </div>
           <div class="page-actions">
-            <a class="btn" href="payees.html">Saved payees</a>
-            <button class="btn btn-primary" type="button" id="open-payment-dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg><span>New payment</span></button>
+            <a class="btn" href="payees.html">Vendors</a>
+            <button class="btn btn-primary" type="button" id="open-payment-dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg><span>New request</span></button>
           </div>
         </div>
 
@@ -68,23 +68,22 @@
             </div>
           </div>
           <div class="toolbar-group">
-            <label class="visually-hidden" for="payment-search">Search payments</label>
-            <input id="payment-search" class="input toolbar-search" type="search" placeholder="Search reference or counterparty">
-            <label class="visually-hidden" for="payment-currency-filter">Currency</label>
-            <select id="payment-currency-filter" class="select toolbar-select"><option value="all">All currencies</option><option>USD</option><option>EUR</option><option>GBP</option><option>JPY</option><option>SGD</option></select>
+            <label class="visually-hidden" for="payment-search">Search requests</label>
+            <input id="payment-search" class="input toolbar-search" type="search" placeholder="Search purpose, person or vendor">
+            <label class="visually-hidden" for="payment-currency-filter">Type</label>
+            <select id="payment-currency-filter" class="select toolbar-select"><option value="all">All types</option><option>Advance</option><option>Reimbursement</option><option>Vendor payment</option></select>
           </div>
         </div>
 
         <section class="workspace-grid" aria-label="Payment operations workspace">
           <div class="table-region" id="payments-region">
-            <table class="data-table ledger-list ledger-payments" id="payments-table" aria-label="Payments">
+            <table class="data-table ledger-list ledger-payments" id="payments-table" aria-label="Requests">
               <thead>
                 <tr>
                   <th class="col-status">Status</th>
-                  <th>Counterparty</th>
-                  <th class="col-ccy">CCY</th>
+                  <th>Request</th>
                   <th class="amount-col col-amount">Amount</th>
-                  <th class="col-date">Initiated</th>
+                  <th class="col-date">Submitted</th>
                   <th class="stage-column col-stage">Waiting on</th>
                 </tr>
               </thead>
@@ -93,7 +92,7 @@
             <div id="payment-empty-state"></div>
           </div>
 
-          <aside class="detail-pane" id="payment-detail" aria-label="Selected payment detail">
+          <aside class="detail-pane" id="payment-detail" aria-label="Selected request detail">
             <div id="payment-not-found" class="detail-missing" hidden></div>
             <div id="payment-detail-body">
               <div class="detail-head">
@@ -116,21 +115,21 @@
                 <p class="action-hint" id="action-hint"></p>
                 <div class="action-row">
                   <button class="btn btn-danger" type="button" id="delete-draft" hidden>Delete draft</button>
-                  <button class="btn" type="button" id="cancel-payment" hidden>Cancel payment</button>
+                  <button class="btn" type="button" id="cancel-payment" hidden>Cancel request</button>
                   <button class="btn" type="button" id="edit-draft" hidden>Edit draft</button>
                   <button class="btn btn-primary" type="button" id="submit-draft" hidden>Submit for approval</button>
                   <button class="btn" type="button" id="reject-action">Reject</button>
-                  <button class="btn btn-primary" type="button" id="approve-action">Approve payment</button>
+                  <button class="btn btn-primary" type="button" id="approve-action">Approve</button>
                 </div>
               </div>
 
               <div class="detail-section">
-                <p class="section-label">Payment data</p>
+                <p class="section-label">Request details</p>
                 <div class="meta-grid">
-                  <div class="meta-item"><span>Currency</span><strong class="mono" id="detail-currency">—</strong></div>
-                  <div class="meta-item"><span>Country</span><strong id="detail-country">—</strong></div>
-                  <div class="meta-item"><span>Initiated</span><strong class="mono" id="detail-initiated">—</strong></div>
-                  <div class="meta-item"><span>Execution date</span><strong class="mono" id="detail-execution">—</strong></div>
+                  <div class="meta-item"><span>Type</span><strong id="detail-currency">—</strong></div>
+                  <div class="meta-item"><span>Requested by</span><strong id="detail-country">—</strong></div>
+                  <div class="meta-item"><span>Submitted</span><strong class="mono" id="detail-initiated">—</strong></div>
+                  <div class="meta-item"><span>Needed by</span><strong class="mono" id="detail-execution">—</strong></div>
                   <div class="meta-item"><span>Purpose</span><strong id="detail-purpose">—</strong></div>
                   <div class="meta-item"><span>Reference</span><strong id="detail-payment-reference">—</strong></div>
                 </div>
@@ -151,39 +150,38 @@
   <dialog id="payment-dialog" aria-labelledby="payment-dialog-title">
     <form method="dialog" id="new-payment-form">
       <div class="dialog-head">
-        <div><p class="section-label dialog-kicker" id="payment-dialog-kicker">Payment instruction</p><h2 id="payment-dialog-title">New cross-border payment</h2></div>
+        <div><p class="section-label dialog-kicker" id="payment-dialog-kicker">Spend request</p><h2 id="payment-dialog-title">New request</h2></div>
         <button class="btn btn-icon" value="cancel" aria-label="Close dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
       </div>
       <ol class="stepper" aria-label="Payment steps">
-        <li data-step-tab="1" aria-current="step"><span class="mono">01</span>Payee</li>
-        <li data-step-tab="2"><span class="mono">02</span>Amount and date</li>
+        <li data-step-tab="1" aria-current="step"><span class="mono">01</span>Type and payee</li>
+        <li data-step-tab="2"><span class="mono">02</span>Amount and purpose</li>
         <li data-step-tab="3"><span class="mono">03</span>Review</li>
       </ol>
       <div class="dialog-body">
         <div class="form-step" data-step="1">
           <div class="form-grid">
-            <div class="form-field full"><label class="form-label" for="payee-select">Pay to</label><select class="select" id="payee-select" name="payeeId"></select></div>
-            <div class="form-field full new-payee-fields" hidden><label class="form-label" for="new-payee-name">Payee legal name</label><input class="input" id="new-payee-name" name="newPayeeName" autocomplete="off"></div>
-            <div class="form-field new-payee-fields" hidden><label class="form-label" for="new-payee-country">Country</label><select class="select" id="new-payee-country" name="newPayeeCountry"><option value="">Select country</option><option>United States</option><option>Germany</option><option>United Kingdom</option><option>Japan</option><option>Netherlands</option><option>Poland</option><option>Singapore</option></select></div>
-            <div class="form-field new-payee-fields" hidden><label class="form-label" for="new-payee-account">IBAN or account number</label><input class="input mono" id="new-payee-account" name="newPayeeAccount" autocomplete="off"></div>
-            <div class="form-field full new-payee-fields" hidden><label class="check-row"><input type="checkbox" name="savePayee" checked> Save to payees for next time</label></div>
+            <div class="form-field full"><label class="form-label" for="type-select">Request type</label><select class="select" id="type-select" name="type"><option>Advance</option><option>Reimbursement</option><option>Vendor payment</option></select></div>
+            <div class="form-field full vendor-fields" hidden><label class="form-label" for="payee-select">Vendor</label><select class="select" id="payee-select" name="payeeId"></select></div>
+            <div class="form-field full new-payee-fields" hidden><label class="form-label" for="new-payee-name">Vendor name</label><input class="input" id="new-payee-name" name="newPayeeName" autocomplete="off"></div>
+            <div class="form-field full new-payee-fields" hidden><label class="form-label" for="new-payee-account">Bank account number</label><input class="input mono" id="new-payee-account" name="newPayeeAccount" autocomplete="off"></div>
+            <div class="form-field full new-payee-fields" hidden><label class="check-row"><input type="checkbox" name="savePayee" checked> Save to vendors for next time</label></div>
             <div class="form-field full"><div class="payee-preview" id="payee-preview"></div></div>
           </div>
         </div>
         <div class="form-step" data-step="2" hidden>
           <div class="form-grid">
-            <div class="form-field"><label class="form-label" for="currency-input">Currency</label><select class="select mono" id="currency-input" name="currency"><option>USD</option><option>EUR</option><option>GBP</option><option>JPY</option><option>SGD</option></select></div>
-            <div class="form-field"><label class="form-label" for="amount-input">Amount</label><div class="amount-field"><span class="currency-prefix" id="currency-prefix">USD</span><input id="amount-input" name="amount" inputmode="decimal" autocomplete="off" placeholder="0.00"></div></div>
-            <div class="form-field"><label class="form-label" for="execution-input">Execution date</label><input class="input mono" type="date" id="execution-input" name="executionDate"></div>
-            <div class="form-field"><label class="form-label" for="purpose-input">Purpose</label><input class="input" id="purpose-input" name="purpose" placeholder="For example: supplier settlement"></div>
-            <div class="form-field full"><label class="form-label" for="reference-input">Reference for payee</label><input class="input mono" id="reference-input" name="reference" maxlength="60" placeholder="Invoice number or note"></div>
-            <div class="form-field full"><div class="inline-note" id="policy-preview"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 3 20h18zM12 9v4M12 17h.01"></path></svg><span>Enter an amount to see which approval rule applies.</span></div></div>
+            <div class="form-field"><label class="form-label" for="amount-input">Amount</label><div class="amount-field"><span class="currency-prefix" id="currency-prefix">VND</span><input id="amount-input" name="amount" inputmode="numeric" autocomplete="off" placeholder="0"></div></div>
+            <div class="form-field"><label class="form-label" for="execution-input">Needed by</label><input class="input mono" type="date" id="execution-input" name="executionDate"></div>
+            <div class="form-field"><label class="form-label" for="purpose-input">Purpose</label><input class="input" id="purpose-input" name="purpose" placeholder="For example: trade fair travel"></div>
+            <div class="form-field full"><label class="form-label" for="reference-input">Note or invoice number</label><input class="input mono" id="reference-input" name="reference" maxlength="60" placeholder="For example: quote PN-0915"></div>
+            <div class="form-field full"><div class="inline-note" id="policy-preview"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 3 20h18zM12 9v4M12 17h.01"></path></svg><span>Enter an amount to see who approves it.</span></div></div>
           </div>
         </div>
         <div class="form-step" data-step="3" hidden>
           <ul class="key-list review-list" id="payment-review"></ul>
           <div class="review-chain" id="review-chain"></div>
-          <p class="form-footnote">Submitting sends this payment to the approvers above. Funds are released only after the final approval.</p>
+          <p class="form-footnote">Submitting sends this request to the approvers above. The accountant pays out only after the final approval.</p>
         </div>
       </div>
       <div class="dialog-actions">

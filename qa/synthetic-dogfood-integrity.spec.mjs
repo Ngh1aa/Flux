@@ -14,14 +14,14 @@ test('source integrity repairs remain visible before human Round 01', async ({ p
 
   await page.goto(`${baseURL}/index.html`, { waitUntil: 'domcontentloaded' });
   const processingRow = page.locator('.payment-row[data-status="processing"]').first();
-  await expect(processingRow.locator('.stage-text')).toHaveText('Settlement');
+  await expect(processingRow.locator('.stage-text')).toHaveText('Payout');
   await processingRow.click();
   await expect(page.locator('#detail-status')).toHaveText('Processing');
-  await expect(page.locator('.approval-rail .rail-step.current .rail-label')).toHaveText('Settlement');
+  await expect(page.locator('.approval-rail .rail-step.current .rail-label')).toHaveText('Payout');
   await expect(page.locator('.approval-rail .rail-step.current .rail-status')).toHaveText('In progress');
 
-  const solventa = page.locator('.payment-row[data-counterparty="Solventa Sp. z o.o."]');
-  await expect(solventa.locator('.stage-text')).toHaveText('Finance manager');
+  const saoMai = page.locator('.payment-row[data-counterparty="Sao Mai Catering"]');
+  await expect(saoMai.locator('.stage-text')).toHaveText('Team lead');
 
   await page.goto(`${baseURL}/reports.html`, { waitUntil: 'domcontentloaded' });
   await expect(page.getByText('Projected Sep close', { exact: true })).toBeVisible();

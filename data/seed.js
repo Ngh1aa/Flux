@@ -6,104 +6,110 @@
 
   const seed = {
     meta: {
-      version: 4,
-      workspace: 'Northstar Holdings',
+      version: 5,
+      workspace: 'Minh An Trading',
       baseCurrency: 'USD',
       // The workspace clock starts here and advances in real time.
       clockStart: '2026-09-15T15:02:00',
-      currentUser: { name: 'Jamie Stone', title: 'Finance ops', role: 'Finance operations', email: 'jamie.stone@northstar.co', initials: 'JS' },
+      // Email and password stay on the old domain until the Team screen moves to the new content (step 4).
+      currentUser: { name: 'Võ Ngọc Lan', title: 'Sales', role: 'Employee', email: 'jamie.stone@northstar.co', initials: 'NL' },
       // Seeded sign-in for the login screen (session only).
       credentials: { email: 'jamie.stone@northstar.co', password: 'northstar' }
     },
 
-    fx: { USD: 1, EUR: 1.09, GBP: 1.27, JPY: 0.0068, SGD: 0.74 },
+    fx: { USD: 1, EUR: 1.09, GBP: 1.27, JPY: 0.0068, SGD: 0.74, VND: 0.0000394 },
 
+    // Team lead, Director and Accountant run the request chain. The old roles stay for the Team and
+    // Settings screens until they move to the new content (step 4).
     approverDirectory: {
+      'Team lead': 'Lê Minh Khoa',
+      Director: 'Trần Quốc Bảo',
+      Accountant: 'Nguyễn Thu Hà',
       'Finance manager': 'Alex Smith',
       CFO: 'Sarah Jensen',
       Controller: 'Mateo Ruiz',
       'Treasury lead': 'Sarah Jensen'
     },
 
+    // Vendors the company pays directly.
     payees: [
-      { id: 'PYE-1001', name: 'Arcwell Systems Inc.', country: 'United States', currency: 'USD', bank: 'JPMorgan Chase', account: 'US 021000021 •• 7710', email: 'ap@arcwellsystems.com', createdAt: '2025-11-02' },
-      { id: 'PYE-1002', name: 'Takahashi Industrial', country: 'Japan', currency: 'JPY', bank: 'MUFG Bank', account: 'JP 0005-221 •• 3381', email: 'finance@takahashi-ind.co.jp', createdAt: '2025-06-12' },
-      { id: 'PYE-1003', name: 'Nordlicht GmbH', country: 'Germany', currency: 'EUR', bank: 'Deutsche Bank', account: 'DE44 5001 0517 •• 2219', email: 'billing@nordlicht-cloud.de', createdAt: '2026-01-20' },
-      { id: 'PYE-1004', name: 'Fieldwork Studio', country: 'United Kingdom', currency: 'GBP', bank: 'Barclays', account: 'GB12 BARC 2004 •• 5521', email: 'studio@fieldworkstudio.co.uk', createdAt: '2025-09-01' },
-      { id: 'PYE-1005', name: 'Solventa Sp. z o.o.', country: 'Poland', currency: 'EUR', bank: 'PKO BP', account: 'PL61 1090 1014 •• 8874', email: 'faktury@solventa-research.pl', createdAt: '2026-09-01' },
-      { id: 'PYE-1006', name: 'Atlas Freight BV', country: 'Netherlands', currency: 'EUR', bank: 'ING', account: 'NL91 INGB 0417 •• 4300', email: 'ar@atlasfreight.nl', createdAt: '2024-03-10' }
+      { id: 'PYE-1001', name: 'Phương Nam Printing', country: 'Vietnam', currency: 'VND', bank: 'Vietcombank', account: '0071 0004 •• 4410', email: 'sales@phuongnamprint.vn', createdAt: '2024-05-14' },
+      { id: 'PYE-1002', name: 'Hòa Phát Furniture', country: 'Vietnam', currency: 'VND', bank: 'BIDV', account: '3110 0012 •• 8823', email: 'b2b@hoaphatfurniture.vn', createdAt: '2023-11-02' },
+      { id: 'PYE-1003', name: 'Sao Mai Catering', country: 'Vietnam', currency: 'VND', bank: 'Techcombank', account: '1903 5521 •• 0076', email: 'order@saomaicatering.vn', createdAt: '2026-09-08' },
+      { id: 'PYE-1004', name: 'Viettel Business', country: 'Vietnam', currency: 'VND', bank: 'MB Bank', account: '0680 1100 •• 2291', email: 'doanhnghiep@viettel.vn', createdAt: '2022-03-01' },
+      { id: 'PYE-1005', name: 'Thiên Long Stationery', country: 'Vietnam', currency: 'VND', bank: 'ACB', account: '2046 7781 •• 5530', email: 'ban.hang@thienlong.vn', createdAt: '2023-06-20' }
     ],
 
+    // Spend requests: advances, reimbursements and vendor payments. Amounts in VND.
     payments: [
       {
-        id: 'TRF-98234', payeeId: 'PYE-1001', counterparty: 'Arcwell Systems Inc.', country: 'United States', currency: 'USD', amount: 18400,
-        purpose: 'Supplier settlement', reference: 'September supplier settlement', executionDate: '2026-09-16', createdAt: '2026-09-15T14:15:22',
-        status: 'pending', chain: ['Finance manager', 'CFO'], stage: 0, policy: 'Rule 01: amount above USD 10,000', approvals: [],
+        id: 'REQ-2041', type: 'Vendor payment', requester: 'Võ Ngọc Lan', payeeId: 'PYE-1001', counterparty: 'Phương Nam Printing', country: 'Vietnam', currency: 'VND', amount: 45000000,
+        purpose: 'Trade fair brochures', reference: 'Quote PN-0915, 5,000 copies', executionDate: '2026-09-18', createdAt: '2026-09-15T14:15:22',
+        status: 'pending', chain: ['Team lead', 'Director'], stage: 0, policy: 'Rule 01: Large requests', approvals: [],
         activity: [
-          { at: '2026-09-15T14:15:22', title: 'Payment created', meta: 'Jamie Stone, Employee' },
-          { at: '2026-09-15T14:15:24', title: 'Policy 01 applied', meta: 'Finance manager → CFO approval required' }
+          { at: '2026-09-15T14:15:22', title: 'Request created', meta: 'Võ Ngọc Lan, Employee' },
+          { at: '2026-09-15T14:15:24', title: 'Rule 01 applied', meta: 'Team lead → Director approval required' }
         ]
       },
       {
-        id: 'TRF-98187', payeeId: 'PYE-1002', counterparty: 'Takahashi Industrial', country: 'Japan', currency: 'JPY', amount: 2850000,
-        purpose: 'Manufacturing services', reference: 'PO 7731 tooling batch', executionDate: '2026-09-15', createdAt: '2026-09-15T12:42:10',
-        status: 'processing', chain: ['Finance manager', 'CFO'], stage: 2, policy: 'Rule 01: amount above USD 10,000',
-        approvals: [{ role: 'Finance manager', by: 'Alex Smith', at: '2026-09-15T13:05:41' }, { role: 'CFO', by: 'Sarah Jensen', at: '2026-09-15T13:48:02' }],
+        id: 'REQ-2038', type: 'Advance', requester: 'Võ Ngọc Lan', payeeId: null, counterparty: 'Võ Ngọc Lan', country: 'Vietnam', currency: 'VND', amount: 26000000,
+        purpose: 'Đà Nẵng trade fair, booth and travel', reference: 'Settle with receipts by 30 Sep', executionDate: '2026-09-16', createdAt: '2026-09-15T12:42:10',
+        status: 'processing', chain: ['Team lead', 'Director'], stage: 2, policy: 'Rule 01: Large requests',
+        approvals: [{ role: 'Team lead', by: 'Lê Minh Khoa', at: '2026-09-15T13:05:41' }, { role: 'Director', by: 'Trần Quốc Bảo', at: '2026-09-15T13:48:02' }],
         activity: [
-          { at: '2026-09-15T12:42:10', title: 'Payment created', meta: 'Jamie Stone, Employee' },
-          { at: '2026-09-15T12:42:12', title: 'Policy 01 applied', meta: 'Finance manager → CFO approval required' },
-          { at: '2026-09-15T13:05:41', title: 'Approved by Finance manager', meta: 'Alex Smith' },
-          { at: '2026-09-15T13:48:02', title: 'Approved by CFO', meta: 'Sarah Jensen' },
-          { at: '2026-09-15T13:48:05', title: 'Released for settlement', meta: 'Flux policy engine' }
+          { at: '2026-09-15T12:42:10', title: 'Request created', meta: 'Võ Ngọc Lan, Employee' },
+          { at: '2026-09-15T12:42:12', title: 'Rule 01 applied', meta: 'Team lead → Director approval required' },
+          { at: '2026-09-15T13:05:41', title: 'Approved by Team lead', meta: 'Lê Minh Khoa' },
+          { at: '2026-09-15T13:48:02', title: 'Approved by Director', meta: 'Trần Quốc Bảo' },
+          { at: '2026-09-15T13:48:05', title: 'Sent to the accountant for payout', meta: 'Flux rules' }
         ]
       },
       {
-        id: 'TRF-98152', payeeId: 'PYE-1003', counterparty: 'Nordlicht GmbH', country: 'Germany', currency: 'EUR', amount: 7240,
-        purpose: 'Cloud infrastructure', reference: 'Invoice NL-2026-0912', executionDate: '2026-09-17', createdAt: '2026-09-15T10:06:33',
-        status: 'pending', chain: ['Finance manager'], stage: 0, policy: 'Workspace default: one approval', approvals: [],
+        id: 'REQ-2036', type: 'Reimbursement', requester: 'Võ Ngọc Lan', payeeId: null, counterparty: 'Võ Ngọc Lan', country: 'Vietnam', currency: 'VND', amount: 1250000,
+        purpose: 'Taxi and client lunch', reference: '2 receipts attached', executionDate: '2026-09-17', createdAt: '2026-09-15T10:06:33',
+        status: 'pending', chain: ['Team lead'], stage: 0, policy: 'Default: team lead approval', approvals: [],
         activity: [
-          { at: '2026-09-15T10:06:33', title: 'Payment created', meta: 'Jamie Stone, Employee' },
-          { at: '2026-09-15T10:06:35', title: 'Workspace default applied', meta: 'Finance manager approval required' }
+          { at: '2026-09-15T10:06:33', title: 'Request created', meta: 'Võ Ngọc Lan, Employee' },
+          { at: '2026-09-15T10:06:35', title: 'Default applied', meta: 'Team lead approval required' }
         ]
       },
       {
-        id: 'TRF-98096', payeeId: 'PYE-1004', counterparty: 'Fieldwork Studio', country: 'United Kingdom', currency: 'GBP', amount: 12900,
-        purpose: 'Design retainer', reference: 'Q3 retainer, month 3', executionDate: '2026-09-14', createdAt: '2026-09-14T16:28:00',
-        status: 'completed', chain: ['Finance manager', 'CFO'], stage: 2, policy: 'Rule 01: amount above USD 10,000',
-        approvals: [{ role: 'Finance manager', by: 'Alex Smith', at: '2026-09-14T16:51:12' }, { role: 'CFO', by: 'Sarah Jensen', at: '2026-09-14T17:20:40' }],
+        id: 'REQ-2033', type: 'Vendor payment', requester: 'Võ Ngọc Lan', payeeId: 'PYE-1002', counterparty: 'Hòa Phát Furniture', country: 'Vietnam', currency: 'VND', amount: 32400000,
+        purpose: 'Twelve office chairs', reference: 'Invoice HP-2026-1144', executionDate: '2026-09-14', createdAt: '2026-09-14T16:28:00',
+        status: 'completed', chain: ['Team lead', 'Director'], stage: 2, policy: 'Rule 01: Large requests',
+        approvals: [{ role: 'Team lead', by: 'Lê Minh Khoa', at: '2026-09-14T16:51:12' }, { role: 'Director', by: 'Trần Quốc Bảo', at: '2026-09-14T17:20:40' }],
         activity: [
-          { at: '2026-09-14T16:28:00', title: 'Payment created', meta: 'Jamie Stone, Employee' },
-          { at: '2026-09-14T16:51:12', title: 'Approved by Finance manager', meta: 'Alex Smith' },
-          { at: '2026-09-14T17:20:40', title: 'Approved by CFO', meta: 'Sarah Jensen' },
-          { at: '2026-09-14T18:02:19', title: 'Settlement confirmed', meta: 'SWIFT gpi confirmation' }
+          { at: '2026-09-14T16:28:00', title: 'Request created', meta: 'Võ Ngọc Lan, Employee' },
+          { at: '2026-09-14T16:51:12', title: 'Approved by Team lead', meta: 'Lê Minh Khoa' },
+          { at: '2026-09-14T17:20:40', title: 'Approved by Director', meta: 'Trần Quốc Bảo' },
+          { at: '2026-09-14T18:02:19', title: 'Paid out by bank transfer', meta: 'Nguyễn Thu Hà, Accountant' }
         ]
       },
       {
-        id: 'TRF-98061', payeeId: 'PYE-1005', counterparty: 'Solventa Sp. z o.o.', country: 'Poland', currency: 'EUR', amount: 5600,
-        purpose: 'Market research', reference: 'Research sprint 2', executionDate: '2026-09-18', createdAt: '2026-09-14T13:11:09',
-        status: 'pending', chain: ['Finance manager'], stage: 0, policy: 'Rule 03: new beneficiary above USD 2,500', approvals: [],
+        id: 'REQ-2031', type: 'Vendor payment', requester: 'Võ Ngọc Lan', payeeId: 'PYE-1003', counterparty: 'Sao Mai Catering', country: 'Vietnam', currency: 'VND', amount: 6800000,
+        purpose: 'Customer workshop lunch', reference: 'Order SM-0912', executionDate: '2026-09-18', createdAt: '2026-09-14T13:11:09',
+        status: 'pending', chain: ['Team lead', 'Accountant'], stage: 0, policy: 'Rule 02: New vendor check', approvals: [],
         activity: [
-          { at: '2026-09-14T13:11:09', title: 'Payment created', meta: 'Jamie Stone, Employee' },
-          { at: '2026-09-14T13:11:11', title: 'Policy 03 applied', meta: 'New beneficiary, Finance manager approval required' }
+          { at: '2026-09-14T13:11:09', title: 'Request created', meta: 'Võ Ngọc Lan, Employee' },
+          { at: '2026-09-14T13:11:11', title: 'Rule 02 applied', meta: 'New vendor, Team lead → Accountant approval required' }
         ]
       },
       {
-        id: 'TRF-97988', payeeId: 'PYE-1006', counterparty: 'Atlas Freight BV', country: 'Netherlands', currency: 'EUR', amount: 21480.14,
-        purpose: 'Freight services', reference: 'Rotterdam lane, August', executionDate: '2026-09-13', createdAt: '2026-09-13T09:31:45',
-        status: 'completed', chain: ['Finance manager', 'CFO'], stage: 2, policy: 'Rule 01: amount above USD 10,000',
-        approvals: [{ role: 'Finance manager', by: 'Alex Smith', at: '2026-09-13T10:02:00' }, { role: 'CFO', by: 'Sarah Jensen', at: '2026-09-13T11:15:30' }],
+        id: 'REQ-2027', type: 'Advance', requester: 'Võ Ngọc Lan', payeeId: null, counterparty: 'Võ Ngọc Lan', country: 'Vietnam', currency: 'VND', amount: 8000000,
+        purpose: 'Customer visits in Cần Thơ', reference: 'Settled 12 Sep', executionDate: '2026-09-08', createdAt: '2026-09-05T09:31:45',
+        status: 'completed', chain: ['Team lead'], stage: 1, policy: 'Default: team lead approval',
+        approvals: [{ role: 'Team lead', by: 'Lê Minh Khoa', at: '2026-09-05T10:02:00' }],
         activity: [
-          { at: '2026-09-13T09:31:45', title: 'Payment created', meta: 'Jamie Stone, Employee' },
-          { at: '2026-09-13T10:02:00', title: 'Approved by Finance manager', meta: 'Alex Smith' },
-          { at: '2026-09-13T11:15:30', title: 'Approved by CFO', meta: 'Sarah Jensen' },
-          { at: '2026-09-13T12:40:11', title: 'Settlement confirmed', meta: 'SWIFT gpi confirmation' }
+          { at: '2026-09-05T09:31:45', title: 'Request created', meta: 'Võ Ngọc Lan, Employee' },
+          { at: '2026-09-05T10:02:00', title: 'Approved by Team lead', meta: 'Lê Minh Khoa' },
+          { at: '2026-09-05T14:40:11', title: 'Paid out in cash', meta: 'Nguyễn Thu Hà, Accountant' }
         ]
       },
       {
-        id: 'TRF-97940', payeeId: 'PYE-1004', counterparty: 'Fieldwork Studio', country: 'United Kingdom', currency: 'GBP', amount: 3200,
-        purpose: 'Workshop facilitation', reference: 'October workshop deposit', executionDate: '2026-09-22', createdAt: '2026-09-12T08:12:00',
+        id: 'REQ-2024', type: 'Reimbursement', requester: 'Võ Ngọc Lan', payeeId: null, counterparty: 'Võ Ngọc Lan', country: 'Vietnam', currency: 'VND', amount: 640000,
+        purpose: 'Printer ink', reference: 'Receipt to attach', executionDate: '2026-09-22', createdAt: '2026-09-12T08:12:00',
         status: 'draft', chain: [], stage: 0, policy: '', approvals: [],
-        activity: [{ at: '2026-09-12T08:12:00', title: 'Draft saved', meta: 'Jamie Stone, Employee' }]
+        activity: [{ at: '2026-09-12T08:12:00', title: 'Draft saved', meta: 'Võ Ngọc Lan, Employee' }]
       }
     ],
 
@@ -171,16 +177,17 @@
 
     expenseCategories: ['Travel', 'Cloud', 'Software', 'Meals', 'Office', 'Professional services'],
 
+    // Rules run top to bottom; the first active match sets the chain. Thresholds are in VND.
     policies: [
-      { id: 'POL-01', name: 'Large cross-border transfers', scope: 'International wires', status: 'Active', conditions: [{ field: 'amount', op: '>', value: 'USD 10,000' }, { field: 'currency', op: '!=', value: 'base currency' }], approvers: ['Finance manager', 'CFO'] },
-      { id: 'POL-02', name: 'Domestic operational spend', scope: 'Domestic ACH', status: 'Active', conditions: [{ field: 'amount', op: '<', value: 'USD 10,000' }], approvers: ['Finance manager'] },
-      { id: 'POL-03', name: 'New beneficiary control', scope: 'All payments', status: 'Active', conditions: [{ field: 'beneficiary_age_days', op: '<', value: '30' }, { field: 'amount', op: '>', value: 'USD 2,500' }], approvers: ['Finance manager'] },
-      { id: 'POL-04', name: 'Weekend execution hold', scope: 'All payments', status: 'Inactive', conditions: [{ field: 'created_outside_hours', op: '=', value: 'true' }], approvers: ['Treasury lead'] }
+      { id: 'POL-01', name: 'Large requests', scope: 'All requests', status: 'Active', conditions: [{ field: 'amount', op: '>', value: 'VND 20,000,000' }], approvers: ['Team lead', 'Director'] },
+      { id: 'POL-02', name: 'New vendor check', scope: 'Vendor payments', status: 'Active', conditions: [{ field: 'beneficiary_age_days', op: '<', value: '30' }], approvers: ['Team lead', 'Accountant'] },
+      { id: 'POL-03', name: 'Advances above 10 million', scope: 'Advances', status: 'Active', conditions: [{ field: 'amount', op: '>', value: 'VND 10,000,000' }], approvers: ['Team lead', 'Accountant'] },
+      { id: 'POL-04', name: 'Weekend submission hold', scope: 'All requests', status: 'Inactive', conditions: [{ field: 'created_outside_hours', op: '=', value: 'true' }], approvers: ['Director'] }
     ],
 
     policyHistory: [
-      { at: '2026-09-12T17:42:00', by: 'Sarah Jensen', action: 'Rule 04 set to Inactive' },
-      { at: '2026-09-02T10:15:00', by: 'Sarah Jensen', action: 'Rule 03 threshold changed to USD 2,500' }
+      { at: '2026-09-12T17:42:00', by: 'Trần Quốc Bảo', action: 'Rule 04 set to Inactive' },
+      { at: '2026-09-02T10:15:00', by: 'Trần Quốc Bảo', action: 'Rule 01 threshold changed to VND 20,000,000' }
     ],
 
     reportSchedule: null
