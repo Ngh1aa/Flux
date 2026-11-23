@@ -286,19 +286,40 @@ dialog::backdrop { background: rgba(20, 23, 26, .28); }
   .metrics-strip { grid-template-columns: 1fr 1fr; }
   .data-table { min-width: 680px; }
   .table-region { overflow-x: auto; }
-  /* Payments read as a ledger list on phones instead of a table cut at the right edge. */
-  .data-table.payments-ledger { min-width: 0; table-layout: auto; }
-  .payments-ledger thead { display: none; }
-  .payments-ledger tbody, .payments-ledger tr { display: block; }
-  .payments-ledger tbody tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 12px 14px; }
-  .payments-ledger td { height: auto; padding: 0; white-space: normal; }
-  .payments-ledger td:first-child { padding-left: 0; grid-column: 1; grid-row: 2; }
-  .payments-ledger td.counterparty { grid-column: 1; grid-row: 1; }
-  .payments-ledger td:nth-child(3), .payments-ledger td:nth-child(5) { display: none; }
-  .payments-ledger td.amount-col { grid-column: 2; grid-row: 1; text-align: right; }
-  .payments-ledger td.stage-column { display: block; grid-column: 2; grid-row: 2; text-align: right; }
-  .payments-ledger .mini-rail { justify-content: flex-end; }
-  .payments-ledger td.amount-col::after { content: ' ' attr(data-ccy); color: var(--secondary); }
+  /* Every table reads as a ledger list on phones instead of a table cut at the right edge: two lines per
+     row, name and status on the left, money and one extra fact on the right. */
+  .data-table.ledger-list { min-width: 0; table-layout: auto; }
+  .ledger-list thead { display: none; }
+  .ledger-list tbody, .ledger-list tr { display: block; }
+  .ledger-list tbody tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 4px 12px; padding: 12px 14px; }
+  .ledger-list td { display: none; height: auto; padding: 0; white-space: normal; }
+  .ledger-list td:first-child { padding-left: 0; }
+  .ledger-payments td:nth-child(2) { display: block; grid-column: 1; grid-row: 1; }
+  .ledger-payments td:nth-child(1) { display: block; grid-column: 1; grid-row: 2; }
+  .ledger-payments td:nth-child(4) { display: block; grid-column: 2; grid-row: 1; text-align: right; }
+  .ledger-payments td:nth-child(6) { display: block; grid-column: 2; grid-row: 2; text-align: right; }
+  .ledger-accounts td:nth-child(2) { display: block; grid-column: 1; grid-row: 1; }
+  .ledger-accounts td:nth-child(1) { display: block; grid-column: 1; grid-row: 2; }
+  .ledger-accounts td:nth-child(3) { display: block; grid-column: 2; grid-row: 1; text-align: right; }
+  .ledger-tx td:nth-child(2) { display: block; grid-column: 1; grid-row: 1; }
+  .ledger-tx td:nth-child(1) { display: block; grid-column: 1; grid-row: 2; }
+  .ledger-tx td:nth-child(4) { display: block; grid-column: 2; grid-row: 1; text-align: right; }
+  .ledger-tx td:nth-child(3) { display: block; grid-column: 2; grid-row: 2; text-align: right; }
+  .ledger-cards td:nth-child(1) { display: block; grid-column: 1; grid-row: 1; }
+  .ledger-cards td:nth-child(3) { display: block; grid-column: 1; grid-row: 2; }
+  .ledger-cards td:nth-child(4) { display: block; grid-column: 2; grid-row: 1; text-align: right; }
+  .ledger-expenses td:nth-child(2) { display: block; grid-column: 1; grid-row: 1; }
+  .ledger-expenses td:nth-child(1) { display: block; grid-column: 1; grid-row: 2; }
+  .ledger-expenses td:nth-child(5) { display: block; grid-column: 2; grid-row: 1; text-align: right; }
+  .ledger-expenses td:nth-child(6) { display: block; grid-column: 2; grid-row: 2; text-align: right; }
+  .ledger-payees td:nth-child(1) { display: block; grid-column: 1; grid-row: 1; }
+  .ledger-payees td:nth-child(2) { display: block; grid-column: 1; grid-row: 2; }
+  .ledger-payees td:nth-child(3) { display: block; grid-column: 2; grid-row: 1; text-align: right; }
+  .ledger-team td:nth-child(1) { display: block; grid-column: 1; grid-row: 1; }
+  .ledger-team td:nth-child(2) { display: block; grid-column: 1; grid-row: 2; }
+  .ledger-team td:nth-child(5) { display: block; grid-column: 2; grid-row: 1; text-align: right; }
+  .ledger-list .mini-rail { justify-content: flex-end; }
+  .ledger-payments td.amount-col::after { content: ' ' attr(data-ccy); color: var(--secondary); }
   .form-grid { grid-template-columns: 1fr; }
   .form-field.full { grid-column: auto; }
   .rule-editor { grid-template-columns: 1fr 96px; }

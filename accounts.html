@@ -53,19 +53,19 @@
           </div>
         </div>
         <section class="metrics-strip" aria-label="Accounts summary">
-          <div class="metric"><span class="metric-label">Available to move</span><strong class="metric-value" id="metric-available">—</strong><span class="metric-note">Excludes reserved balances · 5 currencies</span></div>
+          <div class="metric"><span class="metric-label">Available to move</span><strong class="metric-value" id="metric-available">—</strong><span class="metric-note">Excludes reserved balances, 5 currencies</span></div>
           <div class="metric"><span class="metric-label">Reserved</span><strong class="metric-value" id="metric-reserved">—</strong><span class="metric-note">Committed separately, do not subtract again</span></div>
           <div class="metric"><span class="metric-label">Incoming, 24h</span><strong class="metric-value" id="metric-incoming">—</strong><span class="metric-note" id="metric-incoming-note">Loading</span></div>
           <div class="metric"><span class="metric-label">Scheduled transfers</span><strong class="metric-value" id="metric-scheduled">—</strong><span class="metric-note">Between your own accounts</span></div>
         </section>
         <div class="toolbar">
-          <div class="toolbar-group"><strong class="toolbar-title">Currency accounts</strong><span class="toolbar-note">Available and reserved liquidity</span></div>
+          <div class="toolbar-group"><strong class="toolbar-title">Currency accounts</strong></div>
           <div class="toolbar-group"><button class="btn" type="button" id="export-statement">Download statement</button></div>
         </div>
         <section class="workbench-grid" aria-label="Currency account workspace">
           <div class="workbench-main">
             <div id="accounts-region" class="table-scroll">
-              <table class="data-table" aria-label="Currency accounts">
+              <table class="data-table ledger-list ledger-accounts" aria-label="Currency accounts">
                 <thead><tr><th class="col-ccy-wide">CCY</th><th>Account</th><th class="right col-money">Available</th><th class="right col-money-sm">Reserved</th><th class="col-region">Region</th><th class="col-region">Last activity</th></tr></thead>
                 <tbody id="accounts-body"></tbody>
               </table>
@@ -86,7 +86,7 @@
                 </div>
               </div>
               <div id="tx-region" class="table-scroll">
-                <table class="data-table" aria-label="Account transactions">
+                <table class="data-table ledger-list ledger-tx" aria-label="Account transactions">
                   <thead><tr><th class="col-date-short">Date</th><th>Description</th><th class="col-status">Status</th><th class="right col-money">Amount</th></tr></thead>
                   <tbody id="tx-body"></tbody>
                 </table>

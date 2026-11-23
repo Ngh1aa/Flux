@@ -311,15 +311,10 @@
     function render() {
       const all = store.list('cards');
       const live = all.filter((c) => c.status !== 'Cancelled');
-      const active = all.filter((c) => c.status === 'Active');
-      setText('metric-active-cards', fmt.pad2(active.length));
-      setText('metric-active-note', `${active.filter((c) => c.type === 'Physical').length} physical, ${active.filter((c) => c.type === 'Virtual').length} virtual`);
+      // Counts live on the status tabs; the Active tab also carries this month's spend.
+      document.querySelectorAll('[data-count]').forEach((el) => { el.textContent = String(el.dataset.count === 'all' ? all.length : all.filter((c) => c.status === el.dataset.count).length); });
       const spend = live.reduce((s, c) => s + F.toUsd(c.monthly, c.currency), 0);
-      const limits = live.reduce((s, c) => s + F.toUsd(c.limit, c.currency), 0) || 1;
-      setText('metric-card-spend', `USD ${fmt.whole(spend)}`);
-      setText('metric-card-spend-note', `${Math.round((spend / limits) * 100)}% of aggregate limits`);
-      setText('metric-frozen', fmt.pad2(all.filter((c) => c.status === 'Frozen').length));
-      setText('metric-pending-cards', fmt.pad2(all.filter((c) => c.status === 'Pending').length));
+      document.querySelectorAll('[data-sum="spend"]').forEach((el) => { el.textContent = `USD ${fmt.whole(spend)} this month`; });
       const list = rows();
       tbody.innerHTML = list.map((c) => `<tr tabindex="0" data-id="${esc(c.id)}" class="${c.status === 'Cancelled' ? 'row-muted' : ''}"><td><span class="table-strong">${esc(c.holder)}</span><span class="subcopy mono">•••• ${esc(c.last4)}</span></td><td>${esc(c.type)}</td><td><span class="${STATUS[c.status]}">${esc(c.status)}</span></td><td class="right mono">${fmt.number(c.monthly, c.currency)}</td><td class="right mono">${fmt.number(c.limit, c.currency)}</td><td>${esc(c.program)}</td></tr>`).join('');
       listEmpty(document.getElementById('cards-empty'), {
@@ -705,13 +700,9 @@
       const all = store.list('expenses');
       const usd = (items) => items.reduce((s, x) => s + F.toUsd(x.amount, x.currency), 0);
       const review = all.filter((x) => x.status === 'review');
-      const approved = all.filter((x) => x.status === 'approved');
-      setText('metric-review', fmt.pad2(review.length));
-      setText('metric-review-note', `USD ${fmt.number(usd(review))} equivalent`);
-      setText('metric-missing', fmt.pad2(all.filter((x) => x.status === 'missing').length));
-      setText('metric-rejected', fmt.pad2(all.filter((x) => x.status === 'rejected').length));
-      setText('metric-approved', fmt.pad2(approved.length));
-      setText('metric-approved-note', `USD ${fmt.number(usd(approved))} equivalent`);
+      // Counts live on the status tabs; the review tab also carries the USD value waiting.
+      document.querySelectorAll('[data-count]').forEach((el) => { el.textContent = String(el.dataset.count === 'all' ? all.length : all.filter((x) => x.status === el.dataset.count).length); });
+      document.querySelectorAll('[data-sum="review"]').forEach((el) => { el.textContent = review.length ? `USD ${fmt.number(usd(review))}` : ''; });
       const list = rows();
       tbody.innerHTML = list.map((x) => {
         const [label, cls] = STATUS[x.status];
@@ -969,7 +960,7 @@
       setText('report-spend-delta', prevTotal ? `${total >= prevTotal ? '+' : '-'}${Math.abs(((total - prevTotal) / prevTotal) * 100).toFixed(1)}%` : 'n/a');
       setText('report-fx-cost', `$${fmt.whole(fx)}`);
       setText('report-fx-note', `${total ? ((fx / total) * 100).toFixed(2) : '0.00'}% blended conversion cost`);
-      setText('report-exceptions-label', `Policy exceptions · ${label}`);
+      setText('report-exceptions-label', `Policy exceptions, ${label}`);
       setText('report-exceptions', fmt.pad2(current.filter((r) => r.exception).length));
       setText('report-entries', fmt.whole(current.length));
       setText('report-range-label', range === '30d' ? '30-day operating window' : range === '90d' ? '90-day operating window' : range === 'ytd' ? 'Year-to-date operating window' : `${fmt.date(from)} to ${fmt.date(to)}`);

@@ -530,7 +530,7 @@ test('reports: date range, filters, empty state, client-side CSV export, schedul
   const { page } = s;
   const total30 = await text(page, '#report-total-spend');
   assert.notEqual(total30, '$0');
-  assert.equal(await page.locator('#report-exceptions-label').textContent(), 'Policy exceptions · 30d');
+  assert.equal(await page.locator('#report-exceptions-label').textContent(), 'Policy exceptions, 30d');
   await page.click('[data-report-range="90d"]');
   await page.waitForFunction((t) => document.getElementById('report-total-spend').textContent !== t, total30);
   assert.equal(await text(page, '#report-range-label'), '90-day operating window');

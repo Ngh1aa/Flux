@@ -745,10 +745,7 @@
     function render() {
       const all = store.list('payees');
       const list = rows();
-      setText('payee-count', fmt.pad2(all.length));
-      setText('payee-new-count', fmt.pad2(all.filter((p) => (F.now() - F.parseDate(p.createdAt)) / 86400000 < 30).length));
-      setText('payee-currency-count', fmt.pad2(new Set(all.map((p) => p.currency)).size));
-      setText('payee-country-count', fmt.pad2(new Set(all.map((p) => p.country)).size));
+      setText('payee-count', `${all.length} saved, ${new Set(all.map((p) => p.currency)).size} currencies`);
       tbody.innerHTML = list.map((p) => `<tr tabindex="0" data-id="${esc(p.id)}">
         <td><span class="table-strong">${esc(p.name)}</span><span class="subcopy">${esc(p.email || 'No remittance email')}</span></td>
         <td>${esc(p.country)}</td>

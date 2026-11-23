@@ -93,11 +93,29 @@ ledger reading that finance users expect), taking B's mini rail as the "Waiting 
 |---|---|---|
 | Payments | Built in product code (direction A) | `shots/1440-payments-after.png`, `shots/390-payments-after-full.png`; flow tests 17/17; overlay-check 0 errors, 0 warnings |
 | Shell, all pages | Done | Subtitles removed on 7 pages; mobile nav is a 4-column grid showing all 7 destinations; shell breakpoints live only in `style-base.css` (duplicate 820 px block deleted from `workspace.css`); metric strips sit 2 × 2 on phones. `shots/1440-all-screens-after.jpg`, `shots/390-all-screens-after.jpg` |
-| Accounts, Cards, Team, Expenses, Reports, Settings, Payees | Next | Per screen: metric strip folded into counted tabs where it repeats the filter, ledger list instead of a scrolled table on phones |
+| Cards, Expenses | Done | Metric strip folded into counted status tabs; the work tab leads with its value (cards: spend this month; expenses: USD waiting for review) |
+| Payees | Done | Metric strip removed (currency and country counts carried little); "6 saved, 4 currencies" sits in the list header |
+| Accounts, Team, Reports, Settings | Done, strip kept | Their figures (liquidity, approvers, spend, rules) are not repeated anywhere else, so the strip stays; explanatory notes next to section titles removed |
+| All tables | Done | Phones show a two-line ledger list per row (name and status left, money and one fact right); the forced 860 / 700 / 620 px table widths and sideways scrolling are deleted |
+| Copy | Done | " · " joins replaced with commas or plain spacing (accounts note, card number mask, report label) |
 
 Payments changes: subtitle and metric strip removed; status filter became counted tabs with the
 approval tab first; "Waiting on" column with a mini rail; detail order is amount, Approval Rail,
 decision, payment data, activity; phones get a ledger list with currency codes and a vertical rail.
 At 1440 × 900 the rail starts at 444 px and Approve at 661 px (both below the fold before).
-CSS after the shell pass: +40 / -30 lines, 0 new files, `!important` +0: the metric strip and subtitle rules are still used by other screens
+CSS after all screens: +61 / -40 lines (before the copy fixes), 0 new files, `!important` +0: the metric strip and subtitle rules are still used by other screens
 and are deleted when those screens move.
+
+## 7. Tests changed
+
+| Test | Change | Why |
+|---|---|---|
+| `full-flows.test.cjs` reports label | `Policy exceptions · 30d` → `Policy exceptions, 30d` | Locks copy, not behaviour; " · " joins are banned by TASTE |
+| `synthetic-dogfood-integrity.spec.mjs` accounts note | `· 5 currencies` → `, 5 currencies` | Same; intent (the corrected figure stays visible) kept |
+| `synthetic-dogfood-integrity.spec.mjs` card mask | `•••• · •••• · ••••` → `••••  ••••  ••••` | Same; intent (number masked, no real-looking digits) kept, the negative check is unchanged |
+
+Results on the final tree: `full-flows.test.cjs` 17/17; `synthetic-dogfood-integrity` and `evidence-lens` 6/6; rendered taste-check on 8 screens at 390 and 1440 px: 0 errors after the copy fixes; overlay-check 0 errors, 0 warnings.
+
+## 8. Not verified
+
+Independent review of the screenshots, real phones, screen readers, Safari and Firefox, and any user with a finance role.
