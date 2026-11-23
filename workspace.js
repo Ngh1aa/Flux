@@ -22,7 +22,7 @@
     if (!raw) return 'Enter an amount.';
     if (Number.isNaN(amount)) return 'Use digits only, with up to 2 decimals.';
     if (amount <= 0) return 'Amount must be greater than zero.';
-    if (currency === 'JPY' && !Number.isInteger(amount)) return 'JPY amounts have no decimals.';
+    if ((currency === 'JPY' || currency === 'VND') && !Number.isInteger(amount)) return `${currency} amounts have no decimals.`;
     if (max && F.toUsd(amount, currency) > max) return `Above the USD ${fmt.whole(max)} limit.`;
     return '';
   }
@@ -75,19 +75,17 @@
     function renderMetrics() {
       const accounts = store.list('accounts');
       const clock = F.now();
-      setText('metric-available', `USD ${fmt.whole(accounts.reduce((s, a) => s + F.toUsd(a.available, a.currency), 0))}`);
-      setText('metric-reserved', `USD ${fmt.whole(accounts.reduce((s, a) => s + F.toUsd(a.reserved, a.currency), 0))}`);
+      setText('metric-available', `VND ${fmt.whole(accounts.reduce((s, a) => s + a.available, 0))}`);
+      setText('metric-reserved', `VND ${fmt.whole(accounts.reduce((s, a) => s + a.reserved, 0))}`);
       const credits = store.list('transactions').filter((t) => t.direction === 'credit' && t.status === 'posted' && clock - F.parseDate(t.date) < 86400000 && clock - F.parseDate(t.date) >= 0);
-      setText('metric-incoming', `USD ${fmt.whole(credits.reduce((s, t) => s + F.toUsd(t.amount, accountCurrency(t.accountId)), 0))}`);
+      setText('metric-incoming', `VND ${fmt.whole(credits.reduce((s, t) => s + t.amount, 0))}`);
       setText('metric-incoming-note', `${credits.length} ${credits.length === 1 ? 'credit' : 'credits'} posted`);
       setText('metric-scheduled', fmt.pad2(store.list('transactions').filter((t) => t.status === 'scheduled' && t.direction === 'debit').length));
     }
 
-    const accountCurrency = (id) => store.find('accounts', id)?.currency || 'USD';
-
     function renderList() {
       renderMetrics();
-      tbody.innerHTML = store.list('accounts').map((a) => `<tr tabindex="0" data-id="${esc(a.id)}"><td><span class="currency-tag">${esc(a.currency)}</span></td><td><span class="table-strong">${esc(a.name)}</span><span class="subcopy">${esc(a.purpose)}</span></td><td class="right mono">${fmt.number(a.available, a.currency)}</td><td class="right mono">${fmt.number(a.reserved, a.currency)}</td><td>${esc(a.country)}</td><td><span class="mono">${fmt.time(a.lastActivity)}</span><span class="subcopy">${fmt.day(a.lastActivity)}</span></td></tr>`).join('');
+      tbody.innerHTML = store.list('accounts').map((a) => `<tr tabindex="0" data-id="${esc(a.id)}"><td><span class="currency-tag">${esc(a.id)}</span></td><td><span class="table-strong">${esc(a.name)}</span><span class="subcopy">${esc(a.purpose)}</span></td><td class="right mono">${fmt.number(a.available, a.currency)}</td><td class="right mono">${fmt.number(a.reserved, a.currency)}</td><td>${esc(a.country)}</td><td><span class="mono">${fmt.time(a.lastActivity)}</span><span class="subcopy">${fmt.day(a.lastActivity)}</span></td></tr>`).join('');
       F.markSelected(tbody, selectedId);
       renderPane();
     }
@@ -104,7 +102,7 @@
       }
       panel.hidden = false;
       paneShow(missing, body);
-      setText('account-pane-code', account.currency);
+      setText('account-pane-code', account.id);
       setText('account-pane-title', account.name);
       setText('account-pane-balance', fmt.money(account.available, account.currency));
       setText('account-pane-reserved', fmt.money(account.reserved, account.currency));
@@ -113,14 +111,16 @@
       setText('account-pane-country', account.country);
       setText('account-pane-settlement', account.settlement);
       const accounts = store.list('accounts');
-      const total = accounts.reduce((s, a) => s + F.toUsd(a.available, a.currency), 0) || 1;
-      const shares = accounts.map((a) => ({ code: a.currency, share: F.toUsd(a.available, a.currency) / total })).sort((x, y) => y.share - x.share).slice(0, 4);
+      const total = accounts.reduce((s, a) => s + a.available, 0) || 1;
+      const shares = accounts.map((a) => ({ code: a.id, share: a.available / total })).sort((x, y) => y.share - x.share).slice(0, 4);
       const max = shares[0]?.share || 1;
       document.getElementById('liquidity-bars').innerHTML = shares.map((s) => `<div class="balance-row"><span class="code">${esc(s.code)}</span><div class="balance-track"><div class="balance-fill" style="width:${Math.max(4, (s.share / max) * 88).toFixed(1)}%"></div></div><span class="balance-value">${(s.share * 100).toFixed(1)}%</span></div>`).join('');
       const scheduled = store.list('transactions').filter((t) => t.accountId === account.id && t.status === 'scheduled' && t.direction === 'debit');
-      document.getElementById('treasury-signal').innerHTML = account.currency === 'USD' && !scheduled.length
-        ? '<strong>Treasury signal:</strong> USD reserve is 14% above the target operating band. Next vendor window can settle without conversion.'
-        : `<strong>Treasury signal:</strong> ${scheduled.length ? `${scheduled.length} scheduled ${scheduled.length === 1 ? 'transfer is' : 'transfers are'} reserved from this account.` : `${esc(account.currency)} balance covers known debits.`} Reserved funds are not available to move.`;
+      // Petty cash runs low first; say so before an advance has to wait for cash.
+      const lowCash = account.id === 'CASH' && account.available < 10000000;
+      document.getElementById('treasury-signal').innerHTML = lowCash
+        ? `<strong>Cash check:</strong> petty cash is below VND 10,000,000. Top it up from Vietcombank operating before the next advance.`
+        : `<strong>Cash check:</strong> ${scheduled.length ? `${scheduled.length} scheduled ${scheduled.length === 1 ? 'transfer is' : 'transfers are'} reserved from this account.` : 'The balance covers approved requests waiting for payout.'} Reserved money cannot be moved.`;
       renderTransactions(account);
     }
 
@@ -216,10 +216,9 @@
       setText('move-prefix', from?.currency || '');
       const amount = F.parseAmount(moveForm.elements.amount.value);
       const preview = document.getElementById('move-preview');
-      if (!from || !to || !(amount > 0)) { preview.textContent = 'Enter an amount to see the converted value.'; return; }
-      const rate = store.state.fx[from.currency] / store.state.fx[to.currency];
+      if (!from || !to || !(amount > 0)) { preview.textContent = 'Enter an amount to see the transfer.'; return; }
       const scheduled = moveForm.elements.date.value && moveForm.elements.date.value > F.isoDate();
-      preview.innerHTML = `<strong class="mono">${fmt.money(amount, from.currency)}</strong> arrives as <strong class="mono">${fmt.money(amount * rate, to.currency)}</strong>. Indicative rate 1 ${esc(from.currency)} = ${rate.toFixed(4)} ${esc(to.currency)}. ${scheduled ? 'Funds are reserved until the transfer date.' : 'Recorded today.'}`;
+      preview.innerHTML = `<strong class="mono">${fmt.money(amount, from.currency)}</strong> moves from ${esc(from.name)} to ${esc(to.name)}. ${scheduled ? 'The money is reserved until the transfer date.' : 'Recorded today.'}`;
     }
     ['from', 'to', 'amount', 'date'].forEach((n) => moveForm.elements[n].addEventListener(n === 'amount' ? 'input' : 'change', syncMove));
     F.bindForm(moveForm, {
@@ -267,8 +266,8 @@
     /* Receive details + statement */
     document.getElementById('add-funds').addEventListener('click', () => {
       const a = store.find('accounts', selectedId) || store.list('accounts')[0];
-      document.getElementById('receive-details').innerHTML = [['Account', a.name], ['Account holder', store.state.meta.workspace], ['Routing / account', a.iban], ['Rails', a.rails], ['Jurisdiction', a.country]].map(([k, v]) => `<li><span>${esc(k)}</span><strong>${esc(v)}</strong></li>`).join('');
-      setText('receive-title', `Receiving details, ${a.currency}`);
+      document.getElementById('receive-details').innerHTML = [['Account', a.name], ['Account holder', store.state.meta.workspace], ['Account number', a.iban], ['Transfer methods', a.rails], ['Branch', a.country]].map(([k, v]) => `<li><span>${esc(k)}</span><strong>${esc(v)}</strong></li>`).join('');
+      setText('receive-title', `Receiving details, ${a.name}`);
       F.openDialog('receive-dialog');
     });
     document.getElementById('copy-receive').addEventListener('click', async () => {
@@ -279,7 +278,7 @@
       const a = store.find('accounts', selectedId);
       if (!a) { F.toast('Select an account to download its statement.'); return; }
       const rows = store.list('transactions').filter((t) => t.accountId === a.id).sort((x, y) => (x.date < y.date ? 1 : -1));
-      F.downloadCsv(`flux-statement-${a.currency}-${F.isoDate()}.csv`, [['Transaction', 'Date', 'Description', 'Counterparty', 'Direction', 'Status', `Amount (${a.currency})`]].concat(rows.map((t) => [t.id, F.isoLocal(F.parseDate(t.date)).replace('T', ' '), t.description, t.counterparty, t.direction, t.status, t.amount.toFixed(a.currency === 'JPY' ? 0 : 2)])));
+      F.downloadCsv(`flux-statement-${a.id}-${F.isoDate()}.csv`, [['Transaction', 'Date', 'Description', 'Counterparty', 'Direction', 'Status', `Amount (${a.currency})`]].concat(rows.map((t) => [t.id, F.isoLocal(F.parseDate(t.date)).replace('T', ' '), t.description, t.counterparty, t.direction, t.status, t.amount.toFixed(['JPY', 'VND'].includes(a.currency) ? 0 : 2)])));
       F.toast(`Statement for ${a.name} generated in your browser (${rows.length} entries).`);
     });
 
@@ -698,11 +697,11 @@
 
     function render() {
       const all = store.list('expenses');
-      const usd = (items) => items.reduce((s, x) => s + F.toUsd(x.amount, x.currency), 0);
+      const total = (items) => items.reduce((s, x) => s + x.amount, 0);
       const review = all.filter((x) => x.status === 'review');
-      // Counts live on the status tabs; the review tab also carries the USD value waiting.
+      // Counts live on the status tabs; the review tab also carries the VND value waiting.
       document.querySelectorAll('[data-count]').forEach((el) => { el.textContent = String(el.dataset.count === 'all' ? all.length : all.filter((x) => x.status === el.dataset.count).length); });
-      document.querySelectorAll('[data-sum="review"]').forEach((el) => { el.textContent = review.length ? `USD ${fmt.number(usd(review))}` : ''; });
+      document.querySelectorAll('[data-sum="review"]').forEach((el) => { el.textContent = review.length ? `VND ${fmt.number(total(review), 'VND')}` : ''; });
       const list = rows();
       tbody.innerHTML = list.map((x) => {
         const [label, cls] = STATUS[x.status];
@@ -710,8 +709,8 @@
       }).join('');
       listEmpty(document.getElementById('expense-empty-state'), {
         all: all.length, rows: list.length,
-        emptyTitle: 'No expenses yet', emptyBody: 'Submit an expense with its receipt so it can be coded and approved.', emptyAction: 'New expense', onEmptyAction: () => openForm(null),
-        filteredTitle: 'No matching expenses', onClear: () => { search.value = ''; category.value = 'all'; setSegment(filterButtons, 'expenseFilter', 'all'); render(); }
+        emptyTitle: 'No receipts yet', emptyBody: 'Add a receipt to settle an advance or claim money you spent.', emptyAction: 'Add receipt', onEmptyAction: () => openForm(null),
+        filteredTitle: 'No matching receipts', onClear: () => { search.value = ''; category.value = 'all'; setSegment(filterButtons, 'expenseFilter', 'all'); render(); }
       });
       if (!selectedId && list.length) selectedId = list[0].id;
       F.markSelected(tbody, selectedId);
@@ -739,19 +738,19 @@
       const locked = x.status === 'approved';
       document.getElementById('receipt-host').innerHTML = x.receipt
         ? `<div class="receipt-preview"><div class="receipt-sheet"><div class="receipt-brand">${esc(x.merchant)}</div><div class="receipt-meta">${esc(fmt.date(x.date).toUpperCase())}</div><div class="receipt-line"><span>FILE</span><span class="receipt-file">${esc(x.receipt)}</span></div><div class="receipt-line"><span>${esc((x.detail || x.category).toUpperCase())}</span><span>${fmt.number(x.amount, x.currency)}</span></div><div class="receipt-total"><span>TOTAL</span><span id="receipt-total">${fmt.money(x.amount, x.currency)}</span></div></div></div>`
-        : `<div class="receipt-missing">${F.ICONS.missing}<strong>No receipt attached</strong><span>Policy requires a receipt above USD 25.</span>${locked ? '' : '<button class="btn" type="button" id="attach-receipt">Attach receipt</button>'}</div>`;
+        : `<div class="receipt-missing">${F.ICONS.missing}<strong>No receipt attached</strong><span>A receipt is needed for anything above VND 200,000.</span>${locked ? '' : '<button class="btn" type="button" id="attach-receipt">Attach receipt</button>'}</div>`;
       document.getElementById('attach-receipt')?.addEventListener('click', () => openForm(x));
       const steps = [
-        ['receipt', 'Receipt captured', x.receipt ? `File ${x.receipt}` : 'Waiting for the cardholder', x.receipt ? 'done' : 'current'],
+        ['receipt', 'Receipt captured', x.receipt ? `File ${x.receipt}` : 'Waiting for the employee', x.receipt ? 'done' : 'current'],
         ['policy', 'Policy evaluated', x.receipt ? 'Within policy, no exception' : 'Runs after the receipt arrives', x.receipt ? 'done' : ''],
         ['coding', 'Accounting coding', `${x.category}, verify cost center`, x.status === 'approved' ? 'done' : x.status === 'review' ? 'current' : ''],
-        ['approval', 'Manager approval', x.status === 'approved' ? `Approved by ${x.reviewedBy || 'Alex Smith'}` : x.status === 'rejected' ? `Rejected by ${x.reviewedBy || 'Alex Smith'}` : 'Pending review by Alex Smith', x.status === 'approved' ? 'done' : x.status === 'rejected' ? 'current rejected' : '']
+        ['approval', 'Accountant check', x.status === 'approved' ? `Approved by ${x.reviewedBy || 'Nguyễn Thu Hà'}` : x.status === 'rejected' ? `Rejected by ${x.reviewedBy || 'Nguyễn Thu Hà'}` : 'Waiting for Nguyễn Thu Hà', x.status === 'approved' ? 'done' : x.status === 'rejected' ? 'current rejected' : '']
       ];
       document.getElementById('review-track').innerHTML = steps.map(([key, title, note, state]) => `<div class="review-step ${state}" data-review-step="${key}"><strong>${esc(title)}</strong><span>${esc(note)}</span></div>`).join('');
       const outcome = document.getElementById('expense-outcome');
       outcome.hidden = x.status !== 'rejected';
       outcome.innerHTML = x.status === 'rejected' ? `<span><strong>Returned to ${esc(x.owner)}.</strong> Reason: ${esc(x.rejectReason || 'No reason given')}. Edit the expense to resubmit it.</span>` : '';
-      const travelCap = x.category === 'Travel' && F.toUsd(x.amount, x.currency) > 1000;
+      const travelCap = x.category === 'Travel' && x.amount > 5000000;
       document.getElementById('expense-checks').innerHTML = [
         ['Receipt attached', x.receipt ? ['Pass', 'status-success'] : ['Missing', 'status-danger']],
         ['Merchant allowed', ['Pass', 'status-success']],
@@ -767,15 +766,15 @@
       const reject = document.getElementById('reject-expense');
       approve.disabled = !canDecide;
       reject.disabled = !canDecide;
-      approve.textContent = x.status === 'approved' ? 'Approved' : x.status === 'missing' ? 'Awaiting receipt' : 'Approve expense';
+      approve.textContent = x.status === 'approved' ? 'Approved' : x.status === 'missing' ? 'Awaiting receipt' : 'Approve receipt';
       const locked = x.status === 'approved';
       document.getElementById('edit-expense').disabled = locked;
       document.getElementById('delete-expense').disabled = locked;
       let hint;
       if (locked) hint = 'Approved expenses are locked for accounting sync.';
-      else if (x.status === 'missing') hint = 'Attach a receipt before this expense can be reviewed.';
+      else if (x.status === 'missing') hint = 'Attach the receipt before the accountant can check it.';
       else if (x.status === 'rejected') hint = 'Edit the expense to fix it and resubmit.';
-      else hint = approver ? 'Acting as Alex Smith, Finance manager. Rejecting needs a reason.' : 'Switch to Approver to approve or reject this expense.';
+      else hint = approver ? 'Acting as Nguyễn Thu Hà, Accountant. Rejecting needs a reason.' : 'Switch to Approver to approve or reject this receipt.';
       setText('expense-hint', hint);
       approve.title = canDecide ? '' : hint;
       reject.title = approve.title;
@@ -790,9 +789,9 @@
       button.disabled = true;
       button.textContent = 'Approving…';
       try {
-        await store.commit((s) => { const t = s.expenses.find((e) => e.id === x.id); t.status = 'approved'; t.reviewedBy = 'Alex Smith'; t.reviewedAt = F.isoLocal(); });
+        await store.commit((s) => { const t = s.expenses.find((e) => e.id === x.id); t.status = 'approved'; t.reviewedBy = 'Nguyễn Thu Hà'; t.reviewedAt = F.isoLocal(); });
         render();
-        F.toast(`${x.merchant} approved and queued for accounting sync.`);
+        F.toast(`${x.merchant} approved and counted toward ${x.card === 'Out of pocket' ? 'the reimbursement' : x.card}.`);
       } catch (error) {
         renderPane();
         F.toast(error.message, 'error');
@@ -803,13 +802,13 @@
       const x = store.find('expenses', selectedId);
       if (!x) return;
       F.confirmAction({
-        kicker: 'Expense review',
+        kicker: 'Receipt check',
         title: `Reject ${x.merchant}, ${fmt.money(x.amount, x.currency)}?`,
-        body: `${x.owner} sees your reason and can edit and resubmit the expense.`,
-        confirmLabel: 'Reject expense',
+        body: `${x.owner} sees your reason and can fix and resubmit the receipt.`,
+        confirmLabel: 'Reject receipt',
         busyLabel: 'Rejecting…',
-        reason: { label: 'Reason for rejection', required: true, placeholder: 'For example: receipt shows a different total', requiredMessage: 'Add a reason so the cardholder knows what to fix.' },
-        action: (reason) => store.commit((s) => { const t = s.expenses.find((e) => e.id === x.id); t.status = 'rejected'; t.rejectReason = reason; t.reviewedBy = 'Alex Smith'; }).then(() => { render(); F.toast(`${x.merchant} rejected and returned to ${x.owner}.`); })
+        reason: { label: 'Reason for rejection', required: true, placeholder: 'For example: the receipt shows a different total', requiredMessage: 'Add a reason so the employee knows what to fix.' },
+        action: (reason) => store.commit((s) => { const t = s.expenses.find((e) => e.id === x.id); t.status = 'rejected'; t.rejectReason = reason; t.reviewedBy = 'Nguyễn Thu Hà'; }).then(() => { render(); F.toast(`${x.merchant} rejected and returned to ${x.owner}.`); })
       });
     }
 
@@ -817,10 +816,10 @@
       const x = store.find('expenses', selectedId);
       if (!x) return;
       F.confirmAction({
-        kicker: 'Expense claim',
+        kicker: 'Receipt',
         title: `Delete ${x.id}?`,
         body: `${x.merchant}, ${fmt.money(x.amount, x.currency)} is removed from the queue. This cannot be undone.`,
-        confirmLabel: 'Delete expense',
+        confirmLabel: 'Delete receipt',
         busyLabel: 'Deleting…',
         action: () => store.commit((s) => { s.expenses = s.expenses.filter((e) => e.id !== x.id); }).then(() => { selectedId = null; F.setParam('id', null); render(); F.toast(`${x.id} deleted.`); })
       });
@@ -832,7 +831,7 @@
       editingId = x ? x.id : null;
       form.reset();
       form.elements.category.innerHTML = store.list('expenseCategories').map((c) => `<option>${esc(c)}</option>`).join('');
-      const owners = ['Jamie Stone'].concat(store.list('members').filter((m) => m.status === 'Active').map((m) => m.name));
+      const owners = [store.state.meta.currentUser.name].concat(store.list('members').filter((m) => m.status === 'Active').map((m) => m.name));
       if (x && !owners.includes(x.owner)) owners.push(x.owner);
       form.elements.owner.innerHTML = owners.map((o) => `<option>${esc(o)}</option>`).join('');
       form.elements.date.max = F.isoDate();
@@ -841,11 +840,11 @@
         form.elements.amount.value = fmt.number(x.amount, x.currency);
       } else {
         form.elements.date.value = F.isoDate();
-        form.elements.owner.value = 'Jamie Stone';
+        form.elements.owner.value = owners[0];
       }
       setText('expense-receipt-current', x && x.receipt ? `Current file: ${x.receipt}. Choose a file to replace it.` : 'Only the file name is kept. Nothing is uploaded.');
-      setText('expense-dialog-title', x ? `Edit ${x.id}` : 'New expense');
-      setText('expense-submit', x ? (x.status === 'rejected' ? 'Resubmit expense' : 'Save changes') : 'Submit expense');
+      setText('expense-dialog-title', x ? `Edit ${x.id}` : 'New receipt');
+      setText('expense-submit', x ? (x.status === 'rejected' ? 'Resubmit receipt' : 'Save changes') : 'Submit receipt');
       F.openDialog('expense-dialog');
       form.elements.merchant.focus();
     }
@@ -853,8 +852,8 @@
       busyLabel: 'Submitting…',
       validate(v) {
         const e = {};
-        if (v.merchant.length < 2) e.merchant = 'Enter the merchant name.';
-        const err = amountError(v.amount, v.currency, { max: 25000 });
+        if (v.merchant.length < 2) e.merchant = 'Enter where the money was spent.';
+        const err = amountError(v.amount, v.currency) || (F.parseAmount(v.amount) > 50000000 ? 'Above the VND 50,000,000 limit for one receipt.' : '');
         if (err) e.amount = err;
         if (!v.date) e.date = 'Enter the purchase date.';
         else if (v.date > F.isoDate()) e.date = 'The purchase date cannot be in the future.';

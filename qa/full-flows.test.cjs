@@ -325,30 +325,30 @@ test('request form failure keeps input and retries', async () => {
   await done(s);
 });
 
-test('saved payees: create, view, edit, delete and empty state', async () => {
+test('vendors: create, view, edit, delete and empty state', async () => {
   const s = await open('payees.html');
   const { page } = s;
   await page.click('#add-payee');
   await page.click('#payee-submit');
   await page.waitForSelector('#err-payee-form-name');
-  await page.fill('#payee-name', 'Harbor Print Co');
-  await page.selectOption('#payee-country', 'United States');
-  await page.fill('#payee-bank', 'Wells Fargo');
+  await page.fill('#payee-name', 'Ánh Dương Signs');
+  await page.selectOption('#payee-country', 'Đà Nẵng');
+  await page.fill('#payee-bank', 'BIDV');
   await page.fill('#payee-account', 'short');
   await page.fill('#payee-email', 'not-an-email');
   await page.click('#payee-submit');
   await page.waitForSelector('#err-payee-form-account');
   await page.waitForSelector('#err-payee-form-email');
-  await page.fill('#payee-account', 'US 121000248 7781');
-  await page.fill('#payee-email', 'ar@harborprint.com');
+  await page.fill('#payee-account', '3110 0045 7781');
+  await page.fill('#payee-email', 'sales@anhduongsigns.vn');
   await page.click('#payee-submit');
-  await waitToast(page, 'Harbor Print Co saved');
-  assert.equal(await text(page, '#payee-pane-name'), 'Harbor Print Co');
+  await waitToast(page, 'Ánh Dương Signs saved');
+  assert.equal(await text(page, '#payee-pane-name'), 'Ánh Dương Signs');
   await page.click('#payee-edit');
-  await page.fill('#payee-bank', 'Chase');
+  await page.fill('#payee-bank', 'ACB');
   await page.click('#payee-submit');
-  await waitToast(page, 'Harbor Print Co updated');
-  assert.equal(await text(page, '#payee-pane-bank'), 'Chase');
+  await waitToast(page, 'Ánh Dương Signs updated');
+  assert.equal(await text(page, '#payee-pane-bank'), 'ACB');
   assert.match(await page.getAttribute('#payee-pay', 'href'), /index\.html\?new=PYE-1006/);
   // Delete every payee to reach the true empty state.
   while (await page.locator('#payees-body tr[data-id]').count()) {
@@ -357,55 +357,55 @@ test('saved payees: create, view, edit, delete and empty state', async () => {
     await confirm(page);
     await waitToast(page, `${name} removed`);
   }
-  await page.waitForSelector('#payees-empty:has-text("No saved payees")');
+  await page.waitForSelector('#payees-empty:has-text("No saved vendors")');
   await page.click('#payees-empty [data-state-action]');
   await page.waitForSelector('#payee-dialog[open]');
   await done(s);
 });
 
-test('accounts: detail, transaction search and filter, move money, scheduled cancel, statement', async () => {
-  const s = await open('accounts.html?id=EUR');
+test('funds: detail, transaction search and filter, move money, scheduled cancel, statement', async () => {
+  const s = await open('accounts.html?id=TCB');
   const { page } = s;
-  assert.equal(await text(page, '#account-pane-title'), 'EUR Operations');
-  await page.fill('#tx-search', 'Vasquez');
+  assert.equal(await text(page, '#account-pane-title'), 'Techcombank collections');
+  await page.fill('#tx-search', 'Vinmart');
   assert.equal(await page.locator('#tx-body tr[data-id]').count(), 1);
   await page.click('[data-tx-filter="debit"]');
   await page.waitForSelector('#tx-empty:has-text("No matching transactions")');
   await page.click('#tx-empty [data-state-action]');
   assert.equal(await page.locator('#tx-body tr[data-id]').count(), 5);
-  await page.click('#accounts-body tr[data-id="USD"]');
+  await page.click('#accounts-body tr[data-id="VCB"]');
   await page.click('#open-move-money');
-  await page.selectOption('#move-to', 'USD');
-  await page.fill('#move-amount', '999999999');
+  await page.selectOption('#move-to', 'VCB');
+  await page.fill('#move-amount', '99999999999');
   await page.click('#move-money-form .btn-primary');
   await page.waitForSelector('#err-move-money-form-to');
   assert.match(await text(page, '#err-move-money-form-amount'), /Exceeds/);
-  await page.selectOption('#move-to', 'EUR');
-  await page.fill('#move-amount', '1000');
-  assert.match(await text(page, '#move-preview'), /€917\.43/);
+  await page.selectOption('#move-to', 'TCB');
+  await page.fill('#move-amount', '10,000,000');
+  assert.match(await text(page, '#move-preview'), /VND 10,000,000.*Techcombank collections/);
   await page.click('#move-money-form .btn-primary');
   await waitToast(page, 'completed');
-  assert.match(await text(page, '#accounts-body tr[data-id="USD"] td:nth-child(3)'), /285,420\.00/);
-  // Scheduled transfer, then cancel it from the transaction detail.
+  assert.match(await text(page, '#accounts-body tr[data-id="VCB"] td:nth-child(3)'), /1,274,500,000/);
+  // Scheduled top-up of petty cash, then cancel it from the transaction detail.
   await page.click('#open-move-money');
-  await page.selectOption('#move-to', 'GBP');
-  await page.fill('#move-amount', '500');
+  await page.selectOption('#move-to', 'CASH');
+  await page.fill('#move-amount', '5000000');
   await page.fill('#move-date', '2026-09-20');
   await page.click('#move-money-form .btn-primary');
   await waitToast(page, 'scheduled');
   assert.equal(await text(page, '#metric-scheduled'), '01');
   await page.click('[data-tx-filter="open"]');
-  await page.click('#tx-body tr:has-text("Transfer to GBP Operating")');
+  await page.click('#tx-body tr:has-text("Transfer to Petty cash")');
   await page.waitForSelector('#tx-cancel:not([hidden])');
   await page.click('#tx-cancel');
   await confirm(page);
   await waitToast(page, 'Reserved funds released');
   assert.equal(await text(page, '#metric-scheduled'), '00');
   const [download] = await Promise.all([page.waitForEvent('download'), page.click('#export-statement')]);
-  assert.match(download.suggestedFilename(), /^flux-statement-USD-.*\.csv$/);
+  assert.match(download.suggestedFilename(), /^flux-statement-VCB-.*\.csv$/);
   const csv = fs.readFileSync(await download.path(), 'utf8');
   assert.match(csv, /Transaction,Date,Description/);
-  assert.match(csv, /Transfer to EUR Operations/);
+  assert.match(csv, /Transfer to Techcombank collections/);
   await go(page, 'accounts.html?id=XYZ');
   await page.waitForSelector('#account-not-found:has-text("Account XYZ not found")');
   await done(s);
@@ -494,7 +494,7 @@ test('team: invite, resend, edit role, remove, last-CFO guard', async () => {
   await done(s);
 });
 
-test('expenses: submit with receipt name, edit, delete, approve, reject with reason', async () => {
+test('settlements: add a receipt, edit, delete, approve, reject with reason', async () => {
   const s = await open('expenses.html');
   const { page } = s;
   await page.click('#open-new-expense');
@@ -504,39 +504,41 @@ test('expenses: submit with receipt name, edit, delete, approve, reject with rea
   await page.waitForSelector('#err-expense-form-merchant');
   assert.match(await text(page, '#err-expense-form-date'), /future/);
   assert.match(await text(page, '#err-expense-form-receipt'), /PDF, PNG or JPG/);
-  await page.fill('#expense-merchant', 'Lufthansa');
-  await page.selectOption('#expense-currency', 'EUR');
-  await page.fill('#expense-amount', '480.50');
+  await page.fill('#expense-merchant', 'Vietjet Air');
+  await page.fill('#expense-amount', '1480000.5');
+  await page.click('#expense-submit');
+  assert.match(await text(page, '#err-expense-form-amount'), /no decimals/);
+  await page.fill('#expense-amount', '1,480,000');
   await page.selectOption('#expense-category', 'Travel');
   await page.fill('#expense-date', '2026-09-14');
-  await page.setInputFiles('#expense-receipt', { name: 'lh-boarding-pass.pdf', mimeType: 'application/pdf', buffer: Buffer.from('%PDF') });
+  await page.setInputFiles('#expense-receipt', { name: 'vietjet-boarding.pdf', mimeType: 'application/pdf', buffer: Buffer.from('%PDF') });
   await page.click('#expense-submit');
   await waitToast(page, 'EXP-44183 submitted');
-  assert.match(await text(page, '#receipt-host'), /lh-boarding-pass\.pdf/);
+  assert.match(await text(page, '#receipt-host'), /vietjet-boarding\.pdf/);
   assert.equal(await text(page, '#expense-pane-status'), 'Needs review');
   await page.click('#edit-expense');
-  await page.fill('#expense-amount', '510.00');
+  await page.fill('#expense-amount', '1,520,000');
   await page.click('#expense-submit');
   await waitToast(page, 'EXP-44183 updated');
-  assert.equal(await text(page, '#expense-pane-amount'), '€510.00');
+  assert.equal(await text(page, '#expense-pane-amount'), 'VND 1,520,000');
   await page.click('#delete-expense');
   await confirm(page);
   await waitToast(page, 'EXP-44183 deleted');
-  // Approver decisions.
+  // Accountant decisions.
   await page.click('[data-role="approver"]');
   await page.click('#expenses-body tr[data-id="EXP-44182"]');
   await page.click('#approve-expense');
-  await waitToast(page, 'The Hoxton approved');
+  await waitToast(page, 'Mường Thanh Đà Nẵng approved and counted toward Advance REQ-2038');
   assert.equal(await rowStatus(page, '#expenses-body', 'EXP-44182'), 'Approved');
   await page.click('#expenses-body tr[data-id="EXP-44098"]');
   await page.click('#reject-expense');
   await page.waitForSelector('#flux-confirm[open]');
   await page.click('#flux-confirm-submit');
   await page.waitForSelector('#flux-confirm .field-error');
-  await confirm(page, 'Ticket is first class, policy allows second class');
-  await waitToast(page, 'Deutsche Bahn rejected');
-  assert.match(await text(page, '#expense-outcome'), /first class/);
-  // Missing receipt expense shows the attach state.
+  await confirm(page, 'Book economy, not business class');
+  await waitToast(page, 'Vietnam Airlines rejected');
+  assert.match(await text(page, '#expense-outcome'), /economy/);
+  // A receipt that never arrived shows the attach state.
   await page.click('#expenses-body tr[data-id="EXP-44169"]');
   await page.waitForSelector('#receipt-host:has-text("No receipt attached")');
   await page.click('[data-expense-filter="rejected"]');

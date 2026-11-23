@@ -33,11 +33,11 @@
 
     // Vendors the company pays directly.
     payees: [
-      { id: 'PYE-1001', name: 'Phương Nam Printing', country: 'Vietnam', currency: 'VND', bank: 'Vietcombank', account: '0071 0004 •• 4410', email: 'sales@phuongnamprint.vn', createdAt: '2024-05-14' },
-      { id: 'PYE-1002', name: 'Hòa Phát Furniture', country: 'Vietnam', currency: 'VND', bank: 'BIDV', account: '3110 0012 •• 8823', email: 'b2b@hoaphatfurniture.vn', createdAt: '2023-11-02' },
-      { id: 'PYE-1003', name: 'Sao Mai Catering', country: 'Vietnam', currency: 'VND', bank: 'Techcombank', account: '1903 5521 •• 0076', email: 'order@saomaicatering.vn', createdAt: '2026-09-08' },
-      { id: 'PYE-1004', name: 'Viettel Business', country: 'Vietnam', currency: 'VND', bank: 'MB Bank', account: '0680 1100 •• 2291', email: 'doanhnghiep@viettel.vn', createdAt: '2022-03-01' },
-      { id: 'PYE-1005', name: 'Thiên Long Stationery', country: 'Vietnam', currency: 'VND', bank: 'ACB', account: '2046 7781 •• 5530', email: 'ban.hang@thienlong.vn', createdAt: '2023-06-20' }
+      { id: 'PYE-1001', name: 'Phương Nam Printing', country: 'Hồ Chí Minh City', currency: 'VND', bank: 'Vietcombank', account: '0071 0004 •• 4410', email: 'sales@phuongnamprint.vn', createdAt: '2024-05-14' },
+      { id: 'PYE-1002', name: 'Hòa Phát Furniture', country: 'Hà Nội', currency: 'VND', bank: 'BIDV', account: '3110 0012 •• 8823', email: 'b2b@hoaphatfurniture.vn', createdAt: '2023-11-02' },
+      { id: 'PYE-1003', name: 'Sao Mai Catering', country: 'Hồ Chí Minh City', currency: 'VND', bank: 'Techcombank', account: '1903 5521 •• 0076', email: 'order@saomaicatering.vn', createdAt: '2026-09-08' },
+      { id: 'PYE-1004', name: 'Viettel Business', country: 'Hà Nội', currency: 'VND', bank: 'MB Bank', account: '0680 1100 •• 2291', email: 'doanhnghiep@viettel.vn', createdAt: '2022-03-01' },
+      { id: 'PYE-1005', name: 'Thiên Long Stationery', country: 'Hồ Chí Minh City', currency: 'VND', bank: 'ACB', account: '2046 7781 •• 5530', email: 'ban.hang@thienlong.vn', createdAt: '2023-06-20' }
     ],
 
     // Spend requests: advances, reimbursements and vendor payments. Amounts in VND.
@@ -113,32 +113,28 @@
       }
     ],
 
+    // Where the company's money sits: two bank accounts and the petty cash box. VND only.
     accounts: [
-      { id: 'USD', currency: 'USD', name: 'USD Operating', purpose: 'Primary vendor settlement', available: 286420, reserved: 18400, iban: 'US 021000021 •• 4821', rails: 'Local + SWIFT', settlement: '16 Sep, 09:00 UTC', country: 'United States', lastActivity: '2026-09-15T14:38:00' },
-      { id: 'EUR', currency: 'EUR', name: 'EUR Operations', purpose: 'EU payroll and suppliers', available: 143820.4, reserved: 12840, iban: 'DE89 3704 0044 •• 7720', rails: 'SEPA + SWIFT', settlement: '16 Sep, 08:00 CET', country: 'Germany', lastActivity: '2026-09-15T13:12:00' },
-      { id: 'GBP', currency: 'GBP', name: 'GBP Operating', purpose: 'UK service contracts', available: 72990.18, reserved: 4320, iban: 'GB29 NWBK 6016 •• 1198', rails: 'Faster Payments', settlement: '16 Sep, 09:30 BST', country: 'United Kingdom', lastActivity: '2026-09-15T11:46:00' },
-      { id: 'JPY', currency: 'JPY', name: 'JPY Manufacturing', purpose: 'Factory and logistics', available: 18420000, reserved: 2850000, iban: 'JP ZENGIN 0005-482190', rails: 'Zengin domestic', settlement: '17 Sep, 09:00 JST', country: 'Japan', lastActivity: '2026-09-15T10:04:00' },
-      { id: 'SGD', currency: 'SGD', name: 'SGD APAC Reserve', purpose: 'Regional contingency', available: 94600, reserved: 0, iban: 'SG FAST •• 6042', rails: 'FAST + SWIFT', settlement: 'No scheduled debit', country: 'Singapore', lastActivity: '2026-09-12T09:20:00' }
+      { id: 'VCB', currency: 'VND', name: 'Vietcombank operating', purpose: 'Vendor payouts and payroll', available: 1284500000, reserved: 26000000, iban: '0071 0001 •• 2468', rails: 'Napas 247, interbank', settlement: 'Same business day', country: 'Hồ Chí Minh City', lastActivity: '2026-09-15T14:38:00' },
+      { id: 'TCB', currency: 'VND', name: 'Techcombank collections', purpose: 'Customer receipts', available: 642300000, reserved: 0, iban: '1903 6620 •• 1155', rails: 'Napas 247', settlement: 'Same business day', country: 'Hồ Chí Minh City', lastActivity: '2026-09-15T13:12:00' },
+      { id: 'CASH', currency: 'VND', name: 'Petty cash', purpose: 'Small advances and reimbursements', available: 18750000, reserved: 0, iban: 'Office safe, floor 3', rails: 'Cash', settlement: 'Counted every Friday', country: 'Head office', lastActivity: '2026-09-11T16:20:00' }
     ],
 
     transactions: [
-      { id: 'TX-50311', accountId: 'USD', date: '2026-09-15T14:38:00', description: 'Customer receipt', counterparty: 'Brightline Retail Inc.', direction: 'credit', amount: 42800, status: 'posted' },
-      { id: 'TX-50302', accountId: 'USD', date: '2026-09-15T14:15:24', description: 'Reserved for TRF-98234', counterparty: 'Arcwell Systems Inc.', direction: 'debit', amount: 18400, status: 'pending' },
-      { id: 'TX-50288', accountId: 'USD', date: '2026-09-15T09:02:00', description: 'Card settlement batch', counterparty: 'Flux card program', direction: 'debit', amount: 6214.55, status: 'posted' },
-      { id: 'TX-50261', accountId: 'USD', date: '2026-09-14T17:45:00', description: 'Customer receipt', counterparty: 'Harbor & Co.', direction: 'credit', amount: 18950, status: 'posted' },
-      { id: 'TX-50240', accountId: 'USD', date: '2026-09-13T11:20:00', description: 'Payroll funding', counterparty: 'Northstar US Payroll', direction: 'debit', amount: 84200, status: 'posted' },
-      { id: 'TX-50212', accountId: 'USD', date: '2026-09-12T15:10:00', description: 'Interest credit', counterparty: 'Flux treasury', direction: 'credit', amount: 412.18, status: 'posted' },
-      { id: 'TX-60118', accountId: 'EUR', date: '2026-09-15T13:12:00', description: 'Reserved for TRF-98152', counterparty: 'Nordlicht GmbH', direction: 'debit', amount: 7240, status: 'pending' },
-      { id: 'TX-60104', accountId: 'EUR', date: '2026-09-14T13:11:11', description: 'Reserved for TRF-98061', counterparty: 'Solventa Sp. z o.o.', direction: 'debit', amount: 5600, status: 'pending' },
-      { id: 'TX-60097', accountId: 'EUR', date: '2026-09-13T12:40:11', description: 'Payment TRF-97988', counterparty: 'Atlas Freight BV', direction: 'debit', amount: 21480.14, status: 'posted' },
-      { id: 'TX-60081', accountId: 'EUR', date: '2026-09-12T10:00:00', description: 'Customer receipt', counterparty: 'Vasquez Logistik', direction: 'credit', amount: 38400, status: 'posted' },
-      { id: 'TX-60070', accountId: 'EUR', date: '2026-09-11T08:30:00', description: 'EU payroll', counterparty: 'Northstar EU Payroll', direction: 'debit', amount: 61200, status: 'posted' },
-      { id: 'TX-70044', accountId: 'GBP', date: '2026-09-15T11:46:00', description: 'Customer receipt', counterparty: 'Kestrel Media Ltd', direction: 'credit', amount: 9600, status: 'posted' },
-      { id: 'TX-70039', accountId: 'GBP', date: '2026-09-14T18:02:19', description: 'Payment TRF-98096', counterparty: 'Fieldwork Studio', direction: 'debit', amount: 12900, status: 'posted' },
-      { id: 'TX-70021', accountId: 'GBP', date: '2026-09-10T09:15:00', description: 'Office lease', counterparty: 'Shoreditch Works', direction: 'debit', amount: 8450, status: 'posted' },
-      { id: 'TX-80012', accountId: 'JPY', date: '2026-09-15T10:04:00', description: 'Reserved for TRF-98187', counterparty: 'Takahashi Industrial', direction: 'debit', amount: 2850000, status: 'pending' },
-      { id: 'TX-80007', accountId: 'JPY', date: '2026-09-11T09:00:00', description: 'Customer receipt', counterparty: 'Osaka Components KK', direction: 'credit', amount: 6200000, status: 'posted' },
-      { id: 'TX-90003', accountId: 'SGD', date: '2026-09-12T09:20:00', description: 'Reserve top-up', counterparty: 'Northstar Holdings', direction: 'credit', amount: 25000, status: 'posted' }
+      { id: 'TX-50311', accountId: 'VCB', date: '2026-09-15T14:38:00', description: 'Customer receipt', counterparty: 'Bách Hóa Xanh', direction: 'credit', amount: 186000000, status: 'posted' },
+      { id: 'TX-50302', accountId: 'VCB', date: '2026-09-15T13:48:05', description: 'Reserved for REQ-2038', counterparty: 'Võ Ngọc Lan', direction: 'debit', amount: 26000000, status: 'pending' },
+      { id: 'TX-50288', accountId: 'VCB', date: '2026-09-14T18:02:19', description: 'Paid REQ-2033', counterparty: 'Hòa Phát Furniture', direction: 'debit', amount: 32400000, status: 'posted' },
+      { id: 'TX-50261', accountId: 'VCB', date: '2026-09-14T17:45:00', description: 'Customer receipt', counterparty: 'Co.opmart', direction: 'credit', amount: 94500000, status: 'posted' },
+      { id: 'TX-50240', accountId: 'VCB', date: '2026-09-13T11:20:00', description: 'Payroll, August', counterparty: 'Minh An staff', direction: 'debit', amount: 612000000, status: 'posted' },
+      { id: 'TX-50212', accountId: 'VCB', date: '2026-09-12T15:10:00', description: 'Interest', counterparty: 'Vietcombank', direction: 'credit', amount: 1284000, status: 'posted' },
+      { id: 'TX-60118', accountId: 'TCB', date: '2026-09-15T13:12:00', description: 'Customer receipt', counterparty: 'Lotte Mart', direction: 'credit', amount: 72800000, status: 'posted' },
+      { id: 'TX-60104', accountId: 'TCB', date: '2026-09-14T13:11:11', description: 'Customer receipt', counterparty: 'Thế Giới Di Động', direction: 'credit', amount: 128000000, status: 'posted' },
+      { id: 'TX-60097', accountId: 'TCB', date: '2026-09-13T12:40:11', description: 'Transfer to Vietcombank operating', counterparty: 'Internal transfer', direction: 'debit', amount: 300000000, status: 'posted' },
+      { id: 'TX-60081', accountId: 'TCB', date: '2026-09-12T10:00:00', description: 'Customer receipt', counterparty: 'Vinmart', direction: 'credit', amount: 58400000, status: 'posted' },
+      { id: 'TX-60070', accountId: 'TCB', date: '2026-09-11T08:30:00', description: 'Bank fees', counterparty: 'Techcombank', direction: 'debit', amount: 220000, status: 'posted' },
+      { id: 'TX-70044', accountId: 'CASH', date: '2026-09-11T16:20:00', description: 'Paid reimbursement', counterparty: 'Đặng Hoàng Huy', direction: 'debit', amount: 450000, status: 'posted' },
+      { id: 'TX-70039', accountId: 'CASH', date: '2026-09-10T09:00:00', description: 'Top-up from Vietcombank operating', counterparty: 'Internal transfer', direction: 'credit', amount: 20000000, status: 'posted' },
+      { id: 'TX-70021', accountId: 'CASH', date: '2026-09-05T14:40:11', description: 'Paid REQ-2027 advance', counterparty: 'Võ Ngọc Lan', direction: 'debit', amount: 8000000, status: 'posted' }
     ],
 
     cards: [
@@ -167,17 +163,17 @@
       { id: 'MEM-05', name: 'Theo Brooks', email: 'theo.brooks@northstar.co', role: 'Employee', team: 'Sales', region: 'UK', status: 'Invited', lastSeen: null, invitedAt: '2026-09-15T09:10:00' }
     ],
 
+    // Receipts that settle an advance, or that an employee paid out of pocket. VND only.
     expenses: [
-      { id: 'EXP-44182', merchant: 'The Hoxton', detail: 'Paris, lodging', owner: 'Maya Chen', category: 'Travel', currency: 'USD', amount: 642.18, date: '2026-09-14', card: 'Virtual •••• 1104', receipt: 'hoxton-paris-folio.pdf', status: 'review', note: '' },
-      { id: 'EXP-44169', merchant: 'AWS EMEA', detail: 'Infrastructure', owner: 'Priya Nair', category: 'Cloud', currency: 'USD', amount: 1284.4, date: '2026-09-14', card: 'Virtual •••• 9632', receipt: '', status: 'missing', note: '' },
-      { id: 'EXP-44131', merchant: 'Notion Labs', detail: 'Team subscription', owner: 'Jamie Stone', category: 'Software', currency: 'USD', amount: 192, date: '2026-09-13', card: 'Physical •••• 4821', receipt: 'notion-invoice-0913.pdf', status: 'approved', note: '' },
-      { id: 'EXP-44098', merchant: 'Deutsche Bahn', detail: 'Rail, client visit', owner: 'Luca Meyer', category: 'Travel', currency: 'EUR', amount: 186.4, date: '2026-09-13', card: 'Physical •••• 7718', receipt: 'db-ticket-ice-597.png', status: 'review', note: '' },
-      { id: 'EXP-44061', merchant: 'Figma', detail: 'Design tooling', owner: 'Maya Chen', category: 'Software', currency: 'USD', amount: 225, date: '2026-09-12', card: 'Virtual •••• 1104', receipt: 'figma-receipt-sep.pdf', status: 'approved', note: '' }
+      { id: 'EXP-44182', merchant: 'Mường Thanh Đà Nẵng', detail: 'Hotel, 2 nights', owner: 'Võ Ngọc Lan', category: 'Travel', currency: 'VND', amount: 3200000, date: '2026-09-14', card: 'Advance REQ-2038', receipt: 'muongthanh-folio.pdf', status: 'review', note: '' },
+      { id: 'EXP-44169', merchant: 'Grab', detail: 'Rides to the fair venue', owner: 'Võ Ngọc Lan', category: 'Transport', currency: 'VND', amount: 486000, date: '2026-09-14', card: 'Advance REQ-2038', receipt: '', status: 'missing', note: '' },
+      { id: 'EXP-44131', merchant: 'Thiên Long Stationery', detail: 'Printer paper', owner: 'Đặng Hoàng Huy', category: 'Office supplies', currency: 'VND', amount: 640000, date: '2026-09-13', card: 'Out of pocket', receipt: 'thienlong-hd-0913.pdf', status: 'approved', note: '' },
+      { id: 'EXP-44098', merchant: 'Vietnam Airlines', detail: 'Flights to Đà Nẵng', owner: 'Võ Ngọc Lan', category: 'Travel', currency: 'VND', amount: 6850000, date: '2026-09-13', card: 'Advance REQ-2038', receipt: 'vna-eticket-597.png', status: 'review', note: '' },
+      { id: 'EXP-44061', merchant: 'Highlands Coffee', detail: 'Client meeting', owner: 'Lê Minh Khoa', category: 'Meals with clients', currency: 'VND', amount: 420000, date: '2026-09-12', card: 'Out of pocket', receipt: 'highlands-0912.jpg', status: 'approved', note: '' }
     ],
 
-    expenseCategories: ['Travel', 'Cloud', 'Software', 'Meals', 'Office', 'Professional services'],
+    expenseCategories: ['Travel', 'Transport', 'Meals with clients', 'Office supplies', 'Marketing', 'Equipment'],
 
-    // Rules run top to bottom; the first active match sets the chain. Thresholds are in VND.
     policies: [
       { id: 'POL-01', name: 'Large requests', scope: 'All requests', status: 'Active', conditions: [{ field: 'amount', op: '>', value: 'VND 20,000,000' }], approvers: ['Team lead', 'Director'] },
       { id: 'POL-02', name: 'New vendor check', scope: 'Vendor payments', status: 'Active', conditions: [{ field: 'beneficiary_age_days', op: '<', value: '30' }], approvers: ['Team lead', 'Accountant'] },

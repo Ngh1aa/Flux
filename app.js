@@ -734,25 +734,25 @@
 
     function rows() {
       const q = (search?.value || '').trim().toLowerCase();
-      return store.list('payees').filter((p) => !q || `${p.name} ${p.country} ${p.currency} ${p.bank} ${p.email}`.toLowerCase().includes(q));
+      return store.list('payees').filter((p) => !q || `${p.name} ${p.country} ${p.bank} ${p.email}`.toLowerCase().includes(q));
     }
 
     function render() {
       const all = store.list('payees');
       const list = rows();
-      setText('payee-count', `${all.length} saved, ${new Set(all.map((p) => p.currency)).size} currencies`);
+      setText('payee-count', `${all.length} saved, ${new Set(all.map((p) => p.country)).size} cities`);
       tbody.innerHTML = list.map((p) => `<tr tabindex="0" data-id="${esc(p.id)}">
         <td><span class="table-strong">${esc(p.name)}</span><span class="subcopy">${esc(p.email || 'No remittance email')}</span></td>
         <td>${esc(p.country)}</td>
-        <td><span class="currency-tag">${esc(p.currency)}</span></td>
+        <td>${esc(p.bank)}</td>
         <td class="mono">${esc(p.account)}</td>
         <td class="mono">${fmt.day(p.createdAt)}</td>
       </tr>`).join('');
       if (!all.length) {
-        emptyHost.innerHTML = F.stateBlock({ title: 'No saved payees', body: 'Save the businesses you pay often so new payments start with verified details.', action: 'Add payee' });
+        emptyHost.innerHTML = F.stateBlock({ title: 'No saved vendors', body: 'Save the suppliers you pay often so new requests start with checked details.', action: 'Add vendor' });
         emptyHost.querySelector('[data-state-action]').addEventListener('click', () => openForm(null));
       } else if (!list.length) {
-        emptyHost.innerHTML = F.stateBlock({ icon: 'search', title: 'No matching payees', body: 'Try a different name, country or currency.', action: 'Clear search' });
+        emptyHost.innerHTML = F.stateBlock({ icon: 'search', title: 'No matching vendors', body: 'Try a different name, city or bank.', action: 'Clear search' });
         emptyHost.querySelector('[data-state-action]').addEventListener('click', () => { search.value = ''; render(); });
       } else emptyHost.innerHTML = '';
       if (!selectedId && list.length) selectedId = list[0].id;
@@ -768,8 +768,8 @@
         body.hidden = true;
         missing.hidden = false;
         missing.innerHTML = !store.list('payees').length
-          ? F.stateBlock({ title: 'Nothing selected', body: 'Payee details appear here once you add one.' })
-          : F.stateBlock({ icon: 'missing', title: `Payee ${selectedId} not found`, body: 'It may have been deleted, or the link is out of date.', action: 'Show first payee' });
+          ? F.stateBlock({ title: 'Nothing selected', body: 'Vendor details appear here once you add one.' })
+          : F.stateBlock({ icon: 'missing', title: `Vendor ${selectedId} not found`, body: 'It may have been deleted, or the link is out of date.', action: 'Show first vendor' });
         missing.querySelector('[data-state-action]')?.addEventListener('click', () => select(store.list('payees')[0].id));
         return;
       }
@@ -803,8 +803,8 @@
       editingId = payee ? payee.id : null;
       form.reset();
       F.openDialog(dialog);
-      setText('payee-dialog-title', payee ? `Edit ${payee.name}` : 'Add payee');
-      setText('payee-submit', payee ? 'Save changes' : 'Add payee');
+      setText('payee-dialog-title', payee ? `Edit ${payee.name}` : 'Add vendor');
+      setText('payee-submit', payee ? 'Save changes' : 'Add vendor');
       if (payee) ['name', 'country', 'currency', 'bank', 'account', 'email'].forEach((k) => { form.elements[k].value = payee[k] || ''; });
       form.elements.name.focus();
     }
@@ -812,12 +812,12 @@
     F.bindForm(form, {
       validate(v) {
         const e = {};
-        if (v.name.length < 2) e.name = 'Enter the payee legal name.';
-        else if (store.list('payees').some((p) => p.id !== editingId && p.name.toLowerCase() === v.name.toLowerCase())) e.name = 'Another saved payee already uses this name.';
-        if (!v.country) e.country = 'Select a country.';
+        if (v.name.length < 2) e.name = 'Enter the vendor name.';
+        else if (store.list('payees').some((p) => p.id !== editingId && p.name.toLowerCase() === v.name.toLowerCase())) e.name = 'Another vendor already uses this name.';
+        if (!v.country) e.country = 'Select a city.';
         if (v.bank.length < 2) e.bank = 'Enter the receiving bank.';
-        if (v.account.replace(/\W/g, '').length < 8) e.account = 'Enter at least 8 letters or digits.';
-        if (v.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.email)) e.email = 'Enter a valid email, for example ap@company.com.';
+        if (v.account.replace(/\W/g, '').length < 8) e.account = 'Enter at least 8 digits.';
+        if (v.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.email)) e.email = 'Enter a valid email, for example sales@company.vn.';
         return e;
       },
       submit(v) {
@@ -835,7 +835,7 @@
           F.setParam('id', p.id);
           search.value = '';
           render();
-          F.toast(editingId ? `${p.name} updated.` : `${p.name} saved to payees.`);
+          F.toast(editingId ? `${p.name} updated.` : `${p.name} saved to vendors.`);
         });
       }
     });
@@ -848,14 +848,14 @@
       F.confirmAction({
         kicker: 'Saved payees',
         title: `Delete ${p.name}?`,
-        body: 'Existing payments keep their own copy of these details. You can add the payee again later.',
-        confirmLabel: 'Delete payee',
+        body: 'Existing requests keep their own copy of these details. You can add the vendor again later.',
+        confirmLabel: 'Delete vendor',
         busyLabel: 'Deleting…',
         action: () => store.commit((s) => { s.payees = s.payees.filter((x) => x.id !== p.id); }).then(() => {
           selectedId = null;
           F.setParam('id', null);
           render();
-          F.toast(`${p.name} removed from saved payees.`);
+          F.toast(`${p.name} removed from vendors.`);
         })
       });
     });
@@ -893,7 +893,7 @@
       renderMetrics();
       const rules = store.list('policies');
       if (!rules.length) {
-        listHost.innerHTML = F.stateBlock({ title: 'No approval rules', body: 'Payments fall back to the workspace default: one Finance manager approval.', action: 'Create rule' });
+        listHost.innerHTML = F.stateBlock({ title: 'No approval rules', body: 'Requests fall back to the default: one team lead approval.', action: 'Create rule' });
         listHost.querySelector('[data-state-action]').addEventListener('click', openNewRule);
         return;
       }

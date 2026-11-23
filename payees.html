@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="light">
-  <title>Flux — Saved payees</title>
+  <title>Flux — Vendors</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="workspace.css">
 </head>
@@ -24,11 +24,11 @@
       <nav class="sidebar-nav">
         <p class="nav-section-label">Operations</p>
         <ul class="nav-list">
-          <li><a href="accounts.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16"></rect><path d="M3 9h18M9 9v11"></path></svg><span>Accounts</span></a></li>
+          <li><a href="accounts.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16"></rect><path d="M3 9h18M9 9v11"></path></svg><span>Funds</span></a></li>
           <li><a href="index.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h12M12 3l4 4-4 4M20 17H8m4-4-4 4 4 4"></path></svg><span>Requests</span></a></li>
           <li><a href="cards.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14"></rect><path d="M3 10h18"></path></svg><span>Cards</span></a></li>
           <li><a href="team.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><path d="M3 20c.7-4 3-6 6-6s5.3 2 6 6M17 7h4M19 5v4"></path></svg><span>Team</span></a></li>
-          <li><a href="expenses.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6"></path></svg><span>Expenses</span></a></li>
+          <li><a href="expenses.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6"></path></svg><span>Settlements</span></a></li>
           <li><a href="reports.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"></path></svg><span>Reports</span></a></li>
         </ul>
         <p class="nav-section-label nav-section-gap">Administration</p>
@@ -41,64 +41,64 @@
 
     <main class="main-content">
       <header class="topbar">
-        <div class="breadcrumb"><span>Minh An Trading</span><span>/</span><a href="index.html">Requests</a><span>/</span><strong>Saved payees</strong></div>
+        <div class="breadcrumb"><span>Minh An Trading</span><span>/</span><a href="index.html">Requests</a><span>/</span><strong>Vendors</strong></div>
         <button class="user-menu" type="button"><span>Võ Ngọc Lan, Sales</span><span class="user-initials" aria-hidden="true">NL</span></button>
       </header>
 
       <div class="page-content">
         <div class="page-header">
           <div class="page-title">
-            <h1>Saved payees</h1>
+            <h1>Vendors</h1>
           </div>
           <div class="page-actions">
-            <a class="btn" href="index.html">Back to payments</a>
-            <button class="btn btn-primary" type="button" id="add-payee"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg><span>Add payee</span></button>
+            <a class="btn" href="index.html">Back to requests</a>
+            <button class="btn btn-primary" type="button" id="add-payee"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg><span>Add vendor</span></button>
           </div>
         </div>
 
         <div class="toolbar">
-          <div class="toolbar-group"><strong class="toolbar-title">Beneficiaries</strong><span class="toolbar-note mono" id="payee-count"></span></div>
+          <div class="toolbar-group"><strong class="toolbar-title">Suppliers</strong><span class="toolbar-note mono" id="payee-count"></span></div>
           <div class="toolbar-group">
-            <label class="visually-hidden" for="payee-search">Search payees</label>
-            <input id="payee-search" class="input toolbar-search" type="search" placeholder="Search name, country or currency">
+            <label class="visually-hidden" for="payee-search">Search vendors</label>
+            <input id="payee-search" class="input toolbar-search" type="search" placeholder="Search name, city or bank">
           </div>
         </div>
 
-        <section class="workbench-grid" aria-label="Saved payees workspace">
+        <section class="workbench-grid" aria-label="Vendors workspace">
           <div class="workbench-main" id="payees-region">
-            <table class="data-table ledger-list ledger-payees" aria-label="Saved payees">
-              <thead><tr><th>Payee</th><th class="col-country">Country</th><th class="col-ccy">CCY</th><th class="col-account">Account</th><th class="col-date-short">Added</th></tr></thead>
+            <table class="data-table ledger-list ledger-payees" aria-label="Vendors">
+              <thead><tr><th>Vendor</th><th class="col-country">City</th><th class="col-region">Bank</th><th class="col-account">Account</th><th class="col-date-short">Added</th></tr></thead>
               <tbody id="payees-body"></tbody>
             </table>
             <div id="payees-empty"></div>
           </div>
-          <aside class="workbench-aside" id="payee-pane" aria-label="Selected payee">
+          <aside class="workbench-aside" id="payee-pane" aria-label="Selected vendor">
             <div id="payee-not-found" class="detail-missing" hidden></div>
             <div id="payee-pane-body">
               <div class="pane-head">
                 <span class="pane-kicker" id="payee-pane-id">PYE-1001</span>
-                <h2 class="pane-title" id="payee-pane-name">Payee</h2>
-                <p class="pane-subtitle" id="payee-pane-country">Country</p>
+                <h2 class="pane-title" id="payee-pane-name">Vendor</h2>
+                <p class="pane-subtitle" id="payee-pane-country">City</p>
               </div>
               <div class="pane-section">
                 <p class="section-label">Payout details</p>
                 <ul class="key-list">
                   <li><span>Bank</span><strong id="payee-pane-bank"></strong></li>
                   <li><span>Account</span><strong class="mono" id="payee-pane-account"></strong></li>
-                  <li><span>Currency</span><strong class="mono" id="payee-pane-currency"></strong></li>
-                  <li><span>Remittance email</span><strong id="payee-pane-email"></strong></li>
+                  <li><span>Paid in</span><strong class="mono" id="payee-pane-currency"></strong></li>
+                  <li><span>Email</span><strong id="payee-pane-email"></strong></li>
                   <li><span>Added</span><strong class="mono" id="payee-pane-added"></strong></li>
                 </ul>
               </div>
               <div class="pane-section">
-                <p class="section-label">Recent payments</p>
+                <p class="section-label">Recent requests</p>
                 <ul class="link-list" id="payee-payments"></ul>
               </div>
               <div class="pane-section">
                 <div class="action-row">
                   <button class="btn btn-danger" type="button" id="payee-delete">Delete</button>
-                  <button class="btn" type="button" id="payee-edit">Edit payee</button>
-                  <a class="btn btn-primary" id="payee-pay" href="index.html">New payment</a>
+                  <button class="btn" type="button" id="payee-edit">Edit vendor</button>
+                  <a class="btn btn-primary" id="payee-pay" href="index.html">New request</a>
                 </div>
               </div>
             </div>
@@ -111,18 +111,18 @@
 
   <dialog id="payee-dialog" aria-labelledby="payee-dialog-title">
     <form method="dialog" id="payee-form">
-      <div class="dialog-head"><div><p class="section-label dialog-kicker">Saved payees</p><h2 id="payee-dialog-title">Add payee</h2></div><button class="btn btn-icon" value="cancel" aria-label="Close dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button></div>
+      <div class="dialog-head"><div><p class="section-label dialog-kicker">Vendors</p><h2 id="payee-dialog-title">Add vendor</h2></div><button class="btn btn-icon" value="cancel" aria-label="Close dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button></div>
       <div class="dialog-body">
         <div class="form-grid">
-          <div class="form-field full"><label class="form-label" for="payee-name">Legal name</label><input class="input" id="payee-name" name="name" autocomplete="off"></div>
-          <div class="form-field"><label class="form-label" for="payee-country">Country</label><select class="select" id="payee-country" name="country"><option value="">Select country</option><option>United States</option><option>Germany</option><option>United Kingdom</option><option>Japan</option><option>Netherlands</option><option>Poland</option><option>Singapore</option></select></div>
-          <div class="form-field"><label class="form-label" for="payee-currency">Payout currency</label><select class="select mono" id="payee-currency" name="currency"><option>USD</option><option>EUR</option><option>GBP</option><option>JPY</option><option>SGD</option></select></div>
-          <div class="form-field"><label class="form-label" for="payee-bank">Receiving bank</label><input class="input" id="payee-bank" name="bank" autocomplete="off"></div>
-          <div class="form-field"><label class="form-label" for="payee-account">IBAN or account number</label><input class="input mono" id="payee-account" name="account" autocomplete="off"></div>
-          <div class="form-field full"><label class="form-label" for="payee-email">Remittance email (optional)</label><input class="input" id="payee-email" name="email" type="email" autocomplete="off"><p class="form-hint">Remittance advice is emailed here when a payment settles.</p></div>
+          <div class="form-field full"><label class="form-label" for="payee-name">Vendor name</label><input class="input" id="payee-name" name="name" autocomplete="off"></div>
+          <div class="form-field"><label class="form-label" for="payee-country">City</label><select class="select" id="payee-country" name="country"><option value="">Select city</option><option>Hồ Chí Minh City</option><option>Hà Nội</option><option>Đà Nẵng</option><option>Cần Thơ</option><option>Hải Phòng</option><option>Biên Hòa</option></select></div>
+          <input type="hidden" id="payee-currency" name="currency" value="VND">
+          <div class="form-field"><label class="form-label" for="payee-bank">Bank</label><input class="input" id="payee-bank" name="bank" autocomplete="off"></div>
+          <div class="form-field"><label class="form-label" for="payee-account">Account number</label><input class="input mono" id="payee-account" name="account" autocomplete="off"></div>
+          <div class="form-field full"><label class="form-label" for="payee-email">Email (optional)</label><input class="input" id="payee-email" name="email" type="email" autocomplete="off"><p class="form-hint">The payout notice is emailed here.</p></div>
         </div>
       </div>
-      <div class="dialog-actions"><button class="btn" value="cancel">Cancel</button><button class="btn btn-primary" value="default" id="payee-submit">Add payee</button></div>
+      <div class="dialog-actions"><button class="btn" value="cancel">Cancel</button><button class="btn btn-primary" value="default" id="payee-submit">Add vendor</button></div>
     </form>
   </dialog>
 
