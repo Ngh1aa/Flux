@@ -447,7 +447,7 @@
       F.confirmAction({
         kicker: 'Identity and access',
         title: invited ? `Revoke invite for ${m.name}?` : `Remove ${m.name}?`,
-        body: invited ? 'The invite link stops working. You can invite them again later.' : `${m.name} loses access to Northstar Holdings immediately. Their past approvals stay in activity trails.`,
+        body: invited ? 'The invite link stops working. You can invite them again later.' : `${m.name} loses access to Minh An Trading immediately. Their past approvals stay in the activity trail.`,
         confirmLabel: invited ? 'Revoke invite' : 'Remove member',
         busyLabel: 'Removing…',
         action: () => store.commit((s) => { s.members = s.members.filter((x) => x.id !== m.id); }).then(() => {

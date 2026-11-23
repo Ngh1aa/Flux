@@ -1,71 +1,72 @@
-# Flux — B2B Finance Operations Prototype
+# Flux — Spend requests for a small company
 
-Flux is an independent Product Design / UI/UX concept for business payment operations, approval context, role-based authority, settlement state and audit reconstruction.
+Flux is an independent Product Design / UI/UX concept for **advances, reimbursements and vendor payments
+inside a Vietnamese SME**: an employee asks for money, the request moves through an approval chain, the
+accountant pays it out, and every step stays traceable. UI language: English. Currency: VND.
+
+The fictional company is **Minh An Trading**, about 40 staff in Hồ Chí Minh City. Flux started as a
+cross-border treasury console for a holding group; in November 2026 the content moved to this more familiar
+setting while the approval mechanics and the visual system stayed. The content model is in
+`docs/redesign/content-advances.md`; the interface redesign is in `docs/redesign/inventory.md`.
 
 ## Live product
 
-https://flux-six-liard.vercel.app/ (portfolio entry URL). The root opens the Payments workspace already signed in as Jamie Stone (Northstar Holdings). **Sign out** in the user menu shows the login screen; use **Continue as Jamie Stone** or `jamie.stone@northstar.co` / `northstar`.
+https://flux-six-liard.vercel.app/ (portfolio entry URL). The root opens **Requests** signed in as
+Võ Ngọc Lan (Sales). **Sign out** in the user menu shows the login screen; use **Continue as Võ Ngọc Lan**
+or `lan.vo@minhan.vn` / `minhan`. The **Approver** switch in the sidebar acts as the person whose turn it is
+in the chain (team lead, director or accountant).
 
-**Demo tools:** add `?demo=1` to any product URL (for example `https://flux-six-liard.vercel.app/?demo=1`) to show a small floating **Demo tools** panel with **Fail the next save** and **Reset demo data**. It stays on for that browser tab; `?demo=0` turns it off. Normal visitors never see it.
+**Demo tools:** add `?demo=1` to any product URL to show a small **Demo tools** panel with **Fail the next
+save** and **Reset demo data**. It stays on for that browser tab; `?demo=0` turns it off.
 
-The design lens (`design-lens.html`, `index.html?lens=1`) and documentation pages (`design-system.html`, `component-states.html`, `sitemap.html`, `user-flow.html`, `prototype.html`) still work by direct URL but are not linked from the product.
+## Who does what
 
-## Evidence status
+| Person | Role |
+|---|---|
+| Võ Ngọc Lan | Employee (Sales); creates requests and settles receipts |
+| Lê Minh Khoa | Team lead (Sales); first approval |
+| Trần Quốc Bảo | Director; approves requests above VND 20,000,000 |
+| Nguyễn Thu Hà | Accountant; checks new vendors and receipts, pays out |
 
-Current state: `TECHNICAL_PROOF READY / DIRECT_USER ROUND 01 READY_TO_RECRUIT`
+## Approval rules (seed)
 
-Verified DIRECT_USER sessions: **0**  
-Verified PROXY sessions: **0**
-
-The repository intentionally separates technical/product proof from human evidence. Forced states, browser QA, AI critique and recruiter feedback are not counted as direct-user validation.
+| Rule | When | Chain |
+|---|---|---|
+| Default | Every request | Team lead → Payout |
+| 01 Large requests | Amount above VND 20,000,000 | Team lead → Director → Payout |
+| 02 New vendor check | Vendor added in the last 30 days | Team lead → Accountant → Payout |
+| 03 Advances above 10 million | Advance above VND 10,000,000 | Team lead → Accountant → Payout |
+| 04 Weekend submission hold | Inactive | Director |
 
 ## Product decision map
 
-- **D-01 — Approval context:** keep policy rationale, current approver and next approver together in payment detail.
-- **D-02 — Role boundary:** keep financial evidence visible while action authority changes by role.
-- **D-03 — Settlement recovery:** state financial consequence and safe recovery when settlement fails.
-- **D-04 — Reconstructable activity:** keep creation, policy and reviewer actions traceable in context.
-
-## Evidence deep dive
-
-`Decision Pins → state/edge cases → conceptual before/current → 60-second tour → direct-user test → Decision Log → iteration → retest`
-
-Open:
-- `design-lens.html` for the current recruiter-facing review layer;
-- `EVIDENCE-DEEP-DIVE.md` for current evidence boundaries;
-- `NEXT-EVIDENCE-PLAN.md` for the next execution sequence;
-- `research/validation/flux-round-01/` for the study plan, consent/screener, participant tracker, empty evidence ledger, findings boundary and Decision Log.
-
-## Current forced states
-
-- permission denied;
-- approval expired;
-- insufficient USD liquidity;
-- settlement failed — no money moved.
-
-These are prototype/technical fixtures, not observed user findings.
-
-## Human validation gate
-
-Round 01 targets **3–5 real participants** from finance operations, treasury, AP/payments, finance management or CFO approval workflows. Adjacent participants remain `PROXY` and are analyzed separately.
-
-Do not claim faster approvals, fewer payment errors, better approval confidence or improved recovery until traceable participant evidence exists and the affected decision has been retested after iteration.
+- **D-01 — Approval context:** the rule, the current approver and the next approver sit together in the
+  request detail, above the request data.
+- **D-02 — Role boundary:** request data stays visible; who can approve changes by role.
+- **D-03 — Payout recovery:** when a payout fails, say what happened to the money and how to recover.
+- **D-04 — Reconstructable activity:** creation, rules and every approval are traceable in context.
 
 ## Working prototype (no backend)
 
-Every main workflow runs end to end in the browser. All data is fictional and nothing leaves the tab: no money moves and no email is sent.
+Every main workflow runs end to end in the browser. All companies, people and amounts are fictional and
+nothing leaves the tab: no money moves and no email is sent.
 
-- **Data:** seeded from `data/seed.js` and copied into `sessionStorage` on first load (`core.js`). Changes survive navigation and reload within the tab. Open `?demo=1` and use **Demo tools → Reset demo data** to start over.
-- **Payments** (`index.html`): 3-step new payment (payee, amount and date, review), with the approval chain evaluated live from the policy rules. Drafts can be edited, submitted or deleted. Pending payments can be cancelled by the initiator, or approved or rejected (reason required) in the Approver role. Detail deep link: `index.html?id=TRF-98234`.
-- **Saved payees** (`payees.html`): create, view, edit, delete.
-- **Accounts:** account detail with searchable, filterable transactions, move money between own accounts (now or scheduled, with scheduled cancel), receiving details and a CSV statement.
-- **Cards:** card detail, freeze or unfreeze, edit limit, issue card, cancel with confirmation.
-- **Team:** invite, edit role, remove or revoke with confirmation, resend invite, last-CFO guard.
-- **Expenses:** submit (receipt kept as a file name only), edit, delete, approve or reject with reason.
-- **Reports:** 30d, 90d, YTD or custom range with currency and source filters, CSV export generated client-side, report schedule.
-- **Approval policies** (`settings.html`): create, edit and delete rules with validation, change history, CSV export.
-- **States:** skeleton loading, empty and filtered-empty lists, not-found detail (`?id=UNKNOWN`), inline validation, a simulated load error (`?simulate=load-error`) and a save failure (`?demo=1`, **Demo tools → Fail the next save**) with Try again.
-- The design lens (`index.html?lens=1`) always uses the seed data, so forced evidence states stay stable.
+- **Data:** seeded from `data/seed.js` into `sessionStorage` on first load (`core.js`). Changes survive
+  navigation and reload within the tab; **Demo tools → Reset demo data** starts over.
+- **Requests** (`index.html`): 3-step new request (type and payee, amount and purpose, review) with the
+  chain evaluated live from the rules; advances and reimbursements go to the requester, vendor payments to a
+  vendor. Drafts can be edited, submitted or deleted; pending requests can be cancelled by the requester, or
+  approved or rejected (reason required) by the approver. Deep link: `index.html?id=REQ-2041`.
+- **Settlements** (`expenses.html`): receipts that settle an advance or claim money spent out of pocket;
+  add, edit, delete; the accountant approves or rejects with a reason.
+- **Funds** (`accounts.html`): Vietcombank, Techcombank and petty cash; searchable, filterable transactions;
+  move money now or scheduled, cancel a scheduled transfer; receiving details; CSV statement.
+- **Vendors** (`payees.html`, opened from Requests): create, view, edit, delete.
+- **Team:** invite, edit role, remove or revoke, resend invite; the last active Director is protected.
+- **Reports:** 30d, 90d, YTD or custom range, department and type filters, client-side CSV export, schedule.
+- **Approval rules** (`settings.html`): create, edit and delete rules with validation, history, CSV export.
+- **States:** skeleton loading, empty and filtered-empty lists, not-found detail (`?id=UNKNOWN`), inline
+  validation, a simulated load error (`?simulate=load-error`) and a save failure (`?demo=1`).
 
 ### Tests
 
@@ -74,8 +75,25 @@ py -3 -m http.server 8901 --bind 127.0.0.1
 NODE_PATH=<folder containing playwright> node --test qa/full-flows.test.cjs
 ```
 
-`qa/full-flows.test.cjs` covers every CRUD flow above, sign out and sign in, demo tools via `?demo=1`, reset, console errors, `href="#"` on every page, and a check that no product page shows prototype wording or demo tools without `?demo=1`.
+`qa/full-flows.test.cjs` (17 tests) covers every flow above, sign out and sign in, demo tools, reset,
+console errors, `href="#"` on every page, no prototype wording on product pages, and use at 390 px.
+`qa/synthetic-dogfood-integrity.spec.mjs` and `qa/evidence-lens.spec.mjs` run with `@playwright/test`.
 
-## Local review
+## Evidence status
 
-This repository includes static prototype/reviewer surfaces alongside the project implementation. Use the project’s existing development setup for local work, and treat the Vercel URL above as the canonical reviewer prototype unless the source-of-truth plan is updated.
+Verified DIRECT_USER sessions: **0**. Verified PROXY sessions: **0**.
+
+Forced states, browser tests, AI critique and recruiter feedback are not user validation. Do not claim
+faster approvals, fewer mistakes or better confidence until traceable sessions exist and the affected
+decision has been retested.
+
+## Not yet moved to the new content
+
+These still describe the earlier treasury version and must be updated before they are shown or used:
+
+- the design lens (`design-lens.html`) and its forced states, which still mention USD liquidity;
+- the documentation pages `design-system.html`, `component-states.html`, `sitemap.html`, `user-flow.html`
+  and `prototype.html`;
+- the Round 01 research package in `research/validation/flux-round-01/`, written for finance operations and
+  treasury participants. The right participants are now office staff, team leads and accountants in small
+  companies; the study has to be re-planned before recruiting.

@@ -83,6 +83,6 @@ test is replaced by an advance settlement test.
 |---|---|---|
 | 1. Seed and formatting | Done | 7 requests, 5 vendors, 4 VND rules; VND has no decimals; workspace and signed-in user renamed |
 | 2. Requests and request form | Done | Request type first; vendor picker only for vendor payments; VND only; rail ends at Payout by the accountant; flow tests rewritten for the new data (18/18, one new advance test), Playwright specs 6/6 |
-| 3. Settlements, Funds, Vendors | Next | Expenses, Accounts and Payees still show the old treasury content |
-| 4. Team, Reports, Approval rules, remove Cards | Next | Team and Settings still list the old roles next to the new ones; sign-in email stays on the old domain until Team moves |
-| 5. README, PROJECT-CONTEXT, case study | Next | |
+| 3. Settlements, Funds, Vendors | Done | Receipts settle advances; three VND funds; local vendors with city and bank |
+| 4. Team, Reports, Approval rules, remove Cards | Done | New roles and Director guard; reports by department in VND; rule builder with request_type; Cards removed; sign-in lan.vo@minhan.vn |
+| 5. README, PROJECT-CONTEXT, case study | Done in Flux; case study in the portfolio repo | Design lens, doc pages and the Round 01 research package still describe the treasury version (listed in README) |
