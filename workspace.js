@@ -9,7 +9,6 @@
   F.onReady(() => {
     const page = document.body.dataset.page;
     if (page === 'accounts') initAccounts();
-    if (page === 'cards') initCards();
     if (page === 'team') initTeam();
     if (page === 'expenses') initExpenses();
     if (page === 'reports') initReports();
@@ -23,7 +22,7 @@
     if (Number.isNaN(amount)) return 'Use digits only, with up to 2 decimals.';
     if (amount <= 0) return 'Amount must be greater than zero.';
     if ((currency === 'JPY' || currency === 'VND') && !Number.isInteger(amount)) return `${currency} amounts have no decimals.`;
-    if (max && F.toUsd(amount, currency) > max) return `Above the USD ${fmt.whole(max)} limit.`;
+    if (max && amount > max) return `Above the ${currency} ${fmt.whole(max)} limit.`;
     return '';
   }
 
@@ -291,193 +290,6 @@
   }
 
   /* =====================================================================
-     Cards
-     ===================================================================== */
-  function initCards() {
-    const tbody = document.getElementById('cards-body');
-    const pane = document.getElementById('card-pane');
-    const search = document.getElementById('card-search');
-    const filterButtons = [...document.querySelectorAll('[data-card-filter]')];
-    let selectedId = F.getParam('id');
-    const STATUS = { Active: 'status status-success', Frozen: 'status status-neutral', Pending: 'status status-pending', Cancelled: 'status status-danger' };
-
-    function rows() {
-      const filter = document.querySelector('[data-card-filter].active')?.dataset.cardFilter || 'all';
-      const q = (search.value || '').trim().toLowerCase();
-      return store.list('cards').filter((c) => (filter === 'all' || c.status === filter) && (!q || `${c.holder} ${c.last4} ${c.program} ${c.department}`.toLowerCase().includes(q)));
-    }
-
-    function render() {
-      const all = store.list('cards');
-      const live = all.filter((c) => c.status !== 'Cancelled');
-      // Counts live on the status tabs; the Active tab also carries this month's spend.
-      document.querySelectorAll('[data-count]').forEach((el) => { el.textContent = String(el.dataset.count === 'all' ? all.length : all.filter((c) => c.status === el.dataset.count).length); });
-      const spend = live.reduce((s, c) => s + F.toUsd(c.monthly, c.currency), 0);
-      document.querySelectorAll('[data-sum="spend"]').forEach((el) => { el.textContent = `USD ${fmt.whole(spend)} this month`; });
-      const list = rows();
-      tbody.innerHTML = list.map((c) => `<tr tabindex="0" data-id="${esc(c.id)}" class="${c.status === 'Cancelled' ? 'row-muted' : ''}"><td><span class="table-strong">${esc(c.holder)}</span><span class="subcopy mono">•••• ${esc(c.last4)}</span></td><td>${esc(c.type)}</td><td><span class="${STATUS[c.status]}">${esc(c.status)}</span></td><td class="right mono">${fmt.number(c.monthly, c.currency)}</td><td class="right mono">${fmt.number(c.limit, c.currency)}</td><td>${esc(c.program)}</td></tr>`).join('');
-      listEmpty(document.getElementById('cards-empty'), {
-        all: all.length, rows: list.length,
-        emptyTitle: 'No company cards', emptyBody: 'Issue a virtual or physical card with a monthly limit and a spend program.', emptyAction: 'Issue card', onEmptyAction: openIssue,
-        filteredTitle: 'No matching cards', onClear: () => { search.value = ''; setSegment(filterButtons, 'cardFilter', 'all'); render(); }
-      });
-      if (!selectedId && list.length) selectedId = list[0].id;
-      F.markSelected(tbody, selectedId);
-      renderPane();
-    }
-
-    function renderPane() {
-      const c = store.find('cards', selectedId);
-      const missing = document.getElementById('card-not-found');
-      const body = document.getElementById('card-pane-body');
-      if (!c) { paneMissing(missing, body, { empty: !store.list('cards').length, id: selectedId, noun: 'Card', onShowFirst: () => select(store.list('cards')[0].id) }); return; }
-      paneShow(missing, body);
-      setText('card-pane-holder', c.holder);
-      setText('card-pane-last4', c.last4);
-      setText('card-pane-type', c.type);
-      setText('card-pane-expiry', c.expiry);
-      setText('card-pane-id', c.id);
-      setText('card-pane-owner', c.holder);
-      setText('card-pane-department', c.department);
-      setText('card-pane-program', c.program);
-      setText('card-pane-monthly', fmt.money(c.monthly, c.currency));
-      setText('card-pane-limit', fmt.money(c.limit, c.currency));
-      const status = document.getElementById('card-pane-status');
-      status.textContent = c.status;
-      status.className = STATUS[c.status];
-      document.getElementById('corporate-card').classList.toggle('is-inactive', c.status !== 'Active');
-      const fill = document.getElementById('card-limit-fill');
-      const pct = Math.min(100, Math.max(0, (c.monthly / (c.limit || 1)) * 100));
-      fill.style.width = `${pct}%`;
-      fill.classList.toggle('warning', pct >= 85);
-      const freeze = document.getElementById('freeze-card');
-      const cancelled = c.status === 'Cancelled';
-      freeze.textContent = c.status === 'Frozen' ? 'Unfreeze card' : c.status === 'Pending' ? 'Activate card' : 'Freeze card';
-      freeze.disabled = cancelled;
-      document.getElementById('cancel-card').disabled = cancelled;
-      document.getElementById('edit-limit').disabled = cancelled;
-      setText('card-hint', {
-        Active: 'Freezing declines new spend immediately and can be undone.',
-        Frozen: 'Frozen cards decline all spend. Unfreeze to restore the card.',
-        Pending: 'Physical card issued. Activate it once the cardholder confirms receipt.',
-        Cancelled: 'Cancelled cards cannot be reactivated. Issue a new card instead.'
-      }[c.status]);
-    }
-
-    function select(id, user) { selectedId = id; F.setParam('id', id); F.markSelected(tbody, id); renderPane(); F.revealPane(pane, user); }
-
-    async function toggleFreeze() {
-      const c = store.find('cards', selectedId);
-      const button = document.getElementById('freeze-card');
-      if (!c || c.status === 'Cancelled') return;
-      const next = c.status === 'Active' ? 'Frozen' : 'Active';
-      const original = button.textContent;
-      button.disabled = true;
-      button.textContent = 'Saving…';
-      try {
-        await store.commit((s) => { s.cards.find((x) => x.id === c.id).status = next; });
-        render();
-        F.toast(next === 'Frozen' ? `Card •••• ${c.last4} frozen. New spend is declined.` : c.status === 'Pending' ? `Card •••• ${c.last4} activated.` : `Card •••• ${c.last4} unfrozen.`);
-      } catch (error) {
-        button.disabled = false;
-        button.textContent = original;
-        F.toast(`${error.message}`, 'error');
-      }
-    }
-
-    function cancelCard() {
-      const c = store.find('cards', selectedId);
-      if (!c) return;
-      F.confirmAction({
-        kicker: 'Company card',
-        title: `Cancel card •••• ${c.last4}?`,
-        body: `${c.holder}'s ${c.type.toLowerCase()} card stops working permanently and pending authorisations are declined. This cannot be undone.`,
-        confirmLabel: 'Cancel card',
-        busyLabel: 'Cancelling…',
-        reason: { label: 'Reason (optional)', required: false, placeholder: 'For example: card lost, employee left' },
-        action: (reason) => store.commit((s) => { const t = s.cards.find((x) => x.id === c.id); t.status = 'Cancelled'; t.cancelReason = reason; }).then(() => { render(); F.toast(`Card •••• ${c.last4} cancelled.`); })
-      });
-    }
-
-    /* Edit limit */
-    const limitForm = document.getElementById('limit-form');
-    function openLimit() {
-      const c = store.find('cards', selectedId);
-      if (!c) return;
-      limitForm.reset();
-      limitForm.elements.program.innerHTML = store.list('cardPrograms').map((p) => `<option>${esc(p)}</option>`).join('');
-      limitForm.elements.limit.value = fmt.number(c.limit, c.currency);
-      limitForm.elements.program.value = c.program;
-      setText('limit-prefix', c.currency);
-      setText('limit-kicker', `Card •••• ${c.last4}`);
-      setText('limit-hint', `Spent this cycle: ${fmt.money(c.monthly, c.currency)}. Maximum limit USD 50,000.`);
-      F.openDialog('limit-dialog');
-    }
-    F.bindForm(limitForm, {
-      validate(v) {
-        const c = store.find('cards', selectedId);
-        const e = {};
-        const err = amountError(v.limit, c.currency, { max: 50000 });
-        if (err) e.limit = err;
-        else if (F.parseAmount(v.limit) < c.monthly) e.limit = `Below this cycle's spend of ${fmt.money(c.monthly, c.currency)}. Freeze the card to stop spend instead.`;
-        return e;
-      },
-      submit(v) {
-        const id = selectedId;
-        return store.commit((s) => { const t = s.cards.find((x) => x.id === id); t.limit = F.parseAmount(v.limit); t.program = v.program; return t; })
-          .then((t) => { render(); F.toast(`Limit for •••• ${t.last4} set to ${fmt.money(t.limit, t.currency)}.`); });
-      }
-    });
-
-    /* Issue card */
-    const issueForm = document.getElementById('issue-card-form');
-    function openIssue() {
-      issueForm.reset();
-      issueForm.elements.holder.innerHTML = store.list('members').map((m) => `<option value="${esc(m.name)}">${esc(m.name)}, ${esc(m.team)}${m.status === 'Invited' ? ' (invited)' : ''}</option>`).join('') + '<option value="Jamie Stone">Jamie Stone, Finance</option>';
-      issueForm.elements.program.innerHTML = store.list('cardPrograms').map((p) => `<option>${esc(p)}</option>`).join('');
-      F.openDialog('issue-card-dialog');
-    }
-    F.bindForm(issueForm, {
-      busyLabel: 'Issuing…',
-      validate(v) {
-        const e = {};
-        if (!v.holder) e.holder = 'Choose a cardholder.';
-        const err = amountError(v.limit, v.currency, { max: 50000 });
-        if (err) e.limit = err;
-        if (store.list('cards').some((c) => c.holder === v.holder && c.type === v.type && c.program === v.program && c.status !== 'Cancelled')) e.holder = `${v.holder} already has a ${v.type.toLowerCase()} card in ${v.program}.`;
-        return e;
-      },
-      submit(v) {
-        return store.commit((s) => {
-          const used = new Set(s.cards.map((c) => c.last4));
-          let n = (Date.now() % 9000) + 1000;
-          while (used.has(String(n))) n = n === 9999 ? 1000 : n + 1;
-          const member = s.members.find((m) => m.name === v.holder);
-          const card = { id: `CRD-${n}`, holder: v.holder, last4: String(n), type: v.type, status: v.type === 'Virtual' ? 'Active' : 'Pending', currency: v.currency, monthly: 0, limit: F.parseAmount(v.limit), department: member?.team || 'Finance', program: v.program, expiry: '09 / 29' };
-          s.cards.unshift(card);
-          return card;
-        }).then((card) => {
-          selectedId = card.id;
-          F.setParam('id', card.id);
-          search.value = '';
-          setSegment(filterButtons, 'cardFilter', 'all');
-          render();
-          F.toast(card.status === 'Active' ? `Virtual card •••• ${card.last4} issued to ${card.holder}. It is ready to use.` : `Physical card •••• ${card.last4} issued to ${card.holder}. It stays Pending until activated.`);
-        });
-      }
-    });
-
-    document.getElementById('open-issue-card').addEventListener('click', openIssue);
-    document.getElementById('freeze-card').addEventListener('click', toggleFreeze);
-    document.getElementById('cancel-card').addEventListener('click', cancelCard);
-    document.getElementById('edit-limit').addEventListener('click', openLimit);
-    filterButtons.forEach((b) => b.addEventListener('click', () => { setSegment(filterButtons, 'cardFilter', b.dataset.cardFilter); render(); }));
-    search.addEventListener('input', render);
-    F.bindRows(tbody, select);
-    F.loadView({ region: document.getElementById('cards-region'), tbody, columns: 6, noun: 'cards', render });
-  }
-
-  /* =====================================================================
      Team
      ===================================================================== */
   function initTeam() {
@@ -486,7 +298,7 @@
     const search = document.getElementById('member-search');
     const roleFilter = document.getElementById('role-filter');
     let selectedId = F.getParam('id');
-    const AREAS = [['accounts', 'Accounts'], ['payments', 'Payments'], ['cards', 'Cards'], ['team', 'Team']];
+    const AREAS = [['accounts', 'Funds'], ['payments', 'Requests'], ['cards', 'Settlements'], ['team', 'Team']];
     const LEVELS = [['view', 'View'], ['create', 'Create'], ['approve', 'Approve'], ['admin', 'Admin']];
     const initials = (name) => name.split(/\s+/).map((p) => p[0]).join('').slice(0, 2).toUpperCase();
     const perms = (role) => store.state.roleTemplates[role] || [];
@@ -502,9 +314,9 @@
       const active = all.filter((m) => m.status === 'Active');
       setText('metric-members', fmt.pad2(active.length));
       setText('metric-members-note', `Across ${new Set(active.map((m) => m.team)).size} functional teams`);
-      const approvers = active.filter((m) => ['Finance manager', 'CFO'].includes(m.role));
+      const approvers = active.filter((m) => ['Team lead', 'Accountant', 'Director'].includes(m.role));
       setText('metric-approvers', fmt.pad2(approvers.length));
-      setText('metric-approvers-note', `${approvers.filter((m) => m.role === 'CFO').length} with CFO authority`);
+      setText('metric-approvers-note', `${approvers.filter((m) => m.role === 'Director').length} with final approval`);
       setText('metric-roles', fmt.pad2(new Set(all.map((m) => m.role)).size));
       setText('metric-invites', fmt.pad2(all.filter((m) => m.status === 'Invited').length));
       const list = rows();
@@ -520,13 +332,14 @@
     }
 
     function duty(m) {
-      const first = m.name.split(' ')[0];
+      // Vietnamese names start with the family name, so the note uses the full name.
+      const first = m.name;
       return {
-        'Finance manager': `<strong>Separation of duties intact.</strong> ${esc(first)} can create and approve payments for other team members, but cannot edit policy rules or grant access.`,
-        CFO: `<strong>Final approval authority.</strong> ${esc(first)} can administer payments, cards and team access. Policy still blocks approving their own payments.`,
-        Bookkeeper: `<strong>Read-only finance access.</strong> ${esc(first)} can reconcile accounts but cannot create or approve money movement.`,
-        Employee: `<strong>Own spend only.</strong> ${esc(first)} can view their own cards. Payments and approvals are out of scope.`,
-        Admin: `<strong>Access administrator.</strong> ${esc(first)} manages access and card programs but cannot approve payments.`
+        'Team lead': `<strong>First approval.</strong> ${esc(first)} approves requests from their team but cannot pay out or change the rules.`,
+        Director: `<strong>Final approval.</strong> ${esc(first)} approves large requests and manages funds and team access. Rules still block approving their own requests.`,
+        Accountant: `<strong>Checks and pays out.</strong> ${esc(first)} checks receipts and new vendors and pays out approved requests.`,
+        Employee: `<strong>Own requests only.</strong> ${esc(first)} creates advances, reimbursements and vendor payments and settles their receipts.`,
+        Admin: `<strong>Access administrator.</strong> ${esc(first)} manages who can use Flux but cannot approve or pay out.`
       }[m.role] || '';
     }
 
@@ -560,7 +373,7 @@
 
     function select(id, user) { selectedId = id; F.setParam('id', id); F.markSelected(tbody, id); renderPane(); F.revealPane(pane, user); }
 
-    const onlyCfo = (m) => m.role === 'CFO' && store.list('members').filter((x) => x.role === 'CFO' && x.status === 'Active').length <= 1;
+    const onlyDirector = (m) => m.role === 'Director' && store.list('members').filter((x) => x.role === 'Director' && x.status === 'Active').length <= 1;
 
     /* Invite */
     const inviteForm = document.getElementById('invite-form');
@@ -572,7 +385,7 @@
         if (v.name.length < 2) e.name = 'Enter the full name.';
         const email = v.email.toLowerCase();
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e.email = 'Enter a valid work email.';
-        else if (!email.endsWith('@northstar.co')) e.email = 'Use a northstar.co work email.';
+        else if (!email.endsWith('@minhan.vn')) e.email = 'Use a minhan.vn work email.';
         else {
           const existing = store.list('members').find((m) => m.email.toLowerCase() === email);
           if (existing) e.email = existing.status === 'Invited' ? 'This person is already invited. Resend the invite instead.' : 'This person is already a member.';
@@ -617,7 +430,7 @@
     F.bindForm(memberForm, {
       validate(v) {
         const m = store.find('members', selectedId);
-        return m && onlyCfo(m) && v.role !== 'CFO' ? { role: `${m.name} is the only active CFO. Assign another CFO first.` } : {};
+        return m && onlyDirector(m) && v.role !== 'Director' ? { role: `${m.name} is the only active Director. Assign another Director first.` } : {};
       },
       submit(v) {
         const id = selectedId;
@@ -629,7 +442,7 @@
     function removeMember() {
       const m = store.find('members', selectedId);
       if (!m) return;
-      if (onlyCfo(m)) { F.toast(`${m.name} is the only active CFO. Assign another CFO before removing them.`, 'error'); return; }
+      if (onlyDirector(m)) { F.toast(`${m.name} is the only active Director. Assign another Director before removing them.`, 'error'); return; }
       const invited = m.status === 'Invited';
       F.confirmAction({
         kicker: 'Identity and access',
@@ -917,8 +730,12 @@
 
     function ledger() {
       const rows = window.FLUX_LEDGER();
-      store.list('payments').filter((p) => ['processing', 'completed'].includes(p.status)).forEach((p) => rows.push({ id: p.id, date: p.createdAt.slice(0, 10), category: 'Supplier payments', currency: p.currency, source: 'payment', amountUsd: Math.round(F.toUsd(p.amount, p.currency) * 100) / 100, fxCostUsd: p.currency === 'USD' ? 0 : Math.round(F.toUsd(p.amount, p.currency) * 0.0099 * 100) / 100, exception: false }));
-      store.list('expenses').filter((x) => x.status === 'approved').forEach((x) => rows.push({ id: x.id, date: x.date, category: x.category, currency: x.currency, source: 'expense', amountUsd: Math.round(F.toUsd(x.amount, x.currency) * 100) / 100, fxCostUsd: 0, exception: false }));
+      // Live rows: approved requests and receipts join the generated ledger. Field names follow the seed ledger.
+      const SOURCE = { Advance: 'advance', 'Vendor payment': 'vendor', Reimbursement: 'receipt' };
+      const CATEGORY = { Advance: 'Travel', 'Vendor payment': 'Vendor purchases', Reimbursement: 'Meals with clients' };
+      const deptOf = (name) => ({ Finance: 'Office', Management: 'Office' })[store.list('members').find((m) => m.name === name)?.team] || store.list('members').find((m) => m.name === name)?.team || 'Sales';
+      store.list('payments').filter((p) => ['processing', 'completed'].includes(p.status)).forEach((p) => rows.push({ id: p.id, date: p.createdAt.slice(0, 10), category: CATEGORY[p.type] || 'Vendor purchases', currency: deptOf(p.requester), source: SOURCE[p.type] || 'vendor', amountUsd: p.amount, fxCostUsd: p.type === 'Advance' ? p.amount : 0, exception: false }));
+      store.list('expenses').filter((x) => x.status === 'approved').forEach((x) => rows.push({ id: x.id, date: x.date, category: x.category, currency: deptOf(x.owner), source: 'receipt', amountUsd: x.amount, fxCostUsd: 0, exception: false }));
       return rows;
     }
     const allRows = ledger();
@@ -955,10 +772,10 @@
       const prevTotal = previous.reduce((s, r) => s + r.amountUsd, 0);
       const fx = current.reduce((s, r) => s + r.fxCostUsd, 0);
       const label = { '30d': '30d', '90d': '90d', ytd: 'YTD', custom: 'range' }[range];
-      setText('report-total-spend', `$${fmt.whole(total)}`);
+      setText('report-total-spend', `VND ${fmt.whole(total)}`);
       setText('report-spend-delta', prevTotal ? `${total >= prevTotal ? '+' : '-'}${Math.abs(((total - prevTotal) / prevTotal) * 100).toFixed(1)}%` : 'n/a');
-      setText('report-fx-cost', `$${fmt.whole(fx)}`);
-      setText('report-fx-note', `${total ? ((fx / total) * 100).toFixed(2) : '0.00'}% blended conversion cost`);
+      setText('report-fx-cost', `VND ${fmt.whole(fx)}`);
+      setText('report-fx-note', `${total ? ((fx / total) * 100).toFixed(1) : '0.0'}% of spend went out as advances`);
       setText('report-exceptions-label', `Policy exceptions, ${label}`);
       setText('report-exceptions', fmt.pad2(current.filter((r) => r.exception).length));
       setText('report-entries', fmt.whole(current.length));
@@ -977,7 +794,7 @@
         wrap.hidden = true;
         meta.hidden = true;
         empty.hidden = false;
-        empty.innerHTML = F.stateBlock({ icon: 'search', title: 'No spend in this view', body: 'Widen the date range or clear the currency and source filters.', action: 'Reset filters' });
+        empty.innerHTML = F.stateBlock({ icon: 'search', title: 'No spend in this view', body: 'Widen the date range or clear the department and type filters.', action: 'Reset filters' });
         empty.querySelector('[data-state-action]').addEventListener('click', reset);
         return;
       }
@@ -994,20 +811,20 @@
         buckets.push({ date: d, value: sum });
       }
       const peak = Math.max(...[...byDay.values()]);
-      setText('chart-average', `$${fmt.whole(total / days)}`);
-      setText('chart-peak', `$${fmt.whole(peak)}`);
+      setText('chart-average', `VND ${fmt.whole(total / days)}`);
+      setText('chart-peak', `VND ${fmt.whole(peak)}`);
       const sep = allRows.filter((r) => r.date >= '2026-09-01' && r.date <= LEDGER_END && (currencyInput.value === 'all' || r.currency === currencyInput.value) && (sourceInput.value === 'all' || r.source === sourceInput.value)).reduce((s, r) => s + r.amountUsd, 0);
-      setText('chart-projected', `$${fmt.whole((sep / 15) * 30)}`);
-      setText('chart-caption', `Settled and approved spend, USD equivalent, ${weekly ? 'weekly' : 'daily'} totals`);
+      setText('chart-projected', `VND ${fmt.whole((sep / 15) * 30)}`);
+      setText('chart-caption', `Approved spend in VND, ${weekly ? 'weekly' : 'daily'} totals`);
       const max = Math.max(...buckets.map((b) => b.value), 1);
       const niceMax = Math.ceil(max / 4000) * 4000 || 4000;
       const x = (i) => 40 + (buckets.length === 1 ? 350 : (i / (buckets.length - 1)) * 700);
       const y = (v) => 195 - (v / niceMax) * 165;
       const points = buckets.map((b, i) => `${x(i).toFixed(1)} ${y(b.value).toFixed(1)}`);
       const peakIndex = buckets.findIndex((b) => b.value === Math.max(...buckets.map((q) => q.value)));
-      const ticks = [0, 1, 2, 3].map((i) => { const v = (niceMax / 4) * (4 - i) ; return `<line class="chart-grid" x1="40" y1="${30 + i * 55}" x2="740" y2="${30 + i * 55}"/><text class="chart-axis" x="0" y="${34 + i * 55}">${fmt.whole(v / 1000)}K</text>`; }).join('');
+      const ticks = [0, 1, 2, 3].map((i) => { const v = (niceMax / 4) * (4 - i) ; return `<line class="chart-grid" x1="40" y1="${30 + i * 55}" x2="740" y2="${30 + i * 55}"/><text class="chart-axis" x="0" y="${34 + i * 55}">${fmt.whole(v / 1000000)}M</text>`; }).join('');
       const mid = buckets[Math.floor((buckets.length - 1) / 2)].date;
-      wrap.innerHTML = `<svg class="chart-svg" viewBox="0 0 760 220" role="img" aria-label="Operating spend from ${fmt.date(from)} to ${fmt.date(to)}, peak ${weekly ? 'week' : 'day'} USD ${fmt.whole(buckets[peakIndex].value)}">
+      wrap.innerHTML = `<svg class="chart-svg" viewBox="0 0 760 220" role="img" aria-label="Operating spend from ${fmt.date(from)} to ${fmt.date(to)}, peak ${weekly ? 'week' : 'day'} VND ${fmt.whole(buckets[peakIndex].value)}">
         ${ticks}<line class="chart-grid" x1="40" y1="195" x2="740" y2="195"/>
         <path class="chart-area" d="M${points.join(' L')} L${x(buckets.length - 1).toFixed(1)} 195 L40 195 Z"/>
         <path class="chart-line" pathLength="1" d="M${points.join(' L')}"/>
@@ -1023,16 +840,17 @@
       current.forEach((r) => map.set(r.category, (map.get(r.category) || 0) + r.amountUsd));
       const ranked = [...map.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5);
       document.getElementById('rank-list').innerHTML = ranked.length
-        ? ranked.map(([name, value], i) => `<li class="rank-item"><span class="rank-index">${fmt.pad2(i + 1)}</span><div class="rank-copy"><strong>${esc(name)}</strong><span>${((value / total) * 100).toFixed(1)}% of total spend</span></div><span class="rank-value">$${fmt.whole(value)}</span></li>`).join('')
+        ? ranked.map(([name, value], i) => `<li class="rank-item"><span class="rank-index">${fmt.pad2(i + 1)}</span><div class="rank-copy"><strong>${esc(name)}</strong><span>${((value / total) * 100).toFixed(1)}% of total spend</span></div><span class="rank-value">${fmt.whole(value)}</span></li>`).join('')
         : '<li class="muted-line">No categories in this view.</li>';
     }
 
     function renderExposure(total, fx) {
-      const cells = ['USD', 'EUR', 'JPY', 'GBP', 'SGD'].map((c) => {
+      // Spend by department; the advance share replaces the old FX cost cell.
+      const cells = ['Sales','Operations','Office','Marketing'].map((c) => {
         const v = current.filter((r) => r.currency === c).reduce((s, r) => s + r.amountUsd, 0);
-        return [c, total ? `${((v / total) * 100).toFixed(1)}%` : '—', c === 'USD' ? 'Base currency' : `$${fmt.whole(v)}`];
+        return [c.toUpperCase(), total ? `${((v / total) * 100).toFixed(1)}%` : '—', `VND ${fmt.whole(v)}`];
       });
-      cells.push(['FX COST', total ? `${((fx / total) * 100).toFixed(2)}%` : '—', 'Blended'], ['ENTRIES', fmt.whole(current.length), 'In this view'], ['EXCEPTIONS', fmt.pad2(current.filter((r) => r.exception).length), 'Flagged entries']);
+      cells.push(['ADVANCES', total ? `${((fx / total) * 100).toFixed(1)}%` : '—', 'Of spend'], ['ENTRIES', fmt.whole(current.length), 'In this view'], ['EXCEPTIONS', fmt.pad2(current.filter((r) => r.exception).length), 'Flagged entries'], ['AVERAGE', current.length ? fmt.whole(total / current.length) : '—', 'VND per entry']);
       document.getElementById('exposure-matrix').innerHTML = cells.map(([k, v, note]) => `<div class="exposure-cell"><span>${esc(k)}</span><strong>${esc(v)}</strong><small>${esc(note)}</small></div>`).join('');
     }
 
@@ -1052,8 +870,8 @@
       if (document.querySelector('#report-filters [aria-invalid="true"]')) { F.toast('Fix the date range before exporting.', 'error'); return; }
       if (!current.length) { F.toast('Nothing to export. The current view has no entries.', 'error'); return; }
       const filename = `flux-report-${fromInput.value}_${toInput.value}.csv`;
-      const rows = [['Entry', 'Date', 'Category', 'Source', 'Currency', 'Amount (USD)', 'FX cost (USD)', 'Policy exception']]
-        .concat(current.slice().sort((a, b) => (a.date < b.date ? -1 : 1)).map((r) => [r.id, r.date, r.category, r.source, r.currency, r.amountUsd.toFixed(2), r.fxCostUsd.toFixed(2), r.exception ? 'yes' : 'no']));
+      const rows = [['Entry', 'Date', 'Category', 'Source', 'Department', 'Amount (VND)', 'Advance (VND)', 'Policy exception']]
+        .concat(current.slice().sort((a, b) => (a.date < b.date ? -1 : 1)).map((r) => [r.id, r.date, r.category, r.source, r.currency, r.amountUsd.toFixed(0), r.fxCostUsd.toFixed(0), r.exception ? 'yes' : 'no']));
       F.downloadCsv(filename, rows);
       F.toast(`${current.length} rows exported to ${filename}. Generated in your browser.`);
     });

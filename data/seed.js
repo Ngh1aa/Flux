@@ -11,24 +11,18 @@
       baseCurrency: 'USD',
       // The workspace clock starts here and advances in real time.
       clockStart: '2026-09-15T15:02:00',
-      // Email and password stay on the old domain until the Team screen moves to the new content (step 4).
-      currentUser: { name: 'Võ Ngọc Lan', title: 'Sales', role: 'Employee', email: 'jamie.stone@northstar.co', initials: 'NL' },
+      currentUser: { name: 'Võ Ngọc Lan', title: 'Sales', role: 'Employee', email: 'lan.vo@minhan.vn', initials: 'NL' },
       // Seeded sign-in for the login screen (session only).
-      credentials: { email: 'jamie.stone@northstar.co', password: 'northstar' }
+      credentials: { email: 'lan.vo@minhan.vn', password: 'minhan' }
     },
 
     fx: { USD: 1, EUR: 1.09, GBP: 1.27, JPY: 0.0068, SGD: 0.74, VND: 0.0000394 },
 
-    // Team lead, Director and Accountant run the request chain. The old roles stay for the Team and
-    // Settings screens until they move to the new content (step 4).
+    // Who approves at each step of the request chain.
     approverDirectory: {
       'Team lead': 'Lê Minh Khoa',
       Director: 'Trần Quốc Bảo',
-      Accountant: 'Nguyễn Thu Hà',
-      'Finance manager': 'Alex Smith',
-      CFO: 'Sarah Jensen',
-      Controller: 'Mateo Ruiz',
-      'Treasury lead': 'Sarah Jensen'
+      Accountant: 'Nguyễn Thu Hà'
     },
 
     // Vendors the company pays directly.
@@ -137,30 +131,21 @@
       { id: 'TX-70021', accountId: 'CASH', date: '2026-09-05T14:40:11', description: 'Paid REQ-2027 advance', counterparty: 'Võ Ngọc Lan', direction: 'debit', amount: 8000000, status: 'posted' }
     ],
 
-    cards: [
-      { id: 'CRD-4821', holder: 'Jamie Stone', last4: '4821', type: 'Physical', status: 'Active', currency: 'USD', monthly: 4860.2, limit: 7500, department: 'Finance', program: 'Core operations', expiry: '09 / 29' },
-      { id: 'CRD-1104', holder: 'Maya Chen', last4: '1104', type: 'Virtual', status: 'Active', currency: 'USD', monthly: 8210, limit: 12000, department: 'Growth', program: 'Demand generation', expiry: '03 / 28' },
-      { id: 'CRD-7718', holder: 'Luca Meyer', last4: '7718', type: 'Physical', status: 'Frozen', currency: 'EUR', monthly: 1420.8, limit: 5000, department: 'Operations', program: 'EU field ops', expiry: '11 / 27' },
-      { id: 'CRD-9632', holder: 'Priya Nair', last4: '9632', type: 'Virtual', status: 'Active', currency: 'USD', monthly: 11942.45, limit: 15000, department: 'Engineering', program: 'Cloud infrastructure', expiry: '06 / 28' },
-      { id: 'CRD-2844', holder: 'Theo Brooks', last4: '2844', type: 'Physical', status: 'Pending', currency: 'USD', monthly: 0, limit: 3500, department: 'Sales', program: 'Client travel', expiry: '09 / 29' }
-    ],
-
-    cardPrograms: ['Core operations', 'Demand generation', 'EU field ops', 'Cloud infrastructure', 'Client travel'],
-
+    // Permission areas: accounts = Funds, payments = Requests, cards = Settlements, team = Team.
     roleTemplates: {
-      Employee: ['cards-view'],
-      Bookkeeper: ['accounts-view', 'payments-view', 'cards-view', 'team-view'],
-      'Finance manager': ['accounts-view', 'payments-view', 'payments-create', 'payments-approve', 'cards-view', 'cards-create', 'team-view'],
-      CFO: ['accounts-view', 'payments-view', 'payments-create', 'payments-approve', 'payments-admin', 'cards-view', 'cards-create', 'cards-admin', 'team-view', 'team-admin'],
-      Admin: ['accounts-view', 'accounts-admin', 'payments-view', 'cards-view', 'cards-admin', 'team-view', 'team-create', 'team-admin']
+      Employee: ['payments-view', 'payments-create', 'cards-view', 'cards-create'],
+      'Team lead': ['payments-view', 'payments-create', 'payments-approve', 'cards-view', 'cards-create', 'team-view'],
+      Accountant: ['accounts-view', 'accounts-create', 'payments-view', 'payments-approve', 'cards-view', 'cards-approve', 'team-view'],
+      Director: ['accounts-view', 'accounts-create', 'accounts-admin', 'payments-view', 'payments-create', 'payments-approve', 'payments-admin', 'cards-view', 'cards-approve', 'cards-admin', 'team-view', 'team-admin'],
+      Admin: ['accounts-view', 'payments-view', 'cards-view', 'team-view', 'team-create', 'team-admin']
     },
 
     members: [
-      { id: 'MEM-01', name: 'Alex Smith', email: 'alex.smith@northstar.co', role: 'Finance manager', team: 'Finance', region: 'EU', status: 'Active', lastSeen: '2026-09-15T14:58:00' },
-      { id: 'MEM-02', name: 'Sarah Jensen', email: 'sarah.jensen@northstar.co', role: 'CFO', team: 'Executive', region: 'Global', status: 'Active', lastSeen: '2026-09-15T14:41:00' },
-      { id: 'MEM-03', name: 'Priya Nair', email: 'priya.nair@northstar.co', role: 'Employee', team: 'Engineering', region: 'US', status: 'Active', lastSeen: '2026-09-15T13:36:00' },
-      { id: 'MEM-04', name: 'Mateo Ruiz', email: 'mateo.ruiz@northstar.co', role: 'Bookkeeper', team: 'Accounting', region: 'EU', status: 'Active', lastSeen: '2026-09-15T11:22:00' },
-      { id: 'MEM-05', name: 'Theo Brooks', email: 'theo.brooks@northstar.co', role: 'Employee', team: 'Sales', region: 'UK', status: 'Invited', lastSeen: null, invitedAt: '2026-09-15T09:10:00' }
+      { id: 'MEM-01', name: 'Lê Minh Khoa', email: 'khoa.le@minhan.vn', role: 'Team lead', team: 'Sales', region: 'Hồ Chí Minh City', status: 'Active', lastSeen: '2026-09-15T14:58:00' },
+      { id: 'MEM-02', name: 'Trần Quốc Bảo', email: 'bao.tran@minhan.vn', role: 'Director', team: 'Management', region: 'Hồ Chí Minh City', status: 'Active', lastSeen: '2026-09-15T14:41:00' },
+      { id: 'MEM-03', name: 'Đặng Hoàng Huy', email: 'huy.dang@minhan.vn', role: 'Employee', team: 'Operations', region: 'Hồ Chí Minh City', status: 'Active', lastSeen: '2026-09-15T13:36:00' },
+      { id: 'MEM-04', name: 'Nguyễn Thu Hà', email: 'ha.nguyen@minhan.vn', role: 'Accountant', team: 'Finance', region: 'Hồ Chí Minh City', status: 'Active', lastSeen: '2026-09-15T11:22:00' },
+      { id: 'MEM-05', name: 'Phạm Thanh Tâm', email: 'tam.pham@minhan.vn', role: 'Team lead', team: 'Operations', region: 'Hà Nội', status: 'Invited', lastSeen: null, invitedAt: '2026-09-15T09:10:00' }
     ],
 
     // Receipts that settle an advance, or that an employee paid out of pocket. VND only.
@@ -189,18 +174,19 @@
     reportSchedule: null
   };
 
-  // Deterministic operating-spend ledger for Reports (1 Jan to 15 Sep 2026).
-  // Generated, not stored, so the session copy stays small.
+  // Deterministic spend ledger for Reports (1 Jan to 15 Sep 2026), VND.
+  // Generated, not stored, so the session copy stays small. Field names are kept from the first version:
+  // currency holds the department, amountUsd the VND amount, fxCostUsd the part paid out as an advance.
   function generateLedger() {
     let s = 20260915;
     const rand = () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
     const categories = [
-      { name: 'Cloud infrastructure', weight: 28, currency: ['USD', 'EUR'], source: 'card', base: 1900 },
-      { name: 'Manufacturing services', weight: 22, currency: ['JPY'], source: 'payment', base: 4600 },
-      { name: 'Freight & logistics', weight: 16, currency: ['EUR'], source: 'payment', base: 3100 },
-      { name: 'Travel', weight: 10, currency: ['USD', 'EUR', 'GBP'], source: 'expense', base: 520 },
-      { name: 'Software', weight: 9, currency: ['USD'], source: 'card', base: 640 },
-      { name: 'Professional services', weight: 15, currency: ['GBP', 'USD', 'SGD'], source: 'payment', base: 2800 }
+      { name: 'Customer events', weight: 20, currency: ['Sales', 'Marketing'], source: 'advance', base: 2600000 },
+      { name: 'Vendor purchases', weight: 24, currency: ['Operations', 'Office'], source: 'vendor', base: 6200000 },
+      { name: 'Travel', weight: 18, currency: ['Sales', 'Operations'], source: 'advance', base: 1900000 },
+      { name: 'Meals with clients', weight: 12, currency: ['Sales'], source: 'receipt', base: 450000 },
+      { name: 'Office supplies', weight: 14, currency: ['Office'], source: 'receipt', base: 380000 },
+      { name: 'Marketing materials', weight: 12, currency: ['Marketing'], source: 'vendor', base: 3400000 }
     ];
     const total = categories.reduce((sum, c) => sum + c.weight, 0);
     const rows = [];
@@ -215,7 +201,7 @@
         let pick = rand() * total;
         const cat = categories.find((c) => (pick -= c.weight) < 0) || categories[0];
         const currency = cat.currency[Math.floor(rand() * cat.currency.length)];
-        const usd = Math.round(cat.base * trend * (0.45 + rand() * 1.4) * 100) / 100;
+        const usd = Math.round((cat.base * trend * (0.45 + rand() * 1.4)) / 1000) * 1000;
         rows.push({
           id: `LGR-${String(n).padStart(5, '0')}`,
           date: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`,
@@ -223,7 +209,7 @@
           currency,
           source: cat.source,
           amountUsd: usd,
-          fxCostUsd: currency === 'USD' ? 0 : Math.round(usd * 0.0099 * 100) / 100,
+          fxCostUsd: cat.source === 'advance' ? usd : 0,
           exception: rand() < 0.018
         });
         n += 1;

@@ -1,4 +1,4 @@
-/* Flux payments, saved payees and approval policies.
+/* Flux requests, vendors and approval rules.
    Reads and writes the session store in core.js. */
 (() => {
   'use strict';
@@ -21,7 +21,8 @@
   /* =====================================================================
      Policy evaluation (shared by payments and the policy builder)
      ===================================================================== */
-  const FIELD_LABELS = { amount: 'amount', currency: 'currency', beneficiary_age_days: 'beneficiary_age_days', created_outside_hours: 'created_outside_hours' };
+  const FIELD_LABELS = { amount: 'amount', request_type: 'request_type', beneficiary_age_days: 'vendor_age_days', created_outside_hours: 'outside_hours' };
+  const typeOf = (value) => TYPES.find((t) => t.toLowerCase() === String(value).trim().toLowerCase());
 
   function thresholdOf(value) { return Number(String(value).replace(/[^\d.]/g, '')); }
 
@@ -40,6 +41,7 @@
       const target = /base/i.test(value) ? store.state.meta.baseCurrency : String(value).trim().toUpperCase();
       return compare(context.currency, op, target);
     }
+    if (field === 'request_type') return compare(context.type, op, typeOf(value));
     if (field === 'beneficiary_age_days') return compare(context.ageDays, op, Number(value));
     if (field === 'created_outside_hours') return compare(String(context.outsideHours), op, String(value).trim().toLowerCase());
     return false;
@@ -60,6 +62,7 @@
       // Thresholds are written in VND; requests are always in VND.
       usd: currency === 'VND' ? amount : F.toUsd(amount, currency) / (store.state.fx.VND || 1),
       currency,
+      type,
       ageDays: Math.max(0, Math.floor((clock - created) / 86400000)),
       outsideHours: clock.getDay() === 0 || clock.getDay() === 6 || clock.getHours() < 8 || clock.getHours() >= 18
     };
@@ -938,7 +941,7 @@
         missing.hidden = false;
         const none = !store.list('policies').length;
         missing.innerHTML = none
-          ? F.stateBlock({ title: 'No rule selected', body: 'Create a rule to define who approves which payments.' })
+          ? F.stateBlock({ title: 'No rule selected', body: 'Create a rule to decide who approves which requests.' })
           : F.stateBlock({ icon: 'missing', title: `Rule ${selectedId} not found`, body: 'It may have been deleted, or the link is out of date.', action: 'Open first rule' });
         missing.querySelector('[data-state-action]')?.addEventListener('click', () => select(store.list('policies')[0].id));
         return;
@@ -998,18 +1001,17 @@
       const value = rawValue.trim();
       if (!value) return { error: 'Enter a value for this condition.' };
       if (field === 'amount') {
-        const m = value.match(/^(?:USD\s*)?([\d,]+(?:\.\d{1,2})?)$/i);
-        if (!m) return { error: 'Use an amount such as USD 25,000.' };
+        const m = value.match(/^(?:VND\s*)?([\d,]+)$/i);
+        if (!m) return { error: 'Use an amount such as VND 20,000,000.' };
         const n = Number(m[1].replace(/,/g, ''));
         if (!(n > 0)) return { error: 'Amount threshold must be above zero.' };
         if (op === '=' || op === '!=') return { error: 'Use > or < for amount thresholds.' };
-        return { value: `USD ${fmt.whole(n)}` };
+        return { value: `VND ${fmt.whole(n)}` };
       }
-      if (field === 'currency') {
-        if (op === '>' || op === '<') return { error: 'Currency supports = or != only.' };
-        if (/^base( currency)?$/i.test(value)) return { value: 'base currency' };
-        if (!/^[A-Za-z]{3}$/.test(value)) return { error: 'Use a 3-letter code such as EUR, or "base currency".' };
-        return { value: value.toUpperCase() };
+      if (field === 'request_type') {
+        if (op === '>' || op === '<') return { error: 'Request type supports = or != only.' };
+        if (!typeOf(value)) return { error: 'Use Advance, Reimbursement or Vendor payment.' };
+        return { value: typeOf(value) };
       }
       if (field === 'beneficiary_age_days') {
         if (!/^\d{1,4}$/.test(value)) return { error: 'Use a whole number of days, 0 to 9999.' };
@@ -1047,7 +1049,7 @@
         dirty = false;
         renderList();
         renderBuilder();
-        F.toast(`${snapshot.name} saved. New payments are evaluated with this rule.`);
+        F.toast(`${snapshot.name} saved. New requests are checked with this rule.`);
       }).catch((error) => {
         const alert = document.createElement('div');
         alert.className = 'form-alert';
@@ -1064,9 +1066,9 @@
       const name = draft.name;
       const id = draft.id;
       F.confirmAction({
-        kicker: 'Approval policies',
+        kicker: 'Approval rules',
         title: `Delete Rule ${fmt.pad2(index + 1)}?`,
-        body: `"${name}" stops applying to new payments. Payments already in approval keep their current chain.`,
+        body: `"${name}" stops applying to new requests. Requests already in approval keep their current chain.`,
         confirmLabel: 'Delete rule',
         busyLabel: 'Deleting…',
         action: () => store.commit((s) => {

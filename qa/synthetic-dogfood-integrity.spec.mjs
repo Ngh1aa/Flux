@@ -6,11 +6,8 @@ const baseURL = process.env.FLUX_BASE_URL || 'http://127.0.0.1:4173';
 test('source integrity repairs remain visible before human Round 01', async ({ page }) => {
   await page.goto(`${baseURL}/accounts.html`, { waitUntil: 'domcontentloaded' });
   await expect(page.getByText('Available to move', { exact: true })).toBeVisible();
-  await expect(page.getByText('Excludes reserved balances, 5 currencies', { exact: true })).toBeVisible();
+  await expect(page.getByText('Excludes reserved money, 3 sources', { exact: true })).toBeVisible();
 
-  await page.goto(`${baseURL}/cards.html`, { waitUntil: 'domcontentloaded' });
-  await expect(page.locator('.card-number')).toContainText('••••  ••••  ••••');
-  await expect(page.locator('.card-number')).not.toContainText('5412 · 8881 · 4902');
 
   await page.goto(`${baseURL}/index.html`, { waitUntil: 'domcontentloaded' });
   const processingRow = page.locator('.payment-row[data-status="processing"]').first();
@@ -25,7 +22,7 @@ test('source integrity repairs remain visible before human Round 01', async ({ p
 
   await page.goto(`${baseURL}/reports.html`, { waitUntil: 'domcontentloaded' });
   await expect(page.getByText('Projected Sep close', { exact: true })).toBeVisible();
-  await expect(page.getByText(/3 currency threshold signals are open/)).toBeVisible();
+  await expect(page.getByText(/advances are close to the 15-day settlement window/)).toBeVisible();
   await expect(page.getByText('Policy exceptions, 30d', { exact: true })).toBeVisible();
 });
 

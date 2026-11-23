@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="light">
-  <title>Flux — Approval policies</title>
+  <title>Flux — Approval rules</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="workspace.css">
 </head>
@@ -24,11 +24,10 @@
       <nav class="sidebar-nav">
         <p class="nav-section-label">Operations</p>
         <ul class="nav-list">
-          <li><a href="accounts.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16"></rect><path d="M3 9h18M9 9v11"></path></svg><span>Funds</span></a></li>
           <li><a href="index.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h12M12 3l4 4-4 4M20 17H8m4-4-4 4 4 4"></path></svg><span>Requests</span></a></li>
-          <li><a href="cards.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14"></rect><path d="M3 10h18"></path></svg><span>Cards</span></a></li>
-          <li><a href="team.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><path d="M3 20c.7-4 3-6 6-6s5.3 2 6 6M17 7h4M19 5v4"></path></svg><span>Team</span></a></li>
           <li><a href="expenses.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6"></path></svg><span>Settlements</span></a></li>
+          <li><a href="accounts.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16"></rect><path d="M3 9h18M9 9v11"></path></svg><span>Funds</span></a></li>
+          <li><a href="team.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><path d="M3 20c.7-4 3-6 6-6s5.3 2 6 6M17 7h4M19 5v4"></path></svg><span>Team</span></a></li>
           <li><a href="reports.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"></path></svg><span>Reports</span></a></li>
         </ul>
         <p class="nav-section-label nav-section-gap">Administration</p>
@@ -41,22 +40,22 @@
 
     <main class="main-content">
       <header class="topbar">
-        <div class="breadcrumb"><span>Minh An Trading</span><span>/</span><span>Settings</span><span>/</span><strong>Approval policies</strong></div>
+        <div class="breadcrumb"><span>Minh An Trading</span><span>/</span><span>Settings</span><span>/</span><strong>Approval rules</strong></div>
         <button class="user-menu" type="button"><span>Võ Ngọc Lan, Sales</span><span class="user-initials" aria-hidden="true">NL</span></button>
       </header>
 
       <div class="page-content">
         <div class="page-header">
           <div class="page-title">
-            <h1>Approval policies</h1>
+            <h1>Approval rules</h1>
           </div>
           <div class="page-actions"><button class="btn btn-primary" type="button" id="new-rule-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg><span>New rule</span></button></div>
         </div>
 
         <section class="metrics-strip" aria-label="Policy summary">
           <div class="metric"><span class="metric-label">Active rules</span><strong class="metric-value" id="metric-active-rules">—</strong><span class="metric-note" id="metric-total-rules">Evaluated top to bottom</span></div>
-          <div class="metric"><span class="metric-label">Payments matched, 30d</span><strong class="metric-value">126</strong><span class="metric-note">38 required two approvals</span></div>
-          <div class="metric"><span class="metric-label">Exceptions, 30d</span><strong class="metric-value">03</strong><span class="metric-note">All reviewed by CFO</span></div>
+          <div class="metric"><span class="metric-label">Requests matched, 30d</span><strong class="metric-value">126</strong><span class="metric-note">38 needed two approvals</span></div>
+          <div class="metric"><span class="metric-label">Exceptions, 30d</span><strong class="metric-value">03</strong><span class="metric-note">All reviewed by the director</span></div>
           <div class="metric"><span class="metric-label">Last policy change</span><strong class="metric-value" id="metric-last-change">—</strong><span class="metric-note" id="metric-last-change-note">Loading</span></div>
         </section>
 
@@ -66,7 +65,7 @@
         </div>
 
         <div class="policy-layout">
-          <section class="policy-list" id="policy-list" aria-label="Approval policies"></section>
+          <section class="policy-list" id="policy-list" aria-label="Approval rules"></section>
 
           <section class="policy-card" id="policy-builder" aria-labelledby="policy-builder-title">
             <div id="policy-not-found" class="detail-missing" hidden></div>
@@ -85,9 +84,9 @@
                   <span class="rule-label">Conditions</span>
                   <div class="token-row" id="condition-token-row"></div>
                   <div class="rule-editor" role="group" aria-label="Add condition">
-                    <select class="select mono" id="condition-field" aria-label="Condition field"><option value="amount">amount</option><option value="currency">currency</option><option value="beneficiary_age_days">beneficiary_age_days</option><option value="created_outside_hours">created_outside_hours</option></select>
+                    <select class="select mono" id="condition-field" aria-label="Condition field"><option value="amount">amount</option><option value="request_type">request_type</option><option value="beneficiary_age_days">vendor_age_days</option><option value="created_outside_hours">outside_hours</option></select>
                     <select class="select mono" id="condition-operator" aria-label="Condition operator"><option value=">">&gt;</option><option value="<">&lt;</option><option value="=">=</option><option value="!=">!=</option></select>
-                    <input class="input mono" id="condition-value" value="USD 25,000" aria-label="Condition value">
+                    <input class="input mono" id="condition-value" value="VND 20,000,000" aria-label="Condition value">
                     <button class="btn" type="button" id="add-condition">Add</button>
                   </div>
                 </div>
@@ -96,7 +95,7 @@
                   <span class="rule-label">Consequence</span>
                   <div class="token-row" id="approver-token-row"></div>
                   <div class="approver-add">
-                    <select class="select" id="approver-select" aria-label="Approver role"><option>Finance manager</option><option>CFO</option><option>Treasury lead</option><option>Controller</option></select>
+                    <select class="select" id="approver-select" aria-label="Approver role"><option>Team lead</option><option>Accountant</option><option>Director</option></select>
                     <button class="btn" type="button" id="add-approver">Add approver</button>
                   </div>
                 </div>
@@ -104,13 +103,13 @@
                 <div class="rule-section">
                   <span class="rule-label">Rule scope</span>
                   <div class="form-grid">
-                    <div class="form-field"><label class="form-label" for="scope-select">Applies to</label><select class="select" id="scope-select"><option>International wires</option><option>All payments</option><option>Domestic ACH</option><option>Card transfers</option></select></div>
+                    <div class="form-field"><label class="form-label" for="scope-select">Applies to</label><select class="select" id="scope-select"><option>All requests</option><option>Advances</option><option>Reimbursements</option><option>Vendor payments</option></select></div>
                     <div class="form-field"><label class="form-label" for="status-select">Status</label><select class="select" id="status-select"><option>Active</option><option>Inactive</option></select></div>
                   </div>
                 </div>
               </div>
 
-              <div class="policy-footer"><span>Applies to: <strong id="policy-scope-label">International wires</strong></span><span id="policy-footer-status" class="footer-status active">Active</span></div>
+              <div class="policy-footer"><span>Applies to: <strong id="policy-scope-label">All requests</strong></span><span id="policy-footer-status" class="footer-status active">Active</span></div>
               <div class="policy-save"><button class="btn btn-danger" type="button" id="delete-rule">Delete rule</button><button class="btn" type="button" id="discard-policy">Discard changes</button><button class="btn btn-primary" type="button" id="save-policy">Save policy</button></div>
             </div>
           </section>
@@ -125,14 +124,14 @@
       <div class="dialog-head"><div><p class="section-label dialog-kicker">Policy registry</p><h2 id="new-rule-title">Create approval rule</h2></div><button class="btn btn-icon" value="cancel" aria-label="Close dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button></div>
       <div class="dialog-body">
         <div class="form-grid">
-          <div class="form-field full"><label class="form-label" for="rule-new-name">Rule name</label><input class="input" id="rule-new-name" name="name" placeholder="For example: High-value EUR payments" autocomplete="off"></div>
+          <div class="form-field full"><label class="form-label" for="rule-new-name">Rule name</label><input class="input" id="rule-new-name" name="name" placeholder="For example: Marketing above 5 million" autocomplete="off"></div>
           <div class="form-field"><label class="form-label" for="rule-new-priority">Priority position</label><input class="input mono" id="rule-new-priority" name="priority" inputmode="numeric" value="1"></div>
           <div class="form-field"><label class="form-label" for="rule-new-status">Status</label><select class="select" id="rule-new-status" name="status"><option>Active</option><option>Inactive</option></select></div>
-          <div class="form-field full"><label class="form-label" for="rule-new-scope">Applies to</label><select class="select" id="rule-new-scope" name="scope"><option>All payments</option><option>International wires</option><option>Domestic ACH</option><option>Card transfers</option></select></div>
-          <div class="form-field"><label class="form-label" for="rule-new-field">First condition</label><select class="select mono" id="rule-new-field" name="field"><option value="amount">amount</option><option value="currency">currency</option><option value="beneficiary_age_days">beneficiary_age_days</option><option value="created_outside_hours">created_outside_hours</option></select></div>
+          <div class="form-field full"><label class="form-label" for="rule-new-scope">Applies to</label><select class="select" id="rule-new-scope" name="scope"><option>All requests</option><option>Advances</option><option>Reimbursements</option><option>Vendor payments</option></select></div>
+          <div class="form-field"><label class="form-label" for="rule-new-field">First condition</label><select class="select mono" id="rule-new-field" name="field"><option value="amount">amount</option><option value="request_type">request_type</option><option value="beneficiary_age_days">vendor_age_days</option><option value="created_outside_hours">outside_hours</option></select></div>
           <div class="form-field"><label class="form-label" for="rule-new-op">Operator</label><select class="select mono" id="rule-new-op" name="op"><option value=">">&gt;</option><option value="<">&lt;</option><option value="=">=</option><option value="!=">!=</option></select></div>
-          <div class="form-field"><label class="form-label" for="rule-new-value">Value</label><input class="input mono" id="rule-new-value" name="value" placeholder="USD 25,000" autocomplete="off"></div>
-          <div class="form-field"><label class="form-label" for="rule-new-approver">First approver</label><select class="select" id="rule-new-approver" name="approver"><option>Finance manager</option><option>CFO</option><option>Treasury lead</option><option>Controller</option></select></div>
+          <div class="form-field"><label class="form-label" for="rule-new-value">Value</label><input class="input mono" id="rule-new-value" name="value" placeholder="VND 20,000,000" autocomplete="off"></div>
+          <div class="form-field"><label class="form-label" for="rule-new-approver">First approver</label><select class="select" id="rule-new-approver" name="approver"><option>Team lead</option><option>Accountant</option><option>Director</option></select></div>
         </div>
       </div>
       <div class="dialog-actions"><button class="btn" value="cancel">Cancel</button><button class="btn btn-primary" value="default">Create rule</button></div>

@@ -24,11 +24,10 @@
       <nav class="sidebar-nav">
         <p class="nav-section-label">Operations</p>
         <ul class="nav-list">
-          <li><a href="accounts.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16"></rect><path d="M3 9h18M9 9v11"></path></svg><span>Funds</span></a></li>
           <li><a href="index.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h12M12 3l4 4-4 4M20 17H8m4-4-4 4 4 4"></path></svg><span>Requests</span></a></li>
-          <li><a href="cards.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14"></rect><path d="M3 10h18"></path></svg><span>Cards</span></a></li>
-          <li><a href="team.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><path d="M3 20c.7-4 3-6 6-6s5.3 2 6 6M17 7h4M19 5v4"></path></svg><span>Team</span></a></li>
           <li><a href="expenses.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6"></path></svg><span>Settlements</span></a></li>
+          <li><a href="accounts.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16"></rect><path d="M3 9h18M9 9v11"></path></svg><span>Funds</span></a></li>
+          <li><a href="team.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><path d="M3 20c.7-4 3-6 6-6s5.3 2 6 6M17 7h4M19 5v4"></path></svg><span>Team</span></a></li>
           <li><a href="reports.html" class="nav-link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"></path></svg><span>Reports</span></a></li>
         </ul>
         <p class="nav-section-label nav-section-gap">Administration</p>
@@ -51,7 +50,7 @@
         </div>
         <section class="metrics-strip" aria-label="Team access summary">
           <div class="metric"><span class="metric-label">Active members</span><strong class="metric-value" id="metric-members">—</strong><span class="metric-note" id="metric-members-note">Across functional teams</span></div>
-          <div class="metric"><span class="metric-label">Approvers</span><strong class="metric-value" id="metric-approvers">—</strong><span class="metric-note" id="metric-approvers-note">Finance manager or CFO</span></div>
+          <div class="metric"><span class="metric-label">Approvers</span><strong class="metric-value" id="metric-approvers">—</strong><span class="metric-note" id="metric-approvers-note">Team leads, accountant, director</span></div>
           <div class="metric"><span class="metric-label">Roles in use</span><strong class="metric-value" id="metric-roles">—</strong><span class="metric-note">Least-privilege profiles</span></div>
           <div class="metric"><span class="metric-label">Invitations</span><strong class="metric-value" id="metric-invites">—</strong><span class="metric-note">Expire after 14 days</span></div>
         </section>
@@ -61,19 +60,19 @@
             <label class="visually-hidden" for="member-search">Search members</label>
             <input id="member-search" class="input toolbar-search" type="search" placeholder="Search name or email">
             <label class="visually-hidden" for="role-filter">Filter by role</label>
-            <select id="role-filter" class="select toolbar-select"><option value="all">All roles</option><option>Employee</option><option>Bookkeeper</option><option>Finance manager</option><option>CFO</option><option>Admin</option></select>
+            <select id="role-filter" class="select toolbar-select"><option value="all">All roles</option><option>Employee</option><option>Team lead</option><option>Accountant</option><option>Director</option><option>Admin</option></select>
           </div>
         </div>
         <section class="workbench-grid" aria-label="Team access workspace">
           <div class="workbench-main" id="team-region">
-            <table class="data-table ledger-list ledger-team" aria-label="Team members"><thead><tr><th>Member</th><th class="col-role">Role</th><th class="col-team">Team</th><th class="col-region-sm">Region</th><th class="col-status-sm">Status</th><th class="col-region-sm">Last active</th></tr></thead><tbody id="team-body"></tbody></table>
+            <table class="data-table ledger-list ledger-team" aria-label="Team members"><thead><tr><th>Member</th><th class="col-role">Role</th><th class="col-team">Team</th><th class="col-region-sm">Office</th><th class="col-status-sm">Status</th><th class="col-region-sm">Last active</th></tr></thead><tbody id="team-body"></tbody></table>
             <div id="team-empty"></div>
           </div>
           <aside class="workbench-aside" id="member-pane" aria-label="Selected member">
             <div id="member-not-found" class="detail-missing" hidden></div>
             <div id="member-pane-body">
               <div class="pane-head"><div class="pane-head-row"><div class="identity-cell"><span class="avatar-box avatar-lg" id="member-pane-initials" aria-hidden="true">AS</span><div class="identity-copy"><h2 class="pane-title" id="member-pane-name">Alex Smith</h2><p class="pane-subtitle" id="member-pane-email">alex.smith@northstar.co</p></div></div><span class="status status-success" id="member-pane-status">Active</span></div></div>
-              <div class="pane-section"><p class="section-label">Access envelope</p><ul class="key-list"><li><span>Role</span><strong id="member-pane-role"></strong></li><li><span>Team</span><strong id="member-pane-team"></strong></li><li><span>Region</span><strong id="member-pane-region"></strong></li><li><span>Last active</span><strong class="mono" id="member-pane-last-seen"></strong></li></ul></div>
+              <div class="pane-section"><p class="section-label">Access envelope</p><ul class="key-list"><li><span>Role</span><strong id="member-pane-role"></strong></li><li><span>Team</span><strong id="member-pane-team"></strong></li><li><span>Office</span><strong id="member-pane-region"></strong></li><li><span>Last active</span><strong class="mono" id="member-pane-last-seen"></strong></li></ul></div>
               <div class="pane-section"><div class="section-head"><p class="section-label">Permission matrix</p><a href="settings.html">Policy owner →</a></div><div class="permission-grid" id="permission-grid"></div></div>
               <div class="pane-section"><div class="duty-note" id="member-duty"></div></div>
               <div class="pane-section"><div class="action-row"><button class="btn btn-danger" type="button" id="remove-member">Remove member</button><button class="btn" type="button" id="resend-invite" hidden>Resend invite</button><button class="btn btn-primary" type="button" id="edit-member">Edit role</button></div></div>
@@ -90,11 +89,11 @@
       <div class="dialog-head"><div><p class="section-label dialog-kicker">Identity and access</p><h2 id="invite-member-title">Invite team member</h2></div><button class="btn btn-icon" value="cancel" aria-label="Close dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button></div>
       <div class="dialog-body"><div class="form-grid">
         <div class="form-field"><label class="form-label" for="invite-name">Full name</label><input class="input" id="invite-name" name="name" autocomplete="off"></div>
-        <div class="form-field"><label class="form-label" for="invite-email">Work email</label><input class="input" type="email" id="invite-email" name="email" placeholder="name@northstar.co" autocomplete="off"></div>
-        <div class="form-field"><label class="form-label" for="invite-role">Role</label><select class="select" id="invite-role" name="role"><option>Employee</option><option>Bookkeeper</option><option>Finance manager</option><option>CFO</option><option>Admin</option></select></div>
-        <div class="form-field"><label class="form-label" for="invite-team">Team</label><select class="select" id="invite-team" name="team"><option>Finance</option><option>Accounting</option><option>Engineering</option><option>Sales</option><option>Growth</option><option>Operations</option><option>Executive</option></select></div>
-        <div class="form-field"><label class="form-label" for="invite-region">Region</label><select class="select" id="invite-region" name="region"><option>EU</option><option>US</option><option>UK</option><option>Global</option></select></div>
-        <div class="form-field full"><p class="form-hint">Workspace email domain is northstar.co. The invite link is emailed to this address and expires in 7 days.</p></div>
+        <div class="form-field"><label class="form-label" for="invite-email">Work email</label><input class="input" type="email" id="invite-email" name="email" placeholder="name@minhan.vn" autocomplete="off"></div>
+        <div class="form-field"><label class="form-label" for="invite-role">Role</label><select class="select" id="invite-role" name="role"><option>Employee</option><option>Team lead</option><option>Accountant</option><option>Director</option><option>Admin</option></select></div>
+        <div class="form-field"><label class="form-label" for="invite-team">Team</label><select class="select" id="invite-team" name="team"><option>Sales</option><option>Operations</option><option>Finance</option><option>Marketing</option><option>Management</option></select></div>
+        <div class="form-field"><label class="form-label" for="invite-region">Region</label><select class="select" id="invite-region" name="region"><option>Hồ Chí Minh City</option><option>Hà Nội</option><option>Đà Nẵng</option></select></div>
+        <div class="form-field full"><p class="form-hint">Work emails end in minhan.vn. The invite link is emailed to this address and expires in 7 days.</p></div>
       </div></div>
       <div class="dialog-actions"><button class="btn" value="cancel">Cancel</button><button class="btn btn-primary" value="default">Record invite</button></div>
     </form>
@@ -104,9 +103,9 @@
     <form method="dialog" id="member-form">
       <div class="dialog-head"><div><p class="section-label dialog-kicker">Identity and access</p><h2 id="member-dialog-title">Edit role</h2></div><button class="btn btn-icon" value="cancel" aria-label="Close dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button></div>
       <div class="dialog-body"><div class="form-grid">
-        <div class="form-field"><label class="form-label" for="member-role">Role</label><select class="select" id="member-role" name="role"><option>Employee</option><option>Bookkeeper</option><option>Finance manager</option><option>CFO</option><option>Admin</option></select></div>
-        <div class="form-field"><label class="form-label" for="member-team">Team</label><select class="select" id="member-team" name="team"><option>Finance</option><option>Accounting</option><option>Engineering</option><option>Sales</option><option>Growth</option><option>Operations</option><option>Executive</option></select></div>
-        <div class="form-field"><label class="form-label" for="member-region">Region</label><select class="select" id="member-region" name="region"><option>EU</option><option>US</option><option>UK</option><option>Global</option></select></div>
+        <div class="form-field"><label class="form-label" for="member-role">Role</label><select class="select" id="member-role" name="role"><option>Employee</option><option>Team lead</option><option>Accountant</option><option>Director</option><option>Admin</option></select></div>
+        <div class="form-field"><label class="form-label" for="member-team">Team</label><select class="select" id="member-team" name="team"><option>Sales</option><option>Operations</option><option>Finance</option><option>Marketing</option><option>Management</option></select></div>
+        <div class="form-field"><label class="form-label" for="member-region">Region</label><select class="select" id="member-region" name="region"><option>Hồ Chí Minh City</option><option>Hà Nội</option><option>Đà Nẵng</option></select></div>
         <div class="form-field full"><p class="form-hint" id="member-role-hint">Permissions follow the role template.</p></div>
       </div></div>
       <div class="dialog-actions"><button class="btn" value="cancel">Cancel</button><button class="btn btn-primary" value="default">Save role</button></div>

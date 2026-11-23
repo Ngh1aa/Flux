@@ -436,7 +436,7 @@
   /* ---------- Navigation and demo controls ---------- */
   function initNavigation() {
     document.body.classList.add('flux-enhanced');
-    const route = { payments: 'index.html', payees: 'index.html', accounts: 'accounts.html', cards: 'cards.html', team: 'team.html', expenses: 'expenses.html', reports: 'reports.html', settings: 'settings.html' }[document.body.dataset.page];
+    const route = { payments: 'index.html', payees: 'index.html', accounts: 'accounts.html', team: 'team.html', expenses: 'expenses.html', reports: 'reports.html', settings: 'settings.html' }[document.body.dataset.page];
     if (!route) return;
     document.querySelectorAll('.nav-link').forEach((link) => {
       const active = link.getAttribute('href') === route;
@@ -471,7 +471,7 @@
     menu.hidden = true;
     menu.innerHTML = `
       <div class="account-menu-head"><strong>${escapeHtml(user.name)}</strong><span>${escapeHtml(user.email)}</span><span>${escapeHtml(user.role)}, ${escapeHtml(state.meta.workspace)}</span></div>
-      <div class="account-menu-actions"><a class="account-menu-item" href="settings.html">Approval policies</a><a class="account-menu-item" href="team.html">Team and roles</a><button class="account-menu-item" type="button" id="sign-out">Sign out</button></div>`;
+      <div class="account-menu-actions"><a class="account-menu-item" href="settings.html">Approval rules</a><a class="account-menu-item" href="team.html">Team and roles</a><button class="account-menu-item" type="button" id="sign-out">Sign out</button></div>`;
     wrap.appendChild(menu);
     const close = () => { menu.hidden = true; trigger.setAttribute('aria-expanded', 'false'); };
     trigger.addEventListener('click', (event) => {

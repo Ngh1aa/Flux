@@ -77,31 +77,6 @@
 .account-number span { color: var(--muted); font-size: 12px; }
 .account-number strong { display: block; margin-top: 3px; font-family: var(--mono); font-size: 12px; font-weight: 400; }
 
-.card-stage { padding: 18px; border-bottom: 1px solid var(--line); background: #F6F7F4; }
-.corporate-card { position: relative; min-height: 194px; padding: 19px; overflow: hidden; background: var(--ink); color: var(--ink-inverse); border: 1px solid #0A0C0E; }
-.corporate-card::after { content: ''; position: absolute; right: 18px; top: 18px; width: 34px; height: 22px; border: 1px solid rgba(255,255,255,.45); box-shadow: inset 9px 0 rgba(255,255,255,.06); }
-.card-brand { font-weight: 600; letter-spacing: .13em; font-size: 12px; }
-.card-kind { position: absolute; top: 20px; right: 64px; color: #AEB5B0; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
-.card-number { margin-top: 64px; font-family: var(--mono); font-size: 16px; letter-spacing: .08em; }
-.card-meta { position: absolute; left: 19px; right: 19px; bottom: 18px; display: flex; justify-content: space-between; gap: 16px; color: #AEB5B0; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
-.card-meta strong { display: block; margin-top: 4px; color: #fff; font-size: 12px; font-weight: 500; letter-spacing: 0; text-transform: none; }
-.limit-block { padding: 0; }
-.limit-row { padding: 10px 0; border-top: 1px solid var(--line); }
-.limit-row:first-child { border-top: 0; padding-top: 0; }
-.limit-copy { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; font-size: 12px; }
-.limit-copy span { color: var(--secondary); }
-.limit-copy strong { font-family: var(--mono); font-weight: 500; }
-.limit-track { height: 6px; margin-top: 8px; background: #E4E7E1; }
-.limit-fill { height: 100%; background: var(--accent); }
-.limit-fill.warning { background: var(--pending); }
-.control-list { list-style: none; margin: 0; padding: 0; }
-.control-item { display: grid; grid-template-columns: 16px minmax(0,1fr) auto; gap: 9px; align-items: start; padding: 9px 0; border-top: 1px solid var(--line); }
-.control-item:first-child { border-top: 0; padding-top: 0; }
-.control-marker { width: 14px; height: 14px; margin-top: 1px; border: 1px solid var(--line-strong); background: var(--surface); }
-.control-marker.on { border-color: var(--accent); background: var(--accent); box-shadow: inset 0 0 0 3px #fff; }
-.control-copy strong { display: block; font-size: 12px; font-weight: 500; }
-.control-copy span { display: block; margin-top: 2px; color: var(--muted); font-size: 12px; }
-.control-item > span:last-child { color: var(--secondary); font-family: var(--mono); font-size: 12px; }
 
 .identity-cell { display: flex; align-items: center; gap: 9px; min-width: 0; }
 .avatar-box { flex: 0 0 30px; width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid var(--line-strong); background: #F7F8F5; font-family: var(--mono); font-size: 12px; }
@@ -209,8 +184,7 @@
   .exposure-matrix { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 520px) {
-  .pane-head, .pane-section, .card-stage { padding-left: 14px; padding-right: 14px; }
-  .corporate-card { min-height: 184px; }
+  .pane-head, .pane-section { padding-left: 14px; padding-right: 14px; }
   .permission-grid { grid-template-columns: minmax(78px, 1.1fr) repeat(4, minmax(0, 1fr)); }
   .permission-grid > * { padding: 6px 3px; font-size: 12px; }
   .report-secondary { gap: 12px; }
@@ -313,7 +287,6 @@
 .action-hint { margin: 0 0 10px; color: var(--secondary); font-size: 12px; }
 .outcome-note { margin-top: 12px; }
 .action-error { margin-bottom: 12px; }
-.corporate-card.is-inactive { background: #2C3135; border-style: dashed; }
 .receipt-missing { display: grid; justify-items: center; gap: 4px; padding: 22px 14px; border: 1px dashed var(--line-strong); background: var(--surface-subtle); color: var(--secondary); font-size: 12px; text-align: center; }
 .receipt-missing svg { width: 20px; height: 20px; color: var(--muted); }
 .receipt-missing strong { color: var(--ink); font-size: 13px; font-weight: 500; }
