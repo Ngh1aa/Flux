@@ -14,7 +14,8 @@ permissions:
 
 jobs:
   evidence-lens:
-    runs-on: ubuntu-latest
+    # Pinned: ubuntu-latest became 26.04, where Playwright 1.55 cannot install Chromium.
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - name: Checkout
