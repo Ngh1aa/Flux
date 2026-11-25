@@ -31,8 +31,11 @@ test('Round 01 has one Flux-native canonical form and no human-evidence drift', 
   expect(form).toContain('CANONICAL / READY_TO_USE');
   expect(form).toContain('D-01 Approval context');
   expect(form).toContain('D-02 Role boundary');
-  expect(form).toContain('D-03 Settlement recovery');
+  // D-03 renamed on 2026-11-25: 'settlement' now means settling an advance with receipts. D-05 added with the re-plan.
+  expect(form).toContain('D-03 Payout recovery');
   expect(form).toContain('D-04 Audit reconstruction');
+  expect(form).toContain('D-05 Advance settlement');
+  expect(form).not.toMatch(/USD|Arcwell|treasury console/);
   expect(form).toContain('https://flux-six-liard.vercel.app/');
   expect(form).not.toContain('Safe to spend');
   expect(form).not.toContain('Money Horizon');

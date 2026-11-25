@@ -87,15 +87,12 @@ Forced states, browser tests, AI critique and recruiter feedback are not user va
 faster approvals, fewer mistakes or better confidence until traceable sessions exist and the affected
 decision has been retested.
 
-## Not yet moved to the new content
+## Round 01 research
 
-The design lens and the five documentation pages were moved on 2026-11-25. One thing still describes the
-earlier treasury version and must be updated before it is used:
-
-- the Round 01 research package in `research/validation/flux-round-01/`, written for finance operations and
-  treasury participants. The right participants are now office staff, team leads and accountants in small
-  companies; the study has to be re-planned before recruiting. The design lens already says so
-  (“R01 re-plan before recruiting”).
+`research/validation/flux-round-01/` was re-planned on 2026-11-25 for the new content: 3–5 employees, team
+leads, accountants and directors from companies of up to about 200 staff, five tasks (D-01 approval context,
+D-02 role boundary, D-03 payout recovery, D-04 audit reconstruction, D-05 advance settlement), one Vietnamese
+form, and a pilot session first that is not counted. Status: ready to recruit, 0 sessions run.
 
 ## Design lens and documentation
 

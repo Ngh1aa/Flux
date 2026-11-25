@@ -4,27 +4,33 @@
   "study_type": "moderated task-based usability / decision-comprehension test with async self-report fallback",
   "status": "READY_TO_RECRUIT",
   "evidence_state": "PLANNED_VALIDATION",
+  "replanned_at": "2026-11-25",
+  "replan_reason": "Flux moved from a cross-border treasury console to advances, reimbursements and vendor payments in a Vietnamese SME. The earlier plan targeted treasury and finance-operations participants and used USD data that no longer exists. No session had been run, so nothing was discarded.",
+  "pilot": "Run one pilot session (FLX-PILOT) before FLX-P01 to check the Vietnamese wording, the English UI and the timing. The pilot is not counted as evidence.",
   "target_participants": {
     "minimum": 3,
     "preferred": 5
   },
   "verified_direct_user_sessions": 0,
   "verified_proxy_sessions": 0,
-  "preferred_population": "finance operations, treasury, accounts payable/payments, finance manager or CFO users who review or approve business payments",
+  "preferred_population": "employees, team leads, accountants and directors or owners in Vietnamese companies of up to about 200 staff who, in the last 6 months, asked for, approved, checked or paid out advances, reimbursements or vendor payments",
   "proxy_population_allowed": true,
-  "proxy_rule": "Adjacent operations, accounting, banking-operations, compliance or procurement-approval participants remain PROXY and may not be promoted to DIRECT_USER.",
+  "proxy_rule": "People who did this work only in companies above about 200 staff, or who approve similar requests without money (leave, purchase requests), remain PROXY and may not be promoted to DIRECT_USER.",
+  "language_note": "The Flux interface is in English and participants are Vietnamese. Record English reading comfort at screening and tag any finding caused by language rather than design.",
   "canonical_product_url": "https://flux-six-liard.vercel.app/",
   "priority_decisions": [
     "D-01",
     "D-02",
     "D-03",
-    "D-04"
+    "D-04",
+    "D-05"
   ],
   "decision_names": {
     "D-01": "Approval context",
     "D-02": "Role boundary",
-    "D-03": "Settlement recovery",
-    "D-04": "Audit reconstruction"
+    "D-03": "Payout recovery",
+    "D-04": "Audit reconstruction",
+    "D-05": "Advance settlement"
   },
   "research_assets": {
     "canonical_form": "research/validation/flux-round-01/FLUX-NATIVE-FORM.md",
@@ -34,22 +40,23 @@
     "findings": "research/validation/flux-round-01/FINDINGS.md",
     "decision_log": "research/validation/flux-round-01/DECISION-LOG.md"
   },
-  "form_policy": "Use FLUX-NATIVE-FORM.md as the only participant questionnaire for Round 01. Do not reuse, map or adapt the Nova form.",
+  "form_policy": "Use FLUX-NATIVE-FORM.md as the only participant questionnaire for Round 01. Do not reuse, map or adapt the Nova form or the earlier treasury version of this form.",
   "method_policy": "MODERATED sessions may support observed-behavior evidence. ASYNC_SELF_REPORT responses remain self-report and may not be converted into observed task success, timing or moderator-help claims.",
   "build_policy": "Record the exact prototype URL/build used for every participant and do not silently change builds within a comparison round.",
   "iteration_gate": "Do not claim an evidence-driven iteration until verified real-session evidence is traceable. Prefer synthesis after 3-5 verified DIRECT_USER sessions; preserve PROXY evidence separately.",
   "retest_gate": "After a named decision changes, freeze the changed build and run the same affected task with new or explicitly marked returning participants before claiming improvement.",
   "allowed_claims": [
-    "A recruiter-facing design lens exists with decision pins, conceptual baseline/current comparison, a five-step tour and forced operational states",
-    "A Flux-native direct-user validation round is ready to recruit",
-    "One canonical Round 01 participant form exists for D-01 through D-04",
+    "A recruiter-facing design lens exists with decision pins, conceptual baseline/current comparison, a five-step tour and forced states",
+    "A Flux-native direct-user validation round for small-company spend requests is ready to recruit",
+    "One canonical Round 01 participant form exists for D-01 through D-05",
     "Direct-user evidence has not been collected yet"
   ],
   "forbidden_claims_until_verified": [
-    "Flux has been validated by finance teams",
-    "Flux reduces payment approval time",
-    "Flux reduces payment errors",
+    "Flux has been validated by office staff, team leads or accountants",
+    "Flux reduces approval time",
+    "Flux reduces payment or reimbursement mistakes",
     "Flux improves approval confidence",
-    "The recovery model improves task success"
+    "Flux helps advances get settled faster",
+    "The payout recovery model improves task success"
   ]
 }

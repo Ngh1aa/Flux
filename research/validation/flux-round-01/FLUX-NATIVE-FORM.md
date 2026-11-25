@@ -1,18 +1,20 @@
 # Flux Round 01 — Canonical Flux-Native Participant Form
 
 **Status:** `CANONICAL / READY_TO_USE`  
-**Use this one form only for Flux Round 01.** Do not reuse or adapt the old Nova questionnaire.
+**Use this one form only for Flux Round 01.** Do not reuse or adapt the old Nova questionnaire or the earlier treasury version of this form (replaced on 2026-11-25).
 
 ## Research boundary
 
-- Target: **3–5 participants** with real finance operations / AP-payments / treasury / finance approval experience.
+- Target: **3–5 participants** who, in the last 6 months, asked for, approved, checked or paid out advances, reimbursements or vendor payments in a company of up to about 200 staff.
 - Preferred evidence class: `DIRECT_USER`.
-- Adjacent accounting / compliance / procurement-approval participants may be included only as `PROXY` and must stay separate in synthesis.
-- Preferred method: moderated task-based session.
+- The same work only in larger companies, or approving similar requests without money, counts only as `PROXY` and stays separate in synthesis.
+- Preferred method: moderated task-based session in Vietnamese.
 - Allowed fallback: async self-report using the same form.
 - Canonical product URL: `https://flux-six-liard.vercel.app/`
 - Researcher must record the exact build/commit actually served during each session.
-- Use only simulated prototype data. Never enter real credentials, account numbers, company payment data or customer information.
+- Before each moderated session, reset the data: open the product with `?demo=1`, then **Demo tools → Reset demo data**.
+- The interface is in English. Question 9 records English reading comfort; tag language-caused problems as `LANGUAGE`.
+- Use only the fictional prototype data. Never enter real names, bank accounts, receipts or company information.
 
 > **Method rule:** MODERATED responses may include observed behavior, help and task outcome. ASYNC_SELF_REPORT responses are self-report only; do not convert them into observed task success, timing or moderator-help claims.
 
@@ -22,18 +24,19 @@
 
 ## Form title
 
-**Flux — Business Payment Approval Workflow Test · Round 01**
+**Flux — Thử quy trình tạm ứng, hoàn ứng và thanh toán · Round 01**
 
 ## Form description
 
-Flux là prototype mô phỏng quy trình thanh toán doanh nghiệp, approval chain, phân quyền và xử lý settlement failure. Bài test mất khoảng **20–30 phút**.
+Flux là bản mẫu một công cụ giúp công ty nhỏ xử lý **tạm ứng, hoàn ứng, hoàn tiền chi phí và thanh toán nhà cung cấp**: nhân viên đề nghị, quản lý duyệt, kế toán kiểm tra và chi tiền. Bài thử mất khoảng **25–35 phút**.
 
-- Chỉ dùng dữ liệu giả lập trong prototype.
-- Không nhập hoặc chia sẻ dữ liệu tài chính thật.
-- Không có giao dịch ngân hàng thật nào được thực hiện.
-- Phản hồi sẽ được lưu dưới ID ẩn danh để cải thiện prototype và case study.
+- Giao diện bằng tiếng Anh; câu hỏi bằng tiếng Việt.
+- Công ty, con người và số tiền trong bản mẫu đều là giả.
+- Không nhập hay chia sẻ thông tin thật của bạn hay công ty bạn.
+- Không có khoản tiền thật nào được chuyển.
+- Câu trả lời được lưu dưới mã ẩn danh để cải thiện bản mẫu và case study.
 
-Prototype: **https://flux-six-liard.vercel.app/**
+Bản mẫu: **https://flux-six-liard.vercel.app/**
 
 ---
 
@@ -43,7 +46,7 @@ Prototype: **https://flux-six-liard.vercel.app/**
 
 ### 1. Participant ID
 **Loại:** Short answer · Required  
-Ví dụ: `FLX-P01`
+Ví dụ: `FLX-P01` (buổi thử nghiệm: `FLX-PILOT`)
 
 ### 2. Session method
 **Loại:** Multiple choice · Required
@@ -56,9 +59,9 @@ Không để trống. Ghi URL chính xác và commit/build nếu biết.
 
 ---
 
-# SECTION 1 — Screening + consent
+# SECTION 1 — Sàng lọc và đồng ý
 
-### 4. Trong 6 tháng gần đây, bạn thường xuyên chuẩn bị, review, approve hoặc theo dõi business payment ở mức nào?
+### 4. Trong 6 tháng gần đây, bạn đề nghị, duyệt, kiểm tra hoặc chi các khoản tạm ứng, hoàn tiền hay thanh toán nhà cung cấp ở mức nào?
 **Loại:** Multiple choice · Required
 - Hằng ngày
 - Vài lần mỗi tuần
@@ -67,55 +70,71 @@ Không để trống. Ghi URL chính xác và commit/build nếu biết.
 - Hiếm hơn mỗi tháng
 - Chưa từng
 
-### 5. Bạn đã trực tiếp làm những công việc nào dưới đây?
+### 5. Bạn đã trực tiếp làm những việc nào dưới đây?
 **Loại:** Checkboxes · Required
-- Chuẩn bị supplier/vendor payment
-- Review hoặc approve payment
-- Theo dõi payment status / settlement
-- Xử lý failed / returned payment
-- Quản lý treasury / liquidity / bank balances
-- Theo dõi hoặc cấu hình approval policy
-- Reconcile / audit payment history
+- Đề nghị tạm ứng cho công tác, sự kiện hoặc mua hàng
+- Nộp chứng từ để hoàn ứng (quyết toán khoản đã tạm ứng)
+- Đề nghị hoàn tiền cho khoản mình tự chi trước
+- Đề nghị thanh toán cho nhà cung cấp
+- Duyệt đề nghị của người khác (trưởng nhóm, trưởng phòng, giám đốc)
+- Kiểm tra chứng từ hoặc chi tiền (kế toán)
+- Đặt hoặc sửa quy định ai duyệt khoản nào
 - Khác
-- Chưa từng làm các công việc trên
+- Chưa từng làm các việc trên
 
 ### 6. Vai trò gần nhất với công việc của bạn là gì?
 **Loại:** Multiple choice · Required
-- Finance Operations
-- Accounts Payable / Payments
-- Treasury
-- Finance Manager / Controller
-- CFO / Finance Approver
-- Accountant / Bookkeeper
-- Banking / Payment Operations
-- Compliance / Procurement / Operations liên quan approval
+- Nhân viên (kinh doanh, vận hành, văn phòng…)
+- Trưởng nhóm / trưởng phòng
+- Kế toán
+- Giám đốc / chủ doanh nghiệp
+- Hành chính / nhân sự
 - Khác
 
-### 7. Bạn thường dùng công cụ nào cho công việc này?
-**Loại:** Short answer · Required  
-Ví dụ: business banking, ERP, AP tool, treasury platform, spreadsheet…
+### 7. Công ty bạn (nơi làm những việc trên) có khoảng bao nhiêu người?
+**Loại:** Multiple choice · Required
+- Dưới 10
+- 10–50
+- 51–200
+- Trên 200
 
-### 8. Bạn có trực tiếp tham gia xây Flux hoặc portfolio prototype này không?
+### 8. Hiện công ty bạn xử lý các đề nghị này bằng gì?
+**Loại:** Checkboxes · Required
+- Giấy tờ, ký tay
+- Nhắn tin (Zalo, Messenger…)
+- Email
+- Excel / Google Sheets
+- Phần mềm kế toán (MISA, Fast…)
+- Phần mềm quản trị (Base.vn, 1Office…)
+- Khác
+
+### 9. Bạn đọc giao diện phần mềm bằng tiếng Anh thế nào?
+**Loại:** Multiple choice · Required
+- Thoải mái
+- Đọc được nhưng chậm
+- Khó, thường phải đoán
+
+### 10. Bạn có trực tiếp tham gia làm Flux hoặc portfolio chứa bản mẫu này không?
 **Loại:** Multiple choice · Required
 - Có
 - Không
 
-### 9. Bạn hiểu Flux trong bài này chỉ là prototype mô phỏng, không phải dịch vụ ngân hàng/payment thật?
+### 11. Bạn hiểu Flux trong bài này chỉ là bản mẫu, không chuyển tiền thật?
 **Loại:** Multiple choice · Required
 - Có
 - Không
 
-### 10. Bạn đồng ý tham gia và cho phép dùng ghi chú ẩn danh về hành động/phản hồi của mình để cải thiện prototype và case study?
+### 12. Bạn đồng ý tham gia và cho phép dùng ghi chú ẩn danh về thao tác và câu trả lời của mình để cải thiện bản mẫu và case study?
 **Loại:** Multiple choice · Required
 - Có
 - Không
 
-### 11. Bạn xác nhận sẽ không nhập hoặc chia sẻ dữ liệu tài chính thật trong bài test?
+### 13. Bạn xác nhận sẽ không nhập hoặc chia sẻ thông tin thật của bạn hay công ty bạn trong bài thử?
 **Loại:** Multiple choice · Required
 - Có
 - Không
 
-**Eligibility rule:** Nếu câu 8 = Có, hoặc câu 10/11 = Không → không ingest như participant hợp lệ. Nếu không có kinh nghiệm business-payment gần với câu 5–7 → `PROXY` hoặc exclude, không tự nâng thành `DIRECT_USER`.
+**Eligibility rule:** Nếu câu 10 = Có, hoặc câu 11/12/13 = Không → không ghi nhận là participant hợp lệ. Nếu câu 5 không có việc nào liên quan tới tiền → `EXCLUDE`. Nếu chỉ làm các việc này ở công ty trên 200 người (câu 7), hoặc chỉ duyệt các đề nghị không có tiền → `PROXY`, không tự nâng thành `DIRECT_USER`. Câu 9 không loại ai; chỉ dùng để gắn nhãn `LANGUAGE`.
 
 ---
 
@@ -123,41 +142,41 @@ Ví dụ: business banking, ERP, AP tool, treasury platform, spreadsheet…
 
 ## Task prompt
 
-Mở **Payments**. Hãy tìm khoản thanh toán **Arcwell Systems · USD 18,400**.
+Mở **Requests**. Chọn yêu cầu **Trade fair brochures**, **VND 45,000,000**.
 
-> “Bạn đang review khoản thanh toán này. Chưa thay đổi gì cả, hãy cho biết **vì sao nó cần approval, ai cần hành động ở bước hiện tại, và sau khi người đó approve thì chuyện gì xảy ra tiếp theo**.”
+> “Bạn là Lan, nhân viên kinh doanh. Bạn vừa gửi đề nghị này. Chưa bấm gì cả, hãy cho biết **vì sao khoản này cần giám đốc duyệt, ai đang phải duyệt, và sau người đó là ai**.”
 
-### 12. Theo bạn, vì sao khoản USD 18,400 này cần approval?
+### 14. Theo bạn, vì sao khoản này cần giám đốc duyệt?
 **Loại:** Paragraph · Required
 
-### 13. Ai là người/role cần hành động ở bước hiện tại?
+### 15. Ai đang phải duyệt ở bước hiện tại?
 **Loại:** Short answer · Required
 
-### 14. Sau khi người đó approve, bước tiếp theo là gì?
+### 16. Sau khi người đó duyệt, khoản này đi tiếp tới đâu, tới ai?
 **Loại:** Paragraph · Required
 
-### 15. Bạn đã dựa vào thông tin nào để trả lời?
+### 17. Bạn đã dựa vào thông tin nào để trả lời?
 **Loại:** Checkboxes · Required
-- Approval / control rail
-- Amount
-- Policy / threshold text
-- Current approver / next approver
-- Activity / history
-- Status badge
+- Approval Rail (chuỗi duyệt)
+- Số tiền
+- Tên quy định (Rule 01)
+- Dòng “Next approver”
+- Lịch sử hoạt động
+- Nhãn trạng thái
 - Khác
 
-### 16. Bạn có cần hướng dẫn thêm ngoài task prompt để hiểu approval ownership không?
+### 18. Bạn có cần hướng dẫn thêm ngoài đề bài để hiểu ai duyệt không?
 **Loại:** Multiple choice · Required
 - Không
 - Có một chút
 - Có nhiều
 - Không áp dụng — tôi đang tự làm async
 
-### 17. Mức tự tin với câu trả lời của bạn
+### 19. Mức tự tin với câu trả lời của bạn
 **Loại:** Linear scale 1–5 · Required  
 1 = rất không chắc · 5 = rất chắc
 
-**D-01 internal learning criterion:** weakened nếu participant không giải thích được policy rationale + current owner + next step mà không được dạy.
+**D-01 internal learning criterion:** weakened nếu participant không nói được quy định, người đang duyệt và bước tiếp theo mà không được chỉ.
 
 ---
 
@@ -165,83 +184,83 @@ Mở **Payments**. Hãy tìm khoản thanh toán **Arcwell Systems · USD 18,400
 
 ## Task prompt
 
-Giữ prototype ở **Employee role**.
+Giữ bản mẫu ở vai trò **Employee** (nút ở thanh bên trái), vẫn ở yêu cầu Trade fair brochures.
 
-> “Bạn cần approve khoản payment này nhưng giao diện hiện đang ở Employee role. Hãy cho biết bạn sẽ làm gì và giải thích vì sao nút approve hiện không dùng được.”
+> “Bạn là Lan và muốn khoản này được duyệt sớm. Hãy cho biết **vì sao bạn không bấm được Approve hay Reject**, và **bạn còn làm được gì** với đề nghị này.”
 
-### 18. Việc đầu tiên bạn sẽ làm là gì?
+### 20. Việc đầu tiên bạn sẽ làm là gì?
 **Loại:** Paragraph · Required
 
-### 19. Theo bạn, nút approve bị disabled có nghĩa là gì?
+### 21. Theo bạn, Approve và Reject bị mờ có nghĩa là gì?
 **Loại:** Multiple choice · Required
-- Employee role không có quyền approve
-- Payment đang lỗi
-- Chức năng approve chưa được build
-- Payment đã được approve rồi
+- Lan không có quyền duyệt đề nghị của chính mình
+- Đề nghị đang bị lỗi
+- Chức năng duyệt chưa làm xong
+- Đề nghị đã được duyệt rồi
 - Không chắc
 - Khác
 
-### 20. Theo bạn Employee vẫn được phép làm gì với payment này?
+### 22. Theo bạn, Lan vẫn làm được gì với đề nghị này?
 **Loại:** Paragraph · Required
 
-### 21. Nếu cần approve, bạn kỳ vọng cách chuyển sang đúng quyền/role như thế nào?
+### 23. Nếu là người duyệt thật, bạn nghĩ mình sẽ thấy và làm gì khác?
 **Loại:** Paragraph · Required
 
-### 22. Bạn có cần hướng dẫn thêm ngoài task prompt để hiểu permission boundary không?
+### 24. Bạn có cần hướng dẫn thêm ngoài đề bài để hiểu ai được duyệt không?
 **Loại:** Multiple choice · Required
 - Không
 - Có một chút
 - Có nhiều
 - Không áp dụng — tôi đang tự làm async
 
-### 23. Mức tự tin với cách hiểu role/permission của bạn
+### 25. Mức tự tin với cách hiểu quyền của bạn
 **Loại:** Linear scale 1–5 · Required
 
-**D-02 internal learning criterion:** weakened nếu disabled action bị hiểu là product lỗi/chưa build thay vì permission-bound, hoặc participant không tìm được recovery path hợp lý.
+**D-02 internal learning criterion:** weakened nếu nút mờ bị hiểu là lỗi hoặc chưa làm, hoặc participant không nói được Lan còn làm được gì.
 
 ---
 
-# SECTION 4 — D-03 Settlement recovery · PRIORITY
+# SECTION 4 — D-03 Payout recovery · PRIORITY
 
 ## Setup
 
-Researcher mở Evidence Lens và chọn state **SETTLEMENT FAILED**, sau đó giao lại quyền điều khiển cho participant. Với async session, gửi participant đường dẫn/state setup đã chuẩn bị sẵn.
+Researcher mở `https://flux-six-liard.vercel.app/design-lens.html`, chọn **PAYOUT FAILED**, rồi đưa lại quyền điều khiển cho participant. Với async, gửi đường dẫn này và dặn participant bấm **PAYOUT FAILED** ở cột trái.
 
 ## Task prompt
 
-> “Payment đã đi qua approval nhưng settlement thất bại. Hãy cho biết **tiền đã đi chưa** và **bạn sẽ làm gì tiếp theo**.”
+> “Khoản Trade fair brochures đã được trưởng nhóm và giám đốc duyệt, nhưng lần chi tiền bị lỗi. Bạn là kế toán. Hãy cho biết **tiền đã rời tài khoản công ty chưa** và **bạn sẽ làm gì tiếp**.”
 
-### 24. Theo bạn, ở trạng thái này tiền đã rời tài khoản chưa?
+### 26. Theo bạn, ở trạng thái này tiền đã rời tài khoản công ty chưa?
 **Loại:** Multiple choice · Required
 - Chưa
 - Rồi
 - Không chắc
 
-### 25. Bạn dựa vào thông tin nào để kết luận như vậy?
+### 27. Bạn dựa vào thông tin nào để kết luận như vậy?
 **Loại:** Paragraph · Required
 
-### 26. Hành động tiếp theo an toàn nhất theo bạn là gì?
+### 28. Việc tiếp theo an toàn nhất theo bạn là gì?
 **Loại:** Multiple choice · Required
-- Kiểm tra failure reason / trạng thái rồi dùng recovery hoặc retry flow của payment hiện tại
-- Tạo một payment mới giống hệt ngay lập tức
-- Bỏ qua và chờ hệ thống tự xử lý, không kiểm tra gì thêm
+- Kiểm tra lại số tài khoản nhà cung cấp, rồi chi lại cho chính đề nghị này
+- Tạo ngay một đề nghị mới giống hệt để chi lại
+- Chờ ngân hàng tự xử lý, không kiểm tra gì thêm
 - Không chắc
 - Khác
 
-### 27. Điều gì cần hiển thị thêm để bạn dám xử lý một failed settlement trong hệ thống thật?
+### 29. Cần hiện thêm gì để bạn dám xử lý một lần chi lỗi trong công ty thật?
 **Loại:** Paragraph · Required
 
-### 28. Bạn có cần hướng dẫn thêm ngoài task prompt để hiểu money movement / recovery không?
+### 30. Bạn có cần hướng dẫn thêm ngoài đề bài để hiểu tiền đã đi chưa và cách xử lý không?
 **Loại:** Multiple choice · Required
 - Không
 - Có một chút
 - Có nhiều
 - Không áp dụng — tôi đang tự làm async
 
-### 29. Mức tự tin với cách xử lý của bạn
+### 31. Mức tự tin với cách xử lý của bạn
 **Loại:** Linear scale 1–5 · Required
 
-**D-03 internal learning criterion:** weakened nếu participant nghĩ tiền có thể đã đi, muốn tạo payment trùng, hoặc không tìm được safe recovery path.
+**D-03 internal learning criterion:** weakened nếu participant nghĩ tiền có thể đã đi, muốn tạo đề nghị trùng, hoặc không nói được việc an toàn tiếp theo.
 
 ---
 
@@ -249,63 +268,99 @@ Researcher mở Evidence Lens và chọn state **SETTLEMENT FAILED**, sau đó g
 
 ## Task prompt
 
-Quay lại payment detail / activity trail.
+Quay lại sản phẩm (`https://flux-six-liard.vercel.app/`). Mở tab **Completed** trong **Requests**, chọn **Twelve office chairs**.
 
-> “Một đồng nghiệp hỏi payment này đã xảy ra chuyện gì và ai đã hành động ở từng bước. Hãy dùng giao diện để kể lại control chain cho họ.”
+> “Một đồng nghiệp hỏi khoản mua ghế này đã đi qua những ai và vào lúc nào. Hãy dùng giao diện để kể lại cho họ.”
 
-### 30. Hãy mô tả lại thứ tự các actor/role và hành động bạn hiểu từ giao diện.
+### 32. Hãy kể lại thứ tự: ai làm gì, lúc nào.
 **Loại:** Paragraph · Required
 
-### 31. Bạn đã dùng những bề mặt nào để reconstruct lịch sử?
+### 33. Bạn đã dùng những phần nào để kể lại?
 **Loại:** Checkboxes · Required
-- Approval / control rail
-- Activity / history
-- Status
-- Current / next approver
-- Payment detail
+- Approval Rail
+- Lịch sử hoạt động (Activity)
+- Nhãn trạng thái
+- Thông tin chi tiết đề nghị
 - Khác
 
-### 32. Có bước nào bạn không chắc ai đã làm hoặc chuyện gì đã xảy ra không?
+### 34. Có bước nào bạn không chắc ai đã làm hoặc chuyện gì đã xảy ra không?
 **Loại:** Paragraph · Required
 
-### 33. Nếu đây là audit thật, thông tin nào còn thiếu?
+### 35. Nếu kế toán trưởng hay kiểm toán hỏi, thông tin nào còn thiếu?
 **Loại:** Paragraph · Required
 
-### 34. Bạn có cần hướng dẫn thêm ngoài task prompt để reconstruct control chain không?
+### 36. Bạn có cần hướng dẫn thêm ngoài đề bài để kể lại không?
 **Loại:** Multiple choice · Required
 - Không
 - Có một chút
 - Có nhiều
 - Không áp dụng — tôi đang tự làm async
 
-### 35. Mức tự tin với reconstruction của bạn
+### 37. Mức tự tin với phần kể lại của bạn
 **Loại:** Linear scale 1–5 · Required
 
-**D-04 internal learning criterion:** weakened nếu participant không thể reconstruct actor/action sequence từ visible trail hoặc phải đoán các bước quan trọng.
+**D-04 internal learning criterion:** weakened nếu participant không kể lại được ai tạo, ai duyệt, ai chi mà phải đoán bước quan trọng.
 
 ---
 
-# SECTION 6 — Overall debrief
+# SECTION 6 — D-05 Advance settlement
 
-### 36. Phần nào của Flux rõ nhất đối với bạn?
+## Task prompt
+
+Mở **Settlements**.
+
+> “Lan đã tạm ứng cho chuyến hội chợ ở Đà Nẵng (REQ-2038). Bạn là kế toán, muốn biết **khoản tạm ứng này đã hoàn ứng xong chưa**, **chứng từ nào còn thiếu hoặc chưa duyệt**, và **Lan cần làm gì**.”
+
+### 38. Khoản tạm ứng REQ-2038 đã hoàn ứng xong chưa?
+**Loại:** Multiple choice · Required
+- Xong rồi
+- Chưa xong
+- Không chắc
+
+### 39. Chứng từ nào còn thiếu, và chứng từ nào đang chờ duyệt?
 **Loại:** Paragraph · Required
 
-### 37. Phần nào khiến bạn thấy rủi ro hoặc dễ hiểu sai nhất?
+### 40. Lan cần làm gì tiếp theo?
 **Loại:** Paragraph · Required
 
-### 38. Trước khi approve một payment thật, bạn bắt buộc muốn nhìn thấy những thông tin nào?
+### 41. Bạn có cần hướng dẫn thêm ngoài đề bài để tìm chứng từ còn thiếu không?
+**Loại:** Multiple choice · Required
+- Không
+- Có một chút
+- Có nhiều
+- Không áp dụng — tôi đang tự làm async
+
+### 42. Mức tự tin với câu trả lời của bạn
+**Loại:** Linear scale 1–5 · Required
+
+**D-05 internal learning criterion:** weakened nếu participant không tìm ra chứng từ còn thiếu, hoặc cho rằng khoản tạm ứng đã xong trong khi còn thiếu chứng từ.
+
+---
+
+# SECTION 7 — Tổng kết
+
+### 43. Phần nào của Flux rõ nhất đối với bạn?
 **Loại:** Paragraph · Required
 
-### 39. Có lúc nào bạn tưởng một hành động trong prototype sẽ thực hiện giao dịch ngân hàng thật không?
+### 44. Phần nào khiến bạn thấy dễ hiểu sai hoặc rủi ro nhất?
+**Loại:** Paragraph · Required
+
+### 45. So với cách công ty bạn đang làm (câu 8), Flux giúp được gì và thiếu gì?
+**Loại:** Paragraph · Required
+
+### 46. Có lúc nào bạn tưởng một thao tác trong bản mẫu sẽ chuyển tiền thật không?
 **Loại:** Multiple choice · Required
 - Không
 - Có
 - Không chắc
 
-### 40. Nếu chỉ được sửa **một** thứ trong Flux trước vòng test tiếp theo, bạn muốn sửa gì?
+### 47. Có chỗ nào bạn hiểu sai vì giao diện là tiếng Anh không? Nếu có, ở đâu?
 **Loại:** Paragraph · Required
 
-### 41. Tổng thể, mức độ rõ ràng của approval workflow trong Flux
+### 48. Nếu chỉ được sửa **một** thứ trong Flux trước vòng thử tiếp theo, bạn muốn sửa gì?
+**Loại:** Paragraph · Required
+
+### 49. Tổng thể, quy trình duyệt trong Flux rõ ràng tới mức nào?
 **Loại:** Linear scale 1–5 · Required
 
 ---
@@ -314,9 +369,21 @@ Quay lại payment detail / activity trail.
 
 ## Classification
 
-- `DIRECT_USER`: có trách nhiệm thực tế gần đây với payment preparation/review/approval/monitoring/recovery trong business banking / ERP / AP / treasury workflow.
-- `PROXY`: kinh nghiệm adjacent hữu ích nhưng không trực tiếp khớp payment context.
-- `EXCLUDE`: không có kinh nghiệm liên quan, builder của Flux, hoặc consent không hợp lệ.
+- `DIRECT_USER`: trong 6 tháng gần đây đã đề nghị, duyệt, kiểm tra hoặc chi tạm ứng, hoàn tiền hay thanh toán nhà cung cấp ở công ty tới khoảng 200 người.
+- `PROXY`: làm việc tương tự ở công ty lớn hơn, hoặc chỉ duyệt đề nghị không có tiền.
+- `EXCLUDE`: không có kinh nghiệm liên quan, người làm Flux, hoặc không đồng ý.
+
+## Expected answers (from the seed data, for scoring only)
+
+| Task | Correct answer |
+| --- | --- |
+| D-01 | Rule 01 Large requests: the amount is above VND 20,000,000. Now: Lê Minh Khoa, Team lead. Next: Trần Quốc Bảo, Director, then payout by Nguyễn Thu Hà, Accountant. |
+| D-02 | Lan is the requester and cannot approve her own request; the approver whose turn it is decides. She can still see everything and **Cancel request** while it is pending. |
+| D-03 | No money left the account (“No money left Vietcombank”, “No debit posted”). Safe action: check the vendor account number, retry the payout on the same request; do not create a new one. |
+| D-04 | 14 Sep 16:28 created by Võ Ngọc Lan; 16:51 approved by Lê Minh Khoa, Team lead; 17:20 approved by Trần Quốc Bảo, Director; 18:02 paid by bank transfer by Nguyễn Thu Hà, Accountant. |
+| D-05 | Not settled. Missing receipt: Grab, rides to the fair venue, VND 486,000. Needs review: Mường Thanh Đà Nẵng hotel VND 3,200,000 and Vietnam Airlines flights VND 6,850,000. Lan should add the Grab receipt. |
+
+Partially correct answers are recorded as such with the missing part named; do not round them up.
 
 ## Atomic evidence capture
 
@@ -324,11 +391,12 @@ Mỗi evidence record phải có:
 - participant ID;
 - method (`MODERATED` / `ASYNC_SELF_REPORT`);
 - evidence class (`DIRECT_USER` / `PROXY`);
-- decision ID (`D-01`…`D-04`);
+- decision ID (`D-01`…`D-05`);
 - exact response/observation;
 - whether moderator help occurred;
 - exact prototype/build reference;
 - confidence when available;
+- `LANGUAGE` tag when the English interface caused the problem;
 - contradiction preserved if present.
 
 ## What may be scored
@@ -336,9 +404,9 @@ Mỗi evidence record phải có:
 **MODERATED**
 - observed task behavior;
 - help required;
-- task outcome;
-- duplicate-payment attempt;
-- visible recovery path actually chosen.
+- task outcome against the expected answer;
+- duplicate-request attempt;
+- recovery path actually chosen.
 
 **ASYNC_SELF_REPORT**
 - reported interpretation;
@@ -359,5 +427,6 @@ Do **not** infer observed task success, time-on-task or moderator help from asyn
 
 - Verified DIRECT_USER sessions: **0**
 - Verified PROXY sessions: **0**
+- Pilot: not run
 - Human evidence ledger: intentionally empty
-- D-01…D-04: `PLANNED_VALIDATION`
+- D-01…D-05: `PLANNED_VALIDATION`

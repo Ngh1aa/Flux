@@ -2,40 +2,51 @@
 
 These are current product/design decisions and hypotheses. They are **not** validated outcomes.
 
-## D-01 — Approval context stays in the payment detail
+On 2026-11-25 the decisions were restated for small-company spend requests (advances, reimbursements, vendor payments). D-03 was renamed from "Settlement recovery" to "Payout recovery", because "settlement" now means settling an advance with receipts. D-05 was added. No evidence existed before the change.
 
-- **Decision:** Show policy rationale, current approver and next approver together via the Approval Rail.
+## D-01 — Approval context stays in the request detail
+
+- **Decision:** Show the rule, the current approver and the next approver together on the Approval Rail, above the request data.
 - **Evidence state:** `PROJECT_CONTEXT + WORKING_PROTOTYPE / HYPOTHESIS`
-- **Risk if wrong:** Reviewers approve without understanding why the control chain exists or who owns the next step.
-- **Trade-off:** More operational detail versus a simpler payment detail pane.
+- **Risk if wrong:** Approvers decide without knowing why the director was added, or requesters keep asking in chat who is next.
+- **Trade-off:** More approval context in the detail pane versus a simpler pane.
 - **Next evidence:** Task 1.
 - **Status:** `PLANNED_VALIDATION`
 
-## D-02 — Visibility remains stable while authority changes by role
+## D-02 — The request stays visible while the right to decide changes by role
 
-- **Decision:** Employee and Approver roles share the same payment context; action permissions change without hiding the financial evidence.
+- **Decision:** The requester sees the same request as the approver; only the approver whose turn it is can approve or reject, and the requester can still cancel while it is pending.
 - **Evidence state:** `WORKING_PROTOTYPE / HYPOTHESIS`
-- **Risk if wrong:** Disabled actions are interpreted as broken product behavior, or users cannot tell how to obtain the required authority.
-- **Trade-off:** A visible role switcher exposes complexity that a production permissions model might otherwise abstract away.
+- **Risk if wrong:** Disabled Approve and Reject read as broken, or the requester does not know what they can still do.
+- **Trade-off:** A visible Employee / Approver switch exposes a permission model a production app would hide behind sign-in.
 - **Next evidence:** Task 2.
 - **Status:** `PLANNED_VALIDATION`
 
-## D-03 — Settlement failure must state financial consequence and safe recovery
+## D-03 — A failed payout states what happened to the money and how to retry safely
 
-- **Decision:** A failed settlement explicitly states that no debit was posted, preserves the same payment/audit context and directs the user to verify/retry instead of creating a duplicate payment.
-- **Evidence state:** `FORCED_STATE TECHNICAL_PROOF / HYPOTHESIS`
-- **Risk if wrong:** Duplicate payment attempts or uncertainty about whether funds moved.
-- **Trade-off:** More explicit recovery copy versus compact institutional UI.
+- **Decision:** A failed payout says that no money left the account, keeps the same request and approvals, and points to checking the vendor account and retrying instead of creating a new request.
+- **Evidence state:** `FORCED_STATE TECHNICAL_PROOF / HYPOTHESIS` (the state exists only in the design lens; the product stops at Payout).
+- **Risk if wrong:** The vendor is paid twice, or people believe the money is gone.
+- **Trade-off:** Explicit copy about the money versus a more compact interface.
 - **Next evidence:** Task 3.
 - **Status:** `PLANNED_VALIDATION`
 
-## D-04 — Approval history remains reconstructable in context
+## D-04 — The activity trail stays beside the request
 
-- **Decision:** Creation, policy application and reviewer actions remain visible next to the payment instead of being moved entirely to a separate audit product area.
+- **Decision:** Creation, each approval and the payout stay visible with names and times next to the request instead of in a separate audit area.
 - **Evidence state:** `WORKING_PROTOTYPE / HYPOTHESIS`
-- **Risk if wrong:** The activity trail becomes noise during review or still fails later reconstruction.
-- **Trade-off:** More detail in the working surface versus denser visual scanning.
+- **Risk if wrong:** The trail is noise while deciding, or still not enough to answer "who approved this and when?"
+- **Trade-off:** More detail in the working surface versus faster scanning.
 - **Next evidence:** Task 4.
+- **Status:** `PLANNED_VALIDATION`
+
+## D-05 — Receipts are shown against the advance they settle
+
+- **Decision:** Each receipt names the advance it settles, and a claimed amount without a file is shown as the state "Missing receipt" rather than a footnote.
+- **Evidence state:** `WORKING_PROTOTYPE / HYPOTHESIS`
+- **Risk if wrong:** Advances stay open because nobody sees which receipt is missing; the Settlements list does not show the advance until a receipt is opened.
+- **Trade-off:** A receipt-first list (what the accountant reviews) versus an advance-first view (what the requester needs to close).
+- **Next evidence:** Task 5.
 - **Status:** `PLANNED_VALIDATION`
 
 ## Iteration rule

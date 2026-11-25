@@ -21,6 +21,11 @@
       evidence: 'WORKING_PROTOTYPE / HYPOTHESIS',
       tradeoff: 'Reconstructable history in context versus denser visual scanning during approval.',
       task: 'Task 4: reconstruct how and why the request reached its current state.'
+    },
+    'D-05': {
+      evidence: 'WORKING_PROTOTYPE / HYPOTHESIS',
+      tradeoff: 'A receipt-first list for the accountant versus an advance-first view for the requester.',
+      task: 'Task 5: find the missing receipt on an advance and say what the requester should do.'
     }
   };
 
@@ -58,9 +63,9 @@
     proof.setAttribute('aria-label', 'Flux evidence status');
     proof.innerHTML = `
       <div class="lens-proof-stat"><strong>0</strong><span>VERIFIED USERS</span></div>
-      <div class="lens-proof-stat"><strong>4</strong><span>DECISIONS UNDER TEST</span></div>
+      <div class="lens-proof-stat"><strong>5</strong><span>DECISIONS UNDER TEST</span></div>
       <div class="lens-proof-stat"><strong>4</strong><span>FORCED STATES</span></div>
-      <div class="lens-proof-stat"><strong>R01</strong><span>RE-PLAN BEFORE RECRUITING</span></div>`;
+      <div class="lens-proof-stat"><strong>R01</strong><span>READY TO RECRUIT</span></div>`;
     railHead.appendChild(proof);
 
     const gate = document.createElement('div');
