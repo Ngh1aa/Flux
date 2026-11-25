@@ -44,10 +44,10 @@ test('Flux evidence lens exposes deep decision metadata, comparison, tour and sa
   await page.getByRole('button', { name: 'APPROVAL EXPIRED' }).click();
   await expect(frame.locator('.lens-state-note')).toContainText(/expired/i);
 
-  await page.getByRole('button', { name: 'INSUFFICIENT LIQUIDITY' }).click();
-  await expect(frame.locator('.lens-state-note')).toContainText(/liquidity/i);
+  await page.getByRole('button', { name: 'VENDOR ACCOUNT CHANGED' }).click();
+  await expect(frame.locator('.lens-state-note.warn')).toContainText(/Nothing is paid/);
 
-  await page.getByRole('button', { name: 'SETTLEMENT FAILED' }).click();
+  await page.getByRole('button', { name: 'PAYOUT FAILED' }).click();
   await expect(frame.locator('.lens-state-note.danger')).toContainText('NO MONEY MOVED');
   await expect(frame.locator('#detail-status')).toHaveText('Failed');
   await expect(frame.locator('.lens-state-note.danger')).toContainText(/duplicate/i);

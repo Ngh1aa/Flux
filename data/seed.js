@@ -6,198 +6,187 @@
 
   const seed = {
     meta: {
-      version: 4,
-      workspace: 'Northstar Holdings',
+      version: 5,
+      workspace: 'Minh An Trading',
       baseCurrency: 'USD',
       // The workspace clock starts here and advances in real time.
       clockStart: '2026-09-15T15:02:00',
-      currentUser: { name: 'Jamie Stone', title: 'Finance ops', role: 'Finance operations', email: 'jamie.stone@northstar.co', initials: 'JS' },
+      currentUser: { name: 'Võ Ngọc Lan', title: 'Sales', role: 'Employee', email: 'lan.vo@minhan.vn', initials: 'NL' },
       // Seeded sign-in for the login screen (session only).
-      credentials: { email: 'jamie.stone@northstar.co', password: 'northstar' }
+      credentials: { email: 'lan.vo@minhan.vn', password: 'minhan' }
     },
 
-    fx: { USD: 1, EUR: 1.09, GBP: 1.27, JPY: 0.0068, SGD: 0.74 },
+    fx: { USD: 1, EUR: 1.09, GBP: 1.27, JPY: 0.0068, SGD: 0.74, VND: 0.0000394 },
 
+    // Who approves at each step of the request chain.
     approverDirectory: {
-      'Finance manager': 'Alex Smith',
-      CFO: 'Sarah Jensen',
-      Controller: 'Mateo Ruiz',
-      'Treasury lead': 'Sarah Jensen'
+      'Team lead': 'Lê Minh Khoa',
+      Director: 'Trần Quốc Bảo',
+      Accountant: 'Nguyễn Thu Hà'
     },
 
+    // Vendors the company pays directly.
     payees: [
-      { id: 'PYE-1001', name: 'Arcwell Systems Inc.', country: 'United States', currency: 'USD', bank: 'JPMorgan Chase', account: 'US 021000021 •• 7710', email: 'ap@arcwellsystems.com', createdAt: '2025-11-02' },
-      { id: 'PYE-1002', name: 'Takahashi Industrial', country: 'Japan', currency: 'JPY', bank: 'MUFG Bank', account: 'JP 0005-221 •• 3381', email: 'finance@takahashi-ind.co.jp', createdAt: '2025-06-12' },
-      { id: 'PYE-1003', name: 'Nordlicht GmbH', country: 'Germany', currency: 'EUR', bank: 'Deutsche Bank', account: 'DE44 5001 0517 •• 2219', email: 'billing@nordlicht-cloud.de', createdAt: '2026-01-20' },
-      { id: 'PYE-1004', name: 'Fieldwork Studio', country: 'United Kingdom', currency: 'GBP', bank: 'Barclays', account: 'GB12 BARC 2004 •• 5521', email: 'studio@fieldworkstudio.co.uk', createdAt: '2025-09-01' },
-      { id: 'PYE-1005', name: 'Solventa Sp. z o.o.', country: 'Poland', currency: 'EUR', bank: 'PKO BP', account: 'PL61 1090 1014 •• 8874', email: 'faktury@solventa-research.pl', createdAt: '2026-09-01' },
-      { id: 'PYE-1006', name: 'Atlas Freight BV', country: 'Netherlands', currency: 'EUR', bank: 'ING', account: 'NL91 INGB 0417 •• 4300', email: 'ar@atlasfreight.nl', createdAt: '2024-03-10' }
+      { id: 'PYE-1001', name: 'Phương Nam Printing', country: 'Hồ Chí Minh City', currency: 'VND', bank: 'Vietcombank', account: '0071 0004 •• 4410', email: 'sales@phuongnamprint.vn', createdAt: '2024-05-14' },
+      { id: 'PYE-1002', name: 'Hòa Phát Furniture', country: 'Hà Nội', currency: 'VND', bank: 'BIDV', account: '3110 0012 •• 8823', email: 'b2b@hoaphatfurniture.vn', createdAt: '2023-11-02' },
+      { id: 'PYE-1003', name: 'Sao Mai Catering', country: 'Hồ Chí Minh City', currency: 'VND', bank: 'Techcombank', account: '1903 5521 •• 0076', email: 'order@saomaicatering.vn', createdAt: '2026-09-08' },
+      { id: 'PYE-1004', name: 'Viettel Business', country: 'Hà Nội', currency: 'VND', bank: 'MB Bank', account: '0680 1100 •• 2291', email: 'doanhnghiep@viettel.vn', createdAt: '2022-03-01' },
+      { id: 'PYE-1005', name: 'Thiên Long Stationery', country: 'Hồ Chí Minh City', currency: 'VND', bank: 'ACB', account: '2046 7781 •• 5530', email: 'ban.hang@thienlong.vn', createdAt: '2023-06-20' }
     ],
 
+    // Spend requests: advances, reimbursements and vendor payments. Amounts in VND.
     payments: [
       {
-        id: 'TRF-98234', payeeId: 'PYE-1001', counterparty: 'Arcwell Systems Inc.', country: 'United States', currency: 'USD', amount: 18400,
-        purpose: 'Supplier settlement', reference: 'September supplier settlement', executionDate: '2026-09-16', createdAt: '2026-09-15T14:15:22',
-        status: 'pending', chain: ['Finance manager', 'CFO'], stage: 0, policy: 'Rule 01: amount above USD 10,000', approvals: [],
+        id: 'REQ-2041', type: 'Vendor payment', requester: 'Võ Ngọc Lan', payeeId: 'PYE-1001', counterparty: 'Phương Nam Printing', country: 'Vietnam', currency: 'VND', amount: 45000000,
+        purpose: 'Trade fair brochures', reference: 'Quote PN-0915, 5,000 copies', executionDate: '2026-09-18', createdAt: '2026-09-15T14:15:22',
+        status: 'pending', chain: ['Team lead', 'Director'], stage: 0, policy: 'Rule 01: Large requests', approvals: [],
         activity: [
-          { at: '2026-09-15T14:15:22', title: 'Payment created', meta: 'Jamie Stone, Employee' },
-          { at: '2026-09-15T14:15:24', title: 'Policy 01 applied', meta: 'Finance manager → CFO approval required' }
+          { at: '2026-09-15T14:15:22', title: 'Request created', meta: 'Võ Ngọc Lan, Employee' },
+          { at: '2026-09-15T14:15:24', title: 'Rule 01 applied', meta: 'Team lead → Director approval required' }
         ]
       },
       {
-        id: 'TRF-98187', payeeId: 'PYE-1002', counterparty: 'Takahashi Industrial', country: 'Japan', currency: 'JPY', amount: 2850000,
-        purpose: 'Manufacturing services', reference: 'PO 7731 tooling batch', executionDate: '2026-09-15', createdAt: '2026-09-15T12:42:10',
-        status: 'processing', chain: ['Finance manager', 'CFO'], stage: 2, policy: 'Rule 01: amount above USD 10,000',
-        approvals: [{ role: 'Finance manager', by: 'Alex Smith', at: '2026-09-15T13:05:41' }, { role: 'CFO', by: 'Sarah Jensen', at: '2026-09-15T13:48:02' }],
+        id: 'REQ-2038', type: 'Advance', requester: 'Võ Ngọc Lan', payeeId: null, counterparty: 'Võ Ngọc Lan', country: 'Vietnam', currency: 'VND', amount: 26000000,
+        purpose: 'Đà Nẵng trade fair, booth and travel', reference: 'Settle with receipts by 30 Sep', executionDate: '2026-09-16', createdAt: '2026-09-15T12:42:10',
+        status: 'processing', chain: ['Team lead', 'Director'], stage: 2, policy: 'Rule 01: Large requests',
+        approvals: [{ role: 'Team lead', by: 'Lê Minh Khoa', at: '2026-09-15T13:05:41' }, { role: 'Director', by: 'Trần Quốc Bảo', at: '2026-09-15T13:48:02' }],
         activity: [
-          { at: '2026-09-15T12:42:10', title: 'Payment created', meta: 'Jamie Stone, Employee' },
-          { at: '2026-09-15T12:42:12', title: 'Policy 01 applied', meta: 'Finance manager → CFO approval required' },
-          { at: '2026-09-15T13:05:41', title: 'Approved by Finance manager', meta: 'Alex Smith' },
-          { at: '2026-09-15T13:48:02', title: 'Approved by CFO', meta: 'Sarah Jensen' },
-          { at: '2026-09-15T13:48:05', title: 'Released for settlement', meta: 'Flux policy engine' }
+          { at: '2026-09-15T12:42:10', title: 'Request created', meta: 'Võ Ngọc Lan, Employee' },
+          { at: '2026-09-15T12:42:12', title: 'Rule 01 applied', meta: 'Team lead → Director approval required' },
+          { at: '2026-09-15T13:05:41', title: 'Approved by Team lead', meta: 'Lê Minh Khoa' },
+          { at: '2026-09-15T13:48:02', title: 'Approved by Director', meta: 'Trần Quốc Bảo' },
+          { at: '2026-09-15T13:48:05', title: 'Sent to the accountant for payout', meta: 'Flux rules' }
         ]
       },
       {
-        id: 'TRF-98152', payeeId: 'PYE-1003', counterparty: 'Nordlicht GmbH', country: 'Germany', currency: 'EUR', amount: 7240,
-        purpose: 'Cloud infrastructure', reference: 'Invoice NL-2026-0912', executionDate: '2026-09-17', createdAt: '2026-09-15T10:06:33',
-        status: 'pending', chain: ['Finance manager'], stage: 0, policy: 'Workspace default: one approval', approvals: [],
+        id: 'REQ-2036', type: 'Reimbursement', requester: 'Võ Ngọc Lan', payeeId: null, counterparty: 'Võ Ngọc Lan', country: 'Vietnam', currency: 'VND', amount: 1250000,
+        purpose: 'Taxi and client lunch', reference: '2 receipts attached', executionDate: '2026-09-17', createdAt: '2026-09-15T10:06:33',
+        status: 'pending', chain: ['Team lead'], stage: 0, policy: 'Default: team lead approval', approvals: [],
         activity: [
-          { at: '2026-09-15T10:06:33', title: 'Payment created', meta: 'Jamie Stone, Employee' },
-          { at: '2026-09-15T10:06:35', title: 'Workspace default applied', meta: 'Finance manager approval required' }
+          { at: '2026-09-15T10:06:33', title: 'Request created', meta: 'Võ Ngọc Lan, Employee' },
+          { at: '2026-09-15T10:06:35', title: 'Default applied', meta: 'Team lead approval required' }
         ]
       },
       {
-        id: 'TRF-98096', payeeId: 'PYE-1004', counterparty: 'Fieldwork Studio', country: 'United Kingdom', currency: 'GBP', amount: 12900,
-        purpose: 'Design retainer', reference: 'Q3 retainer, month 3', executionDate: '2026-09-14', createdAt: '2026-09-14T16:28:00',
-        status: 'completed', chain: ['Finance manager', 'CFO'], stage: 2, policy: 'Rule 01: amount above USD 10,000',
-        approvals: [{ role: 'Finance manager', by: 'Alex Smith', at: '2026-09-14T16:51:12' }, { role: 'CFO', by: 'Sarah Jensen', at: '2026-09-14T17:20:40' }],
+        id: 'REQ-2033', type: 'Vendor payment', requester: 'Võ Ngọc Lan', payeeId: 'PYE-1002', counterparty: 'Hòa Phát Furniture', country: 'Vietnam', currency: 'VND', amount: 32400000,
+        purpose: 'Twelve office chairs', reference: 'Invoice HP-2026-1144', executionDate: '2026-09-14', createdAt: '2026-09-14T16:28:00',
+        status: 'completed', chain: ['Team lead', 'Director'], stage: 2, policy: 'Rule 01: Large requests',
+        approvals: [{ role: 'Team lead', by: 'Lê Minh Khoa', at: '2026-09-14T16:51:12' }, { role: 'Director', by: 'Trần Quốc Bảo', at: '2026-09-14T17:20:40' }],
         activity: [
-          { at: '2026-09-14T16:28:00', title: 'Payment created', meta: 'Jamie Stone, Employee' },
-          { at: '2026-09-14T16:51:12', title: 'Approved by Finance manager', meta: 'Alex Smith' },
-          { at: '2026-09-14T17:20:40', title: 'Approved by CFO', meta: 'Sarah Jensen' },
-          { at: '2026-09-14T18:02:19', title: 'Settlement confirmed', meta: 'SWIFT gpi confirmation' }
+          { at: '2026-09-14T16:28:00', title: 'Request created', meta: 'Võ Ngọc Lan, Employee' },
+          { at: '2026-09-14T16:51:12', title: 'Approved by Team lead', meta: 'Lê Minh Khoa' },
+          { at: '2026-09-14T17:20:40', title: 'Approved by Director', meta: 'Trần Quốc Bảo' },
+          { at: '2026-09-14T18:02:19', title: 'Paid out by bank transfer', meta: 'Nguyễn Thu Hà, Accountant' }
         ]
       },
       {
-        id: 'TRF-98061', payeeId: 'PYE-1005', counterparty: 'Solventa Sp. z o.o.', country: 'Poland', currency: 'EUR', amount: 5600,
-        purpose: 'Market research', reference: 'Research sprint 2', executionDate: '2026-09-18', createdAt: '2026-09-14T13:11:09',
-        status: 'pending', chain: ['Finance manager'], stage: 0, policy: 'Rule 03: new beneficiary above USD 2,500', approvals: [],
+        id: 'REQ-2031', type: 'Vendor payment', requester: 'Võ Ngọc Lan', payeeId: 'PYE-1003', counterparty: 'Sao Mai Catering', country: 'Vietnam', currency: 'VND', amount: 6800000,
+        purpose: 'Customer workshop lunch', reference: 'Order SM-0912', executionDate: '2026-09-18', createdAt: '2026-09-14T13:11:09',
+        status: 'pending', chain: ['Team lead', 'Accountant'], stage: 0, policy: 'Rule 02: New vendor check', approvals: [],
         activity: [
-          { at: '2026-09-14T13:11:09', title: 'Payment created', meta: 'Jamie Stone, Employee' },
-          { at: '2026-09-14T13:11:11', title: 'Policy 03 applied', meta: 'New beneficiary, Finance manager approval required' }
+          { at: '2026-09-14T13:11:09', title: 'Request created', meta: 'Võ Ngọc Lan, Employee' },
+          { at: '2026-09-14T13:11:11', title: 'Rule 02 applied', meta: 'New vendor, Team lead → Accountant approval required' }
         ]
       },
       {
-        id: 'TRF-97988', payeeId: 'PYE-1006', counterparty: 'Atlas Freight BV', country: 'Netherlands', currency: 'EUR', amount: 21480.14,
-        purpose: 'Freight services', reference: 'Rotterdam lane, August', executionDate: '2026-09-13', createdAt: '2026-09-13T09:31:45',
-        status: 'completed', chain: ['Finance manager', 'CFO'], stage: 2, policy: 'Rule 01: amount above USD 10,000',
-        approvals: [{ role: 'Finance manager', by: 'Alex Smith', at: '2026-09-13T10:02:00' }, { role: 'CFO', by: 'Sarah Jensen', at: '2026-09-13T11:15:30' }],
+        id: 'REQ-2027', type: 'Advance', requester: 'Võ Ngọc Lan', payeeId: null, counterparty: 'Võ Ngọc Lan', country: 'Vietnam', currency: 'VND', amount: 8000000,
+        purpose: 'Customer visits in Cần Thơ', reference: 'Settled 12 Sep', executionDate: '2026-09-08', createdAt: '2026-09-05T09:31:45',
+        status: 'completed', chain: ['Team lead'], stage: 1, policy: 'Default: team lead approval',
+        approvals: [{ role: 'Team lead', by: 'Lê Minh Khoa', at: '2026-09-05T10:02:00' }],
         activity: [
-          { at: '2026-09-13T09:31:45', title: 'Payment created', meta: 'Jamie Stone, Employee' },
-          { at: '2026-09-13T10:02:00', title: 'Approved by Finance manager', meta: 'Alex Smith' },
-          { at: '2026-09-13T11:15:30', title: 'Approved by CFO', meta: 'Sarah Jensen' },
-          { at: '2026-09-13T12:40:11', title: 'Settlement confirmed', meta: 'SWIFT gpi confirmation' }
+          { at: '2026-09-05T09:31:45', title: 'Request created', meta: 'Võ Ngọc Lan, Employee' },
+          { at: '2026-09-05T10:02:00', title: 'Approved by Team lead', meta: 'Lê Minh Khoa' },
+          { at: '2026-09-05T14:40:11', title: 'Paid out in cash', meta: 'Nguyễn Thu Hà, Accountant' }
         ]
       },
       {
-        id: 'TRF-97940', payeeId: 'PYE-1004', counterparty: 'Fieldwork Studio', country: 'United Kingdom', currency: 'GBP', amount: 3200,
-        purpose: 'Workshop facilitation', reference: 'October workshop deposit', executionDate: '2026-09-22', createdAt: '2026-09-12T08:12:00',
+        id: 'REQ-2024', type: 'Reimbursement', requester: 'Võ Ngọc Lan', payeeId: null, counterparty: 'Võ Ngọc Lan', country: 'Vietnam', currency: 'VND', amount: 640000,
+        purpose: 'Printer ink', reference: 'Receipt to attach', executionDate: '2026-09-22', createdAt: '2026-09-12T08:12:00',
         status: 'draft', chain: [], stage: 0, policy: '', approvals: [],
-        activity: [{ at: '2026-09-12T08:12:00', title: 'Draft saved', meta: 'Jamie Stone, Employee' }]
+        activity: [{ at: '2026-09-12T08:12:00', title: 'Draft saved', meta: 'Võ Ngọc Lan, Employee' }]
       }
     ],
 
+    // Where the company's money sits: two bank accounts and the petty cash box. VND only.
     accounts: [
-      { id: 'USD', currency: 'USD', name: 'USD Operating', purpose: 'Primary vendor settlement', available: 286420, reserved: 18400, iban: 'US 021000021 •• 4821', rails: 'Local + SWIFT', settlement: '16 Sep, 09:00 UTC', country: 'United States', lastActivity: '2026-09-15T14:38:00' },
-      { id: 'EUR', currency: 'EUR', name: 'EUR Operations', purpose: 'EU payroll and suppliers', available: 143820.4, reserved: 12840, iban: 'DE89 3704 0044 •• 7720', rails: 'SEPA + SWIFT', settlement: '16 Sep, 08:00 CET', country: 'Germany', lastActivity: '2026-09-15T13:12:00' },
-      { id: 'GBP', currency: 'GBP', name: 'GBP Operating', purpose: 'UK service contracts', available: 72990.18, reserved: 4320, iban: 'GB29 NWBK 6016 •• 1198', rails: 'Faster Payments', settlement: '16 Sep, 09:30 BST', country: 'United Kingdom', lastActivity: '2026-09-15T11:46:00' },
-      { id: 'JPY', currency: 'JPY', name: 'JPY Manufacturing', purpose: 'Factory and logistics', available: 18420000, reserved: 2850000, iban: 'JP ZENGIN 0005-482190', rails: 'Zengin domestic', settlement: '17 Sep, 09:00 JST', country: 'Japan', lastActivity: '2026-09-15T10:04:00' },
-      { id: 'SGD', currency: 'SGD', name: 'SGD APAC Reserve', purpose: 'Regional contingency', available: 94600, reserved: 0, iban: 'SG FAST •• 6042', rails: 'FAST + SWIFT', settlement: 'No scheduled debit', country: 'Singapore', lastActivity: '2026-09-12T09:20:00' }
+      { id: 'VCB', currency: 'VND', name: 'Vietcombank operating', purpose: 'Vendor payouts and payroll', available: 1284500000, reserved: 26000000, iban: '0071 0001 •• 2468', rails: 'Napas 247, interbank', settlement: 'Same business day', country: 'Hồ Chí Minh City', lastActivity: '2026-09-15T14:38:00' },
+      { id: 'TCB', currency: 'VND', name: 'Techcombank collections', purpose: 'Customer receipts', available: 642300000, reserved: 0, iban: '1903 6620 •• 1155', rails: 'Napas 247', settlement: 'Same business day', country: 'Hồ Chí Minh City', lastActivity: '2026-09-15T13:12:00' },
+      { id: 'CASH', currency: 'VND', name: 'Petty cash', purpose: 'Small advances and reimbursements', available: 18750000, reserved: 0, iban: 'Office safe, floor 3', rails: 'Cash', settlement: 'Counted every Friday', country: 'Head office', lastActivity: '2026-09-11T16:20:00' }
     ],
 
     transactions: [
-      { id: 'TX-50311', accountId: 'USD', date: '2026-09-15T14:38:00', description: 'Customer receipt', counterparty: 'Brightline Retail Inc.', direction: 'credit', amount: 42800, status: 'posted' },
-      { id: 'TX-50302', accountId: 'USD', date: '2026-09-15T14:15:24', description: 'Reserved for TRF-98234', counterparty: 'Arcwell Systems Inc.', direction: 'debit', amount: 18400, status: 'pending' },
-      { id: 'TX-50288', accountId: 'USD', date: '2026-09-15T09:02:00', description: 'Card settlement batch', counterparty: 'Flux card program', direction: 'debit', amount: 6214.55, status: 'posted' },
-      { id: 'TX-50261', accountId: 'USD', date: '2026-09-14T17:45:00', description: 'Customer receipt', counterparty: 'Harbor & Co.', direction: 'credit', amount: 18950, status: 'posted' },
-      { id: 'TX-50240', accountId: 'USD', date: '2026-09-13T11:20:00', description: 'Payroll funding', counterparty: 'Northstar US Payroll', direction: 'debit', amount: 84200, status: 'posted' },
-      { id: 'TX-50212', accountId: 'USD', date: '2026-09-12T15:10:00', description: 'Interest credit', counterparty: 'Flux treasury', direction: 'credit', amount: 412.18, status: 'posted' },
-      { id: 'TX-60118', accountId: 'EUR', date: '2026-09-15T13:12:00', description: 'Reserved for TRF-98152', counterparty: 'Nordlicht GmbH', direction: 'debit', amount: 7240, status: 'pending' },
-      { id: 'TX-60104', accountId: 'EUR', date: '2026-09-14T13:11:11', description: 'Reserved for TRF-98061', counterparty: 'Solventa Sp. z o.o.', direction: 'debit', amount: 5600, status: 'pending' },
-      { id: 'TX-60097', accountId: 'EUR', date: '2026-09-13T12:40:11', description: 'Payment TRF-97988', counterparty: 'Atlas Freight BV', direction: 'debit', amount: 21480.14, status: 'posted' },
-      { id: 'TX-60081', accountId: 'EUR', date: '2026-09-12T10:00:00', description: 'Customer receipt', counterparty: 'Vasquez Logistik', direction: 'credit', amount: 38400, status: 'posted' },
-      { id: 'TX-60070', accountId: 'EUR', date: '2026-09-11T08:30:00', description: 'EU payroll', counterparty: 'Northstar EU Payroll', direction: 'debit', amount: 61200, status: 'posted' },
-      { id: 'TX-70044', accountId: 'GBP', date: '2026-09-15T11:46:00', description: 'Customer receipt', counterparty: 'Kestrel Media Ltd', direction: 'credit', amount: 9600, status: 'posted' },
-      { id: 'TX-70039', accountId: 'GBP', date: '2026-09-14T18:02:19', description: 'Payment TRF-98096', counterparty: 'Fieldwork Studio', direction: 'debit', amount: 12900, status: 'posted' },
-      { id: 'TX-70021', accountId: 'GBP', date: '2026-09-10T09:15:00', description: 'Office lease', counterparty: 'Shoreditch Works', direction: 'debit', amount: 8450, status: 'posted' },
-      { id: 'TX-80012', accountId: 'JPY', date: '2026-09-15T10:04:00', description: 'Reserved for TRF-98187', counterparty: 'Takahashi Industrial', direction: 'debit', amount: 2850000, status: 'pending' },
-      { id: 'TX-80007', accountId: 'JPY', date: '2026-09-11T09:00:00', description: 'Customer receipt', counterparty: 'Osaka Components KK', direction: 'credit', amount: 6200000, status: 'posted' },
-      { id: 'TX-90003', accountId: 'SGD', date: '2026-09-12T09:20:00', description: 'Reserve top-up', counterparty: 'Northstar Holdings', direction: 'credit', amount: 25000, status: 'posted' }
+      { id: 'TX-50311', accountId: 'VCB', date: '2026-09-15T14:38:00', description: 'Customer receipt', counterparty: 'Bách Hóa Xanh', direction: 'credit', amount: 186000000, status: 'posted' },
+      { id: 'TX-50302', accountId: 'VCB', date: '2026-09-15T13:48:05', description: 'Reserved for REQ-2038', counterparty: 'Võ Ngọc Lan', direction: 'debit', amount: 26000000, status: 'pending' },
+      { id: 'TX-50288', accountId: 'VCB', date: '2026-09-14T18:02:19', description: 'Paid REQ-2033', counterparty: 'Hòa Phát Furniture', direction: 'debit', amount: 32400000, status: 'posted' },
+      { id: 'TX-50261', accountId: 'VCB', date: '2026-09-14T17:45:00', description: 'Customer receipt', counterparty: 'Co.opmart', direction: 'credit', amount: 94500000, status: 'posted' },
+      { id: 'TX-50240', accountId: 'VCB', date: '2026-09-13T11:20:00', description: 'Payroll, August', counterparty: 'Minh An staff', direction: 'debit', amount: 612000000, status: 'posted' },
+      { id: 'TX-50212', accountId: 'VCB', date: '2026-09-12T15:10:00', description: 'Interest', counterparty: 'Vietcombank', direction: 'credit', amount: 1284000, status: 'posted' },
+      { id: 'TX-60118', accountId: 'TCB', date: '2026-09-15T13:12:00', description: 'Customer receipt', counterparty: 'Lotte Mart', direction: 'credit', amount: 72800000, status: 'posted' },
+      { id: 'TX-60104', accountId: 'TCB', date: '2026-09-14T13:11:11', description: 'Customer receipt', counterparty: 'Thế Giới Di Động', direction: 'credit', amount: 128000000, status: 'posted' },
+      { id: 'TX-60097', accountId: 'TCB', date: '2026-09-13T12:40:11', description: 'Transfer to Vietcombank operating', counterparty: 'Internal transfer', direction: 'debit', amount: 300000000, status: 'posted' },
+      { id: 'TX-60081', accountId: 'TCB', date: '2026-09-12T10:00:00', description: 'Customer receipt', counterparty: 'Vinmart', direction: 'credit', amount: 58400000, status: 'posted' },
+      { id: 'TX-60070', accountId: 'TCB', date: '2026-09-11T08:30:00', description: 'Bank fees', counterparty: 'Techcombank', direction: 'debit', amount: 220000, status: 'posted' },
+      { id: 'TX-70044', accountId: 'CASH', date: '2026-09-11T16:20:00', description: 'Paid reimbursement', counterparty: 'Đặng Hoàng Huy', direction: 'debit', amount: 450000, status: 'posted' },
+      { id: 'TX-70039', accountId: 'CASH', date: '2026-09-10T09:00:00', description: 'Top-up from Vietcombank operating', counterparty: 'Internal transfer', direction: 'credit', amount: 20000000, status: 'posted' },
+      { id: 'TX-70021', accountId: 'CASH', date: '2026-09-05T14:40:11', description: 'Paid REQ-2027 advance', counterparty: 'Võ Ngọc Lan', direction: 'debit', amount: 8000000, status: 'posted' }
     ],
 
-    cards: [
-      { id: 'CRD-4821', holder: 'Jamie Stone', last4: '4821', type: 'Physical', status: 'Active', currency: 'USD', monthly: 4860.2, limit: 7500, department: 'Finance', program: 'Core operations', expiry: '09 / 29' },
-      { id: 'CRD-1104', holder: 'Maya Chen', last4: '1104', type: 'Virtual', status: 'Active', currency: 'USD', monthly: 8210, limit: 12000, department: 'Growth', program: 'Demand generation', expiry: '03 / 28' },
-      { id: 'CRD-7718', holder: 'Luca Meyer', last4: '7718', type: 'Physical', status: 'Frozen', currency: 'EUR', monthly: 1420.8, limit: 5000, department: 'Operations', program: 'EU field ops', expiry: '11 / 27' },
-      { id: 'CRD-9632', holder: 'Priya Nair', last4: '9632', type: 'Virtual', status: 'Active', currency: 'USD', monthly: 11942.45, limit: 15000, department: 'Engineering', program: 'Cloud infrastructure', expiry: '06 / 28' },
-      { id: 'CRD-2844', holder: 'Theo Brooks', last4: '2844', type: 'Physical', status: 'Pending', currency: 'USD', monthly: 0, limit: 3500, department: 'Sales', program: 'Client travel', expiry: '09 / 29' }
-    ],
-
-    cardPrograms: ['Core operations', 'Demand generation', 'EU field ops', 'Cloud infrastructure', 'Client travel'],
-
+    // Permission areas: accounts = Funds, payments = Requests, cards = Settlements, team = Team.
     roleTemplates: {
-      Employee: ['cards-view'],
-      Bookkeeper: ['accounts-view', 'payments-view', 'cards-view', 'team-view'],
-      'Finance manager': ['accounts-view', 'payments-view', 'payments-create', 'payments-approve', 'cards-view', 'cards-create', 'team-view'],
-      CFO: ['accounts-view', 'payments-view', 'payments-create', 'payments-approve', 'payments-admin', 'cards-view', 'cards-create', 'cards-admin', 'team-view', 'team-admin'],
-      Admin: ['accounts-view', 'accounts-admin', 'payments-view', 'cards-view', 'cards-admin', 'team-view', 'team-create', 'team-admin']
+      Employee: ['payments-view', 'payments-create', 'cards-view', 'cards-create'],
+      'Team lead': ['payments-view', 'payments-create', 'payments-approve', 'cards-view', 'cards-create', 'team-view'],
+      Accountant: ['accounts-view', 'accounts-create', 'payments-view', 'payments-approve', 'cards-view', 'cards-approve', 'team-view'],
+      Director: ['accounts-view', 'accounts-create', 'accounts-admin', 'payments-view', 'payments-create', 'payments-approve', 'payments-admin', 'cards-view', 'cards-approve', 'cards-admin', 'team-view', 'team-admin'],
+      Admin: ['accounts-view', 'payments-view', 'cards-view', 'team-view', 'team-create', 'team-admin']
     },
 
     members: [
-      { id: 'MEM-01', name: 'Alex Smith', email: 'alex.smith@northstar.co', role: 'Finance manager', team: 'Finance', region: 'EU', status: 'Active', lastSeen: '2026-09-15T14:58:00' },
-      { id: 'MEM-02', name: 'Sarah Jensen', email: 'sarah.jensen@northstar.co', role: 'CFO', team: 'Executive', region: 'Global', status: 'Active', lastSeen: '2026-09-15T14:41:00' },
-      { id: 'MEM-03', name: 'Priya Nair', email: 'priya.nair@northstar.co', role: 'Employee', team: 'Engineering', region: 'US', status: 'Active', lastSeen: '2026-09-15T13:36:00' },
-      { id: 'MEM-04', name: 'Mateo Ruiz', email: 'mateo.ruiz@northstar.co', role: 'Bookkeeper', team: 'Accounting', region: 'EU', status: 'Active', lastSeen: '2026-09-15T11:22:00' },
-      { id: 'MEM-05', name: 'Theo Brooks', email: 'theo.brooks@northstar.co', role: 'Employee', team: 'Sales', region: 'UK', status: 'Invited', lastSeen: null, invitedAt: '2026-09-15T09:10:00' }
+      { id: 'MEM-01', name: 'Lê Minh Khoa', email: 'khoa.le@minhan.vn', role: 'Team lead', team: 'Sales', region: 'Hồ Chí Minh City', status: 'Active', lastSeen: '2026-09-15T14:58:00' },
+      { id: 'MEM-02', name: 'Trần Quốc Bảo', email: 'bao.tran@minhan.vn', role: 'Director', team: 'Management', region: 'Hồ Chí Minh City', status: 'Active', lastSeen: '2026-09-15T14:41:00' },
+      { id: 'MEM-03', name: 'Đặng Hoàng Huy', email: 'huy.dang@minhan.vn', role: 'Employee', team: 'Operations', region: 'Hồ Chí Minh City', status: 'Active', lastSeen: '2026-09-15T13:36:00' },
+      { id: 'MEM-04', name: 'Nguyễn Thu Hà', email: 'ha.nguyen@minhan.vn', role: 'Accountant', team: 'Finance', region: 'Hồ Chí Minh City', status: 'Active', lastSeen: '2026-09-15T11:22:00' },
+      { id: 'MEM-05', name: 'Phạm Thanh Tâm', email: 'tam.pham@minhan.vn', role: 'Team lead', team: 'Operations', region: 'Hà Nội', status: 'Invited', lastSeen: null, invitedAt: '2026-09-15T09:10:00' }
     ],
 
+    // Receipts that settle an advance, or that an employee paid out of pocket. VND only.
     expenses: [
-      { id: 'EXP-44182', merchant: 'The Hoxton', detail: 'Paris, lodging', owner: 'Maya Chen', category: 'Travel', currency: 'USD', amount: 642.18, date: '2026-09-14', card: 'Virtual •••• 1104', receipt: 'hoxton-paris-folio.pdf', status: 'review', note: '' },
-      { id: 'EXP-44169', merchant: 'AWS EMEA', detail: 'Infrastructure', owner: 'Priya Nair', category: 'Cloud', currency: 'USD', amount: 1284.4, date: '2026-09-14', card: 'Virtual •••• 9632', receipt: '', status: 'missing', note: '' },
-      { id: 'EXP-44131', merchant: 'Notion Labs', detail: 'Team subscription', owner: 'Jamie Stone', category: 'Software', currency: 'USD', amount: 192, date: '2026-09-13', card: 'Physical •••• 4821', receipt: 'notion-invoice-0913.pdf', status: 'approved', note: '' },
-      { id: 'EXP-44098', merchant: 'Deutsche Bahn', detail: 'Rail, client visit', owner: 'Luca Meyer', category: 'Travel', currency: 'EUR', amount: 186.4, date: '2026-09-13', card: 'Physical •••• 7718', receipt: 'db-ticket-ice-597.png', status: 'review', note: '' },
-      { id: 'EXP-44061', merchant: 'Figma', detail: 'Design tooling', owner: 'Maya Chen', category: 'Software', currency: 'USD', amount: 225, date: '2026-09-12', card: 'Virtual •••• 1104', receipt: 'figma-receipt-sep.pdf', status: 'approved', note: '' }
+      { id: 'EXP-44182', merchant: 'Mường Thanh Đà Nẵng', detail: 'Hotel, 2 nights', owner: 'Võ Ngọc Lan', category: 'Travel', currency: 'VND', amount: 3200000, date: '2026-09-14', card: 'Advance REQ-2038', receipt: 'muongthanh-folio.pdf', status: 'review', note: '' },
+      { id: 'EXP-44169', merchant: 'Grab', detail: 'Rides to the fair venue', owner: 'Võ Ngọc Lan', category: 'Transport', currency: 'VND', amount: 486000, date: '2026-09-14', card: 'Advance REQ-2038', receipt: '', status: 'missing', note: '' },
+      { id: 'EXP-44131', merchant: 'Thiên Long Stationery', detail: 'Printer paper', owner: 'Đặng Hoàng Huy', category: 'Office supplies', currency: 'VND', amount: 640000, date: '2026-09-13', card: 'Out of pocket', receipt: 'thienlong-hd-0913.pdf', status: 'approved', note: '' },
+      { id: 'EXP-44098', merchant: 'Vietnam Airlines', detail: 'Flights to Đà Nẵng', owner: 'Võ Ngọc Lan', category: 'Travel', currency: 'VND', amount: 6850000, date: '2026-09-13', card: 'Advance REQ-2038', receipt: 'vna-eticket-597.png', status: 'review', note: '' },
+      { id: 'EXP-44061', merchant: 'Highlands Coffee', detail: 'Client meeting', owner: 'Lê Minh Khoa', category: 'Meals with clients', currency: 'VND', amount: 420000, date: '2026-09-12', card: 'Out of pocket', receipt: 'highlands-0912.jpg', status: 'approved', note: '' }
     ],
 
-    expenseCategories: ['Travel', 'Cloud', 'Software', 'Meals', 'Office', 'Professional services'],
+    expenseCategories: ['Travel', 'Transport', 'Meals with clients', 'Office supplies', 'Marketing', 'Equipment'],
 
     policies: [
-      { id: 'POL-01', name: 'Large cross-border transfers', scope: 'International wires', status: 'Active', conditions: [{ field: 'amount', op: '>', value: 'USD 10,000' }, { field: 'currency', op: '!=', value: 'base currency' }], approvers: ['Finance manager', 'CFO'] },
-      { id: 'POL-02', name: 'Domestic operational spend', scope: 'Domestic ACH', status: 'Active', conditions: [{ field: 'amount', op: '<', value: 'USD 10,000' }], approvers: ['Finance manager'] },
-      { id: 'POL-03', name: 'New beneficiary control', scope: 'All payments', status: 'Active', conditions: [{ field: 'beneficiary_age_days', op: '<', value: '30' }, { field: 'amount', op: '>', value: 'USD 2,500' }], approvers: ['Finance manager'] },
-      { id: 'POL-04', name: 'Weekend execution hold', scope: 'All payments', status: 'Inactive', conditions: [{ field: 'created_outside_hours', op: '=', value: 'true' }], approvers: ['Treasury lead'] }
+      { id: 'POL-01', name: 'Large requests', scope: 'All requests', status: 'Active', conditions: [{ field: 'amount', op: '>', value: 'VND 20,000,000' }], approvers: ['Team lead', 'Director'] },
+      { id: 'POL-02', name: 'New vendor check', scope: 'Vendor payments', status: 'Active', conditions: [{ field: 'beneficiary_age_days', op: '<', value: '30' }], approvers: ['Team lead', 'Accountant'] },
+      { id: 'POL-03', name: 'Advances above 10 million', scope: 'Advances', status: 'Active', conditions: [{ field: 'amount', op: '>', value: 'VND 10,000,000' }], approvers: ['Team lead', 'Accountant'] },
+      { id: 'POL-04', name: 'Weekend submission hold', scope: 'All requests', status: 'Inactive', conditions: [{ field: 'created_outside_hours', op: '=', value: 'true' }], approvers: ['Director'] }
     ],
 
     policyHistory: [
-      { at: '2026-09-12T17:42:00', by: 'Sarah Jensen', action: 'Rule 04 set to Inactive' },
-      { at: '2026-09-02T10:15:00', by: 'Sarah Jensen', action: 'Rule 03 threshold changed to USD 2,500' }
+      { at: '2026-09-12T17:42:00', by: 'Trần Quốc Bảo', action: 'Rule 04 set to Inactive' },
+      { at: '2026-09-02T10:15:00', by: 'Trần Quốc Bảo', action: 'Rule 01 threshold changed to VND 20,000,000' }
     ],
 
     reportSchedule: null
   };
 
-  // Deterministic operating-spend ledger for Reports (1 Jan to 15 Sep 2026).
-  // Generated, not stored, so the session copy stays small.
+  // Deterministic spend ledger for Reports (1 Jan to 15 Sep 2026), VND.
+  // Generated, not stored, so the session copy stays small. Field names are kept from the first version:
+  // currency holds the department, amountUsd the VND amount, fxCostUsd the part paid out as an advance.
   function generateLedger() {
     let s = 20260915;
     const rand = () => { s |= 0; s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
     const categories = [
-      { name: 'Cloud infrastructure', weight: 28, currency: ['USD', 'EUR'], source: 'card', base: 1900 },
-      { name: 'Manufacturing services', weight: 22, currency: ['JPY'], source: 'payment', base: 4600 },
-      { name: 'Freight & logistics', weight: 16, currency: ['EUR'], source: 'payment', base: 3100 },
-      { name: 'Travel', weight: 10, currency: ['USD', 'EUR', 'GBP'], source: 'expense', base: 520 },
-      { name: 'Software', weight: 9, currency: ['USD'], source: 'card', base: 640 },
-      { name: 'Professional services', weight: 15, currency: ['GBP', 'USD', 'SGD'], source: 'payment', base: 2800 }
+      { name: 'Customer events', weight: 20, currency: ['Sales', 'Marketing'], source: 'advance', base: 2600000 },
+      { name: 'Vendor purchases', weight: 24, currency: ['Operations', 'Office'], source: 'vendor', base: 6200000 },
+      { name: 'Travel', weight: 18, currency: ['Sales', 'Operations'], source: 'advance', base: 1900000 },
+      { name: 'Meals with clients', weight: 12, currency: ['Sales'], source: 'receipt', base: 450000 },
+      { name: 'Office supplies', weight: 14, currency: ['Office'], source: 'receipt', base: 380000 },
+      { name: 'Marketing materials', weight: 12, currency: ['Marketing'], source: 'vendor', base: 3400000 }
     ];
     const total = categories.reduce((sum, c) => sum + c.weight, 0);
     const rows = [];
@@ -212,7 +201,7 @@
         let pick = rand() * total;
         const cat = categories.find((c) => (pick -= c.weight) < 0) || categories[0];
         const currency = cat.currency[Math.floor(rand() * cat.currency.length)];
-        const usd = Math.round(cat.base * trend * (0.45 + rand() * 1.4) * 100) / 100;
+        const usd = Math.round((cat.base * trend * (0.45 + rand() * 1.4)) / 1000) * 1000;
         rows.push({
           id: `LGR-${String(n).padStart(5, '0')}`,
           date: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`,
@@ -220,7 +209,7 @@
           currency,
           source: cat.source,
           amountUsd: usd,
-          fxCostUsd: currency === 'USD' ? 0 : Math.round(usd * 0.0099 * 100) / 100,
+          fxCostUsd: cat.source === 'advance' ? usd : 0,
           exception: rand() < 0.018
         });
         n += 1;

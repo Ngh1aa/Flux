@@ -4,23 +4,28 @@
   const meta = {
     'D-01': {
       evidence: 'PROJECT_CONTEXT + WORKING_PROTOTYPE / HYPOTHESIS',
-      tradeoff: 'More approval context in the working surface versus a simpler payment-detail pane.',
-      task: 'Task 1 · explain why approval is required, who acts now, who acts next.'
+      tradeoff: 'More approval context in the request detail versus a simpler detail pane.',
+      task: 'Task 1: say why the request needs approval, who approves now and who is next.'
     },
     'D-02': {
       evidence: 'WORKING_PROTOTYPE / HYPOTHESIS',
       tradeoff: 'Stable visibility across roles versus exposing permission complexity directly in the interface.',
-      task: 'Task 2 · explain what changed when role authority changes and what stayed visible.'
+      task: 'Task 2: explain what changed when switching to Approver and what stayed visible.'
     },
     'D-03': {
       evidence: 'FORCED_STATE TECHNICAL_PROOF / HYPOTHESIS',
-      tradeoff: 'Explicit financial-consequence copy versus a more compact institutional interface.',
-      task: 'Task 3 · handle settlement failure, state whether money moved, choose a safe recovery path.'
+      tradeoff: 'Explicit copy about the money versus a more compact interface.',
+      task: 'Task 3: handle a failed payout, say whether money moved, choose a safe retry.'
     },
     'D-04': {
       evidence: 'WORKING_PROTOTYPE / HYPOTHESIS',
       tradeoff: 'Reconstructable history in context versus denser visual scanning during approval.',
-      task: 'Task 4 · reconstruct how and why the payment reached its current state.'
+      task: 'Task 4: reconstruct how and why the request reached its current state.'
+    },
+    'D-05': {
+      evidence: 'WORKING_PROTOTYPE / HYPOTHESIS',
+      tradeoff: 'A receipt-first list for the accountant versus an advance-first view for the requester.',
+      task: 'Task 5: find the missing receipt on an advance and say what the requester should do.'
     }
   };
 
@@ -29,13 +34,13 @@
     .lens-proof-strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:10px}
     .lens-proof-stat{border:1px solid #cfd4ce;background:#fff;padding:8px;min-width:0}
     .lens-proof-stat strong{display:block;font:800 13px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:#1f3a5f}
-    .lens-proof-stat span{display:block;margin-top:4px;font:700 8px/1.25 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.04em;color:#66706a}
-    .lens-return{display:inline-flex;align-items:center;gap:6px;margin-top:10px;color:#1f3a5f;text-decoration:none;font:800 9px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.04em}
+    .lens-proof-stat span{display:block;margin-top:4px;font:700 12px/1.25 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.04em;color:#66706a}
+    .lens-return{display:inline-flex;align-items:center;gap:6px;margin-top:10px;color:#1f3a5f;text-decoration:none;font:800 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.04em}
     .lens-return:hover{text-decoration:underline;text-underline-offset:3px}
-    .decision-evidence{margin-top:8px;padding-top:8px;border-top:1px solid #e1e4df;font-size:10px;line-height:1.45;color:#66706a}
+    .decision-evidence{margin-top:8px;padding-top:8px;border-top:1px solid #e1e4df;font-size:12px;line-height:1.45;color:#66706a}
     .decision-evidence b{color:#14171a}
-    .lens-mobile-toggle{display:none;position:fixed;left:8px;top:8px;z-index:40;border:1px solid #1f3a5f;background:#fff;color:#1f3a5f;padding:8px 9px;font:800 9px/1 ui-monospace,SFMono-Regular,Menlo,monospace;box-shadow:0 8px 20px rgba(20,23,26,.12)}
-    .lens-research-gate{margin-top:8px;border:1px dashed #b9c1b8;background:#fff;padding:9px;font-size:10px;line-height:1.45;color:#66706a}
+    .lens-mobile-toggle{display:none;position:fixed;left:8px;top:8px;z-index:40;border:1px solid #1f3a5f;background:#fff;color:#1f3a5f;padding:8px 9px;font:800 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;box-shadow:0 8px 20px rgba(20,23,26,.12)}
+    .lens-research-gate{margin-top:8px;border:1px dashed #b9c1b8;background:#fff;padding:9px;font-size:12px;line-height:1.45;color:#66706a}
     .lens-research-gate strong{color:#14171a}
     @media(max-width:900px){
       .lens-mobile-toggle{display:block}
@@ -58,7 +63,7 @@
     proof.setAttribute('aria-label', 'Flux evidence status');
     proof.innerHTML = `
       <div class="lens-proof-stat"><strong>0</strong><span>VERIFIED USERS</span></div>
-      <div class="lens-proof-stat"><strong>4</strong><span>DECISIONS UNDER TEST</span></div>
+      <div class="lens-proof-stat"><strong>5</strong><span>DECISIONS UNDER TEST</span></div>
       <div class="lens-proof-stat"><strong>4</strong><span>FORCED STATES</span></div>
       <div class="lens-proof-stat"><strong>R01</strong><span>READY TO RECRUIT</span></div>`;
     railHead.appendChild(proof);
@@ -76,7 +81,7 @@
   }
 
   const stillOpenHeading = [...document.querySelectorAll('.section h2')].find((el) => el.textContent.trim() === 'STILL OPEN');
-  if (stillOpenHeading) stillOpenHeading.textContent = 'STILL OPEN · BEFORE ROUND 01';
+  if (stillOpenHeading) stillOpenHeading.textContent = 'STILL OPEN BEFORE ROUND 01';
 
   document.querySelectorAll('.decision').forEach((card) => {
     const strong = card.querySelector('strong');
