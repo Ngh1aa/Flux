@@ -7,13 +7,16 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
   evidence-lens:
-    runs-on: ubuntu-latest
+    # Pinned: ubuntu-latest became 26.04, where Playwright 1.55 cannot install Chromium.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,8 +26,18 @@ jobs:
           node-version: 22
       - name: Install browser test dependency
         run: npm install --no-save @playwright/test@1.55.0
-      - name: Install Chromium
-        run: npx playwright install --with-deps chromium
+      - name: Cache Playwright Chromium
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-1.55.0-chromium-v1
+      # Retries the browser download, installs system packages only when Chromium cannot launch,
+      # and smoke-tests the launch. A plain install --with-deps failed on 2026-11-25 (PR #12) before any test ran.
+      - name: Install and smoke-test Chromium
+        timeout-minutes: 8
+        env:
+          PLAYWRIGHT_DOWNLOAD_CONNECTION_TIMEOUT: "120000"
+        run: bash scripts/ci/install-playwright-chromium.sh
       - name: Start static server
         run: |
           python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/flux-evidence-http.log 2>&1 &
