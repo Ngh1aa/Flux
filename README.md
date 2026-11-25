@@ -89,11 +89,19 @@ decision has been retested.
 
 ## Not yet moved to the new content
 
-These still describe the earlier treasury version and must be updated before they are shown or used:
+The design lens and the five documentation pages were moved on 2026-11-25. One thing still describes the
+earlier treasury version and must be updated before it is used:
 
-- the design lens (`design-lens.html`) and its forced states, which still mention USD liquidity;
-- the documentation pages `design-system.html`, `component-states.html`, `sitemap.html`, `user-flow.html`
-  and `prototype.html`;
 - the Round 01 research package in `research/validation/flux-round-01/`, written for finance operations and
   treasury participants. The right participants are now office staff, team leads and accountants in small
-  companies; the study has to be re-planned before recruiting.
+  companies; the study has to be re-planned before recruiting. The design lens already says so
+  (“R01 re-plan before recruiting”).
+
+## Design lens and documentation
+
+`design-lens.html` (reachable by URL only, never linked from the product) pins the four decisions on the live
+request detail and forces five states: normal approval, permission denied, approval expired, vendor account
+changed, and payout failed. Expiry and failed payout exist only there; the product itself stops at
+Payout. The documentation pages (`design-system.html`, `component-states.html`, `sitemap.html`,
+`user-flow.html`, `prototype.html`) describe the same company and data, and mark what is designed but not
+built (submitting a rejected request again).
